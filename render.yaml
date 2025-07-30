@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: DAVE-XMD
+    env: docker
+    region: Frankfurt
+    plan: free
+    buildCommand: "npm install"
+    startCommand: "npm run toxictech"
+    envVars:
+      - key: PORT
+        value: "3000"
