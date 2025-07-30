@@ -1,21 +1,21 @@
 {
   "name": "DAVE-XMD",
   "version": "2.0.0",
-  "description": "A simple baileys powered WhatsApp bot md",
+  "description": "WhatsApp Multi Device Bot",
   "main": "dave.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "node dave.js",
-    "s": "node dave.js",
-    "davetech": "pm2 start dave.js --attach",
-    "c": "tsc"
+    "start": "node dave.js"
   },
   "keywords": [
-    "toxicmdbot",
-    "Baileyspowerd",
-    "DAVE-XMD",
-    "davemd",
-    "whatsappbot",
-    "Dave-Bot"
+    "termux",
+    "whatsapp-openai",
+    "whatsapp-bot",
+    "whatsapp-baileys",
+    "baileys-md",
+    "bot-wa",
+    "bot-md",
+    "whatsapp-multi-device"
   ],
   "author": "gifteddave",
   "license": "ISC",
@@ -69,5 +69,18 @@
     "youtube-yts": "^2.0.0",
     "yt-search": "^2.10.4",
     "youtubedl-core": "^4.11.7"
-  }
+    },
+  "directories": {
+    "lib": "lib",
+    "src": "src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giftedee/DAVE-XMD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/giftdee/DAVE-XMD/issues"
+  },
+  "homepage": "https://github.com/giftedee/DAVE-XMD#readme"
 }
+
