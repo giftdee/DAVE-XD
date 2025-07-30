@@ -6,18 +6,18 @@
   "scripts": {
     "test": "node dave.js",
     "s": "node dave.js",
-    "toxictech": "pm2 start dave.js --attach",
+    "davetech": "pm2 start dave.js --attach",
     "c": "tsc"
   },
   "keywords": [
     "toxicmdbot",
     "Baileyspowerd",
     "DAVE-XMD",
-    "toxicmd",
+    "davemd",
     "whatsappbot",
-    "Toxic-Bot"
+    "Dave-Bot"
   ],
-  "author": "xhclinton",
+  "author": "gifteddave",
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
