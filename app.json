@@ -1,121 +1,39 @@
 {
-  "name": "Dave",
-  "description": "WhatsApp bot developed by xhclinton",
-  "keywords": ["bot", "node", "baileys", "whatsapp"],
-  "logo": "https://i.ibb.co/jyzsBZG/0b3f2531c2c10a93.jpg",
-  "repository": "https://github.com/giftdee/DAVE-XMD",
+  "name": "DAVE-XMD",
+  "description": "🔥 Fast Multi-Device WhatsApp Bot powered by Baileys.",
+  "website": "https://github.com/giftdee/DAVE-XMD#readme",
+  "repository": "https://github.com/giftdee/DAVE-XMD.git",
+  "logo": "https://files.catbox.moe/nxzaly.jpg",
   "success_url": "/",
-  "stack": "container",
+
   "env": {
-    "PREFIX": {
-      "description": "Choose your prefix for the bot",
-      "value": ".",
-      "required": true
-    },
-    "AUTO_READ_STATUS": {
-      "description": "Type 'yes' to enable auto-read status; 'no' to disable",
-      "value": "yes",
-      "required": false
-    },
-    "AUTO_DOWNLOAD_STATUS": {
-      "description": "Type 'yes' to auto-download statuses; 'no' to disable",
-      "value": "no",
-      "required": false
-    },
-    "AUTO_LIKE_STATUS": {
-      "description": "Type 'yes' to auto-like statuses; 'no' to disable",
-      "value": "yes",
-      "required": false
-    },
-    "PM_PERMIT": {
-      "description": "Type 'yes' to block others from using bot in PM",
-      "value": "no",
-      "required": false
-    },
-    "BOT_NAME": {
-      "description": "Name of your bot",
-      "value": "𝙏𝙤𝙭𝙞𝙘 𝙈𝘿",
-      "required": false
-    },
-    "AUTO_READ_MESSAGES": {
-      "description": "Type 'yes' to enable blue tick (read receipt)",
-      "value": "no",
-      "required": false
-    },
-    "BOT_MENU_LINKS": {
-      "description": "Menu image URLs, comma separated",
-      "value": "https://i.ibb.co/QvzCRjHQ/1c5d0e2ade058b6b.jpg",
-      "required": false
-    },
-    "PUBLIC_MODE": {
-      "description": "Type 'yes' for public mode or 'no' for private mode",
-      "value": "yes",
-      "required": false
-    },
-    "HEROKU_API_KEY": {
-      "description": "Your Heroku API key (optional)",
-      "required": false
-    },
-    "HEROKU_APP_NAME": {
-      "description": "Your Heroku app name (optional)",
-      "required": false
-    },
     "SESSION_ID": {
-      "description": "Your session ID after scanning the QR code",
-      "value": "",
+      "description": "🛡️ Required – Your WhatsApp session ID",
       "required": true
     },
-    "OWNER_NAME": {
-      "description": "Your name",
-      "value": "gifted_dave",
-      "required": false
-    },
-    "NUMERO_OWNER": {
-      "description": "Your number (no '+' and include country code)",
-      "value": "254111687009",
-      "required": false
-    },
-    "WARN_COUNT": {
-      "description": "Warning limit",
-      "value": "3",
-      "required": false
-    },
-    "STARTING_BOT_MESSAGE": {
-      "description": "Show starting message? Type 'yes' or 'no'",
-      "value": "yes",
-      "required": true
-    },
-    "PRESENCE": {
-      "description": "1 = online, 2 = typing, 3 = recording, blank = real state",
-      "value": "",
-      "required": false
-    },
-    "ANTI_DELETE_MESSAGE": {
-      "description": "Enable anti-delete message? Type 'yes' or 'no'",
-      "value": "yes",
+    "OWNER_NUMBER": {
+       "description": "⏩ *Required* – Default country code (e.g., 254 for Kenya).",
+      "value": "254",
       "required": false
     }
   },
+
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "description": "🔄 PostgreSQL database for session storage"
+    }
+  ],
+
   "buildpacks": [
     {
       "url": "heroku/nodejs"
     },
     {
-      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
     },
     {
-      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
-    }
-  ],
-  "formation": {
-    "worker": {
-      "quantity": 1,
-      "size": "standard-2x"
-    }
-  },
-  "addons": [
-    {
-      "plan": "heroku-postgresql:essential-0"
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
     }
   ]
 }
