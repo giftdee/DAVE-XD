@@ -1,4 +1,4 @@
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/giftedee/DAVE-XMD)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/giftdee/DAVE-XMD)
 
 
 ## 🛡️ Safety Notice
