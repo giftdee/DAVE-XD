@@ -74,7 +74,7 @@ zokou({ nomCom: "dev", categorie: "General", reaction: "💘" }, async (dest, zk
     const { ms, mybotpic } = commandeOptions;
 
     const devs = [
-        { nom: "gifted_dave", numero: "254111687009" },
+        { nom: "Gifted_dave", numero: "254111687009" },
         { nom: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐃𝐞𝐯", numero: "254104260236" }
     ];
 
@@ -85,7 +85,7 @@ zokou({ nomCom: "dev", categorie: "General", reaction: "💘" }, async (dest, zk
         message += `• *${dev.nom}*: https://wa.me/${dev.numero}\n`;
     }
     
-    message += `\n╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* ◇════╝`;
+    message += `\n*╚═══════ ✾*𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*✾═══════╝`;
 
     try {
         const lien = mybotpic();
@@ -120,20 +120,28 @@ zokou({ nomCom: "support", categorie: "General", reaction: "🔗" }, async (dest
     const { ms, repondre, auteurMessage } = commandeOptions; 
 
     const supportMessage = `
-╔════◇ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐒𝐔𝐏𝐏𝐎𝐑𝐓* ◇════╗
-
-*🌟 𝐓𝐡𝐚𝐧𝐤 𝐲𝐨𝐮 𝐟𝐨𝐫 𝐜𝐡𝐨𝐨𝐬𝐢𝐧𝐠 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃!*
-
-*📢 𝐂𝐡𝐚𝐧𝐧𝐞𝐥:*
-https://whatsapp.com/channel/0029VagJlnG6xCSU2tS1Vz19
-
-*👥 𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐆𝐫𝐨𝐮𝐩:*
-https://chat.whatsapp.com/GoXKLVJgTAAC3556FXkfFI
-
-*🎥 𝐘𝐨𝐮𝐓𝐮𝐛𝐞:*
-https://youtube.com/@kn_dave
-
-╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 gifted_dave* ◇════╝
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃    ⚡ 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐅𝐅𝐈𝐂𝐈𝐀𝐋 ⚡     ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ 💫 𝙏𝙝𝙖𝙣𝙠 𝙮𝙤𝙪 𝙛𝙤𝙧 𝙘𝙝𝙤𝙤𝙨𝙞𝙣𝙜        ┃
+┃    *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 WhatsApp Bot!*       ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ 🔗 *Support Links* ⤵️                ┃
+┃                                     ┃
+┃ 📢 Channel                          ┃
+┃ https://whatsapp.com/channel/      ┃
+┃ 0029VbApvFQ2Jl84lhONkc3k            ┃
+┃                                     ┃
+┃ 👥 Support Group                    ┃
+┃ https://chat.whatsapp.com/         ┃
+┃ LNkkXQ1rDv3GQNFFbqLoMe?mode=ac_t    ┃
+┃                                     ┃
+┃ 🎬 YouTube                          ┃
+┃ https://youtube.com/@davlodavlo19  ┃
+┃                                     ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ ⏩⏩⏩⏩⏩⏩⏩⏩⏩⚠️⚠️⚠️⚠️⚠️⚠️  ┃
+╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 Gifted_dave* ◇════╝
     `;
 
     await repondre(supportMessage);
