@@ -16,3 +16,11 @@ termux-setup
 .bash_history
 npm-debug.log*
 yarn-debug.log*
+/auth
+/set.env
+/package-lock.json
+/node_modules
+/store.json
+/audio.mp3
+/code obstrui
+/.opus
