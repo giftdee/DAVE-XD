@@ -1,11 +1,16 @@
 {
-  "name": "DAVE-XMD",
-  "description": "🔥 Fast Multi-Device WhatsApp Bot powered by Baileys.",
-  "website": "https://github.com/giftdee/DAVE-XMD#readme",
-  "repository": "https://github.com/giftdee/DAVE-XMD.git",
+  "name": "DAVE-XMD MULT DEVICE",
+  "description": "DAVE-XMD Whatsapp device bot made by Makamesco to help Whatsapp users to enjoy while helping...",
+  "keywords": [
+    "bot",
+    "node",
+    "baileys",
+    "whatsapp"
+  ],
   "logo": "https://files.catbox.moe/nxzaly.jpg",
-  "success_url": "/",
-
+  "repository": "https://github.com/giftdee/DAVE-XMD",
+  "succes_url": "/",
+  "stack": "container",
   "env": {
     "SESSION_ID": {
       "description": "🛡️ Required – Your WhatsApp session ID",
