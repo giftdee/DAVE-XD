@@ -34,7 +34,7 @@ STATUS
 
 ◈━━━━━━━━━━━━━━━━◈
 │❒⁠⁠⁠⁠ RAM : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
-│❒⁠⁠⁠⁠ DEV : gifted_dave
+│❒⁠⁠⁠⁠ DEV : Gifted_dave
 ⁠⁠⁠⁠◈━━━━━━━━━━━━━━━━◈
   `;
 
@@ -88,7 +88,7 @@ STATUS
 
       if (audioFiles.length === 0) {
         console.log("No MP3 files found in folder");
-        repondre(`𝐍𝐨 𝐚𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞𝐬 𝐟𝐨𝐮𝐧𝐝 𝐢𝐧 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧 𝐟�{o𝐥𝐝𝐞𝐫`);
+        repondre(`𝐍𝐨 𝐚𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞𝐬 𝐟𝐨𝐮𝐧𝐝 𝐢𝐧 kn_dave 𝐟�{o𝐥𝐝𝐞𝐫`);
         return;
       }
 
@@ -109,8 +109,8 @@ STATUS
               audio: { url: audioPath },
               mimetype: "audio/mpeg", // MP3 files use audio/mpeg
               ptt: true, // Voice note appearance (waveform, duration)
-              fileName: `𝐓𝐎𝐗𝐈𝐂 𝐕𝐎𝐈𝐂𝐄 ✧`,
-              caption: "✦⋆✗𝐓𝐎𝐗𝐈𝐂",
+              fileName: `𝐃𝐀𝐕𝐄-𝐕𝐎𝐈𝐂𝐄 ✧`,
+              caption: "✦⋆✗𝐃𝐀𝐕𝐄",
             },
             { quoted: ms }
           );
