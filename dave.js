@@ -45,7 +45,7 @@ const { isUserBanned, addUserToBanList, removeUserFromBanList } = require("./bdd
 const { addGroupToBanList, isGroupBanned, removeGroupFromBanList } = require("./bdd/banGroup");
 const { isGroupOnlyAdmin, addGroupToOnlyAdminList, removeGroupFromOnlyAdminList } = require("./bdd/onlyAdmin");
 let { reagir } = require(__dirname + "/framework/app");
-var session = conf.session.replace(/Toxic-MD-WHATSAPP-BOT;;;=>/g, "");
+var session = conf.session.replace(/DAVE-XMD-WHATSAPP-BOT;;;=>/g, "");
 const prefixe = conf.PREFIXE;
 const more = String.fromCharCode(8206);
 const readmore = more.repeat(4001);
@@ -74,7 +74,7 @@ setTimeout(() => {
         const sockOptions = {
             version,
             logger: pino({ level: "silent" }),
-            browser: ["Toxic-MD", "Chrome", "1.0.0"],
+            browser: ["DAVE-XMD", "Chrome", "1.0.0"],
             printQRInTerminal: true,
             markOnlineOnConnect: false,
             auth: {
@@ -897,9 +897,9 @@ zk.ev.on('group-participants.update', async (group) => {
                 let cmsg =`      BOT RUNNING
                 ⁠              
 > 𝑫𝑬𝑽   :
-gufted_dave
+Gifted_dave
 > 𝑩𝑶𝑻   : 
-DAVE-XMD 
+𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  
 ⁠⁠`;
                 await zk.sendMessage(zk.user.id, { text: cmsg });
                 }
