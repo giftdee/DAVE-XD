@@ -32,7 +32,7 @@ zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📣" }, async (dest, z
   tag +=`
   
 ◈━━━━━━━━━━━━━━━━◈
-│ 𝐓𝐎𝐗𝐈𝐂  𝐌𝐃 𝐓𝐀𝐆𝐒
+│ 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐓𝐀𝐆𝐒
 ◈━━━━━━━━━━━━━━━━◈ \n
 │⭕ *Group* : ${nomGroupe} 
 │⭕ *Hey🙃* : *${nomAuteurMessage}* 
@@ -65,7 +65,7 @@ zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📣" }, async (dest, z
 
 zokou({ nomCom: "link", categorie: 'Group', reaction: "🙋" }, async (dest, zk, commandeOptions) => {
   const { repondre, nomGroupe, nomAuteurMessage, verifGroupe } = commandeOptions;
-  if (!verifGroupe) { repondre("wait bro, you want the link to your dm?"); return; };
+  if (!verifGroupe) { repondre("wait bois, you want the link to your dm?"); return; };
 
 
   var link = await zk.groupInviteCode(dest)
@@ -250,7 +250,7 @@ zokou({ nomCom: "remove", categorie: 'Group', reaction: "👺" }, async (dest, z
         if (zkad) {
           if (membre) {
             if (admin == false) {
-              const gifLink = "https://raw.githubusercontent.com/gifted/DAVE-XMD/main/media/remover.gif"
+              const gifLink = "https://raw.githubusercontent.com/giftdee/DAVE-XMD/main/media/remover.gif"
               var sticker = new Sticker(gifLink, {
                 pack: 'Dave-Xmd', // The pack name
                 author: nomAuteurMessage, // The author name
@@ -661,7 +661,7 @@ zokou({nomCom:"tag",categorie:'Group',reaction:"🎤"},async(dest,zk,commandeOpt
         let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.stickerMessage)
 
         let stickerMess = new Sticker(media, {
-          pack: 'Toxic-mdtag',
+          pack: 'Dave-xmdtag',
           type: StickerTypes.CROPPED,
           categories: ["🤩", "🎉"],
           id: "12345",
@@ -808,7 +808,7 @@ zokou({
 
       let msg = `* *State:* ${state}
       * *Instructions:* To activate autounmute, add the minute and hour after the command separated by ':'
-      Example autounmute 7:30
+      Example autounmute 4:20
       * To delete autounmute, use the command *autounmute del*`
 
         repondre(msg) ;
