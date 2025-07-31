@@ -1,7 +1,7 @@
-import fetch from 'node-fetch';
-import FormData from 'form-data';
-import { fileTypeFromBuffer } from 'file-type';
-import { zokou } from "../framework/zokou.js";
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+const { fileTypeFromBuffer } = require('file-type');
+const { zokou } = require('../framework/zokou');
 
 const MAX_FILE_SIZE_MB = 200;
 
@@ -37,73 +37,30 @@ async function uploadMedia(buffer) {
   }
 }
 
-zokou(
-  {
-    nomCom: "tourl",
-    categorie: "General",
-    reaction: "🔗",
-  },
-  async (dest, zk, commandeOptions) => {
-    const { ms, msgRepondu, repondre } = commandeOptions;
+// Register the command with the bot
+zokou({ 
+  nomCom: "tourl", 
+  categorie: "daveplugins", 
+  reaction: "🌐", 
+  desc: "Upload media to get a URL" 
+}, async (dest, zk, commandeOptions) => {
+  const { ms } = commandeOptions;
 
-    try {
-      // Validate message type
-      if (!msgRepondu) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Please reply to a media message (image/video/audio)\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      const validTypes = ['imageMessage', 'videoMessage', 'audioMessage'];
-      if (!validTypes.includes(msgRepondu.mtype)) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Unsupported media type! Only images, videos and audio\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      await repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Uploading your media, please wait... ⏳\n◈━━━━━━━━━━━━━━━━◈`);
-
-      // Download and validate media
-      const media = await zk.downloadMediaMessage(msgRepondu, 'buffer');
-      if (!media || media.length === 0) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Failed to download media. Please try again\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      // Check file size
-      const fileSizeMB = media.length / (1024 * 1024);
-      if (fileSizeMB > MAX_FILE_SIZE_MB) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ File too large! Max ${MAX_FILE_SIZE_MB}MB\n│❒ Your file: ${fileSizeMB.toFixed(2)}MB\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      // Upload and validate response
-      const mediaUrl = await uploadMedia(media);
-      if (!mediaUrl) {
-        throw new Error('No URL returned from upload service');
-      }
-
-      // Determine media type for response
-      const mediaType = getMediaType(msgRepondu.mtype);
-      const successMessage = {
-        text: `DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${mediaType.toUpperCase()} URL 🔗\n│❒ ${mediaUrl}\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`
-      };
-
-      // For non-audio media, send as media message with caption
-      if (mediaType !== 'audio') {
-        successMessage[mediaType] = { url: mediaUrl };
-        successMessage.caption = successMessage.text;
-        delete successMessage.text;
-      }
-
-      await zk.sendMessage(dest, successMessage, { quoted: ms });
-
-    } catch (error) {
-      console.error('Command error:', error);
-      await repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Error: ${error.message}\n◈━━━━━━━━━━━━━━━━◈`);
-    }
+  if (!ms || !ms.msg || !ms.type || !/image|video/.test(ms.type)) {
+    return await zk.sendMessage(dest, { text: "Please reply to an image or video." }, { quoted: ms });
   }
-);
 
-function getMediaType(mtype) {
-  const typeMap = {
-    imageMessage: 'image',
-    videoMessage: 'video',
-    audioMessage: 'audio'
-  };
-  return typeMap[mtype] || 'file';
-}
+  const mediaBuffer = await ms.download();
+
+  const fileSizeMB = mediaBuffer.length / (1024 * 1024);
+  if (fileSizeMB > MAX_FILE_SIZE_MB) {
+    return await zk.sendMessage(dest, { text: `File size exceeds ${MAX_FILE_SIZE_MB}MB.` }, { quoted: ms });
+  }
+
+  try {
+    const link = await uploadMedia(mediaBuffer);
+    await zk.sendMessage(dest, { text: `✅ Uploaded successfully:\n\n${link}` }, { quoted: ms });
+  } catch (e) {
+    await zk.sendMessage(dest, { text: `❌ Failed to upload: ${e.message}` }, { quoted: ms });
+  }
+});
