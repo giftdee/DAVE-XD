@@ -45,7 +45,7 @@ const { isUserBanned, addUserToBanList, removeUserFromBanList } = require("./bdd
 const { addGroupToBanList, isGroupBanned, removeGroupFromBanList } = require("./bdd/banGroup");
 const { isGroupOnlyAdmin, addGroupToOnlyAdminList, removeGroupFromOnlyAdminList } = require("./bdd/onlyAdmin");
 let { reagir } = require(__dirname + "/framework/app");
-var session = conf.session.replace(/DAVE-XMD-WHATSAPP-BOT;;;=>/g, "");
+var session = conf.session.replace(/MAKAMESCO-MD<=/g, "");
 const prefixe = conf.PREFIXE;
 const more = String.fromCharCode(8206);
 const readmore = more.repeat(4001);
@@ -74,7 +74,7 @@ setTimeout(() => {
         const sockOptions = {
             version,
             logger: pino({ level: "silent" }),
-            browser: ['DAVE-XMD', "Safari"],
+            browser: ['DAVE-XMD', 'Chrome'],
             printQRInTerminal: true,
             markOnlineOnConnect: false,
             auth: {
