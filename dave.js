@@ -574,7 +574,7 @@ try {
             };
             var txt = "bot detected, \n";
            // txt += `message supprimé \n @${auteurMessage.split("@")[0]} rétiré du groupe.`;
-            const gifLink = "https://raw.githubusercontent.com/gifted/DAVE-XMD/main/media/remover.gif";
+            const gifLink = "https://raw.githubusercontent.com/giftdee/DAVE-XMD/main/media/remover.gif";
             var sticker = new Sticker(gifLink, {
                 pack: 'DAVE-XMD',
                 author: conf.OWNER_NAME,
@@ -896,10 +896,11 @@ zk.ev.on('group-participants.update', async (group) => {
 
                 let cmsg =`      BOT RUNNING
                 ⁠              
-> 𝑫𝑬𝑽   :
-Gifted_dave
-> 𝑩𝑶𝑻   : 
-𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  
+>⎯⎯⎯[ BOOT SEQUENCE INITIALIZED ]⎯⎯⎯
+⟢  STATUS  : BOT ACTIVE
+⟢  DEV     : Gifted_dave
+⟢  BOT     : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
+⎯⎯⎯[ SYSTEM READY FOR COMMANDS ]⎯⎯⎯ 
 ⁠⁠`;
                 await zk.sendMessage(zk.user.id, { text: cmsg });
                 }
