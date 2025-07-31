@@ -39,15 +39,15 @@ zokou(
 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
 
 ◈━━━━━━━━━━━━━━━━◈
-│❒ Yo ${nomAuteurMessage}, here’s the 411 on 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇’s repo! 📦
+│❒ Yo ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 repo!💱
 │❒ *🔗 𝐆𝐢𝐭𝐇𝐮𝐛*: https://github.com/giftdee/DAVE-XMD/fork
 │❒ *📩 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩 𝐆𝐫𝐨𝐮𝐩*: https://chat.whatsapp.com/LNkkXQ1rDv3GQNFFbqLoMe?mode=ac_t
 │❒ *💾 𝐑𝐀𝐌 𝐔𝐬𝐚𝐠𝐞*: ${format(os.totalmem() - os.freemem())} / ${format(os.totalmem())}
-│❒ *👑 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫*: gifted_dave
+│❒ *👑 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫*: 𝐃𝐀𝐕𝐄
 │❒ *🌐 𝐌𝐨𝐝𝐞*: ${mode}
 │❒ *📅 𝐃𝐚𝐭𝐞*: ${date}
 │❒ *⏰ 𝐓𝐢𝐦𝐞 (GMT)*: ${time}
-│❒ Powered by kn_dave
+│❒ Powered by 𝐃𝐀𝐕𝐄
 ◈━━━━━━━━━━━━━━━━◈
       `;
 
@@ -62,14 +62,14 @@ zokou(
             {
               video: { url: lien },
               caption: infoMsg,
-              footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by gifted_dave 😎`,
+              footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by 𝐃𝐀𝐕𝐄😎`,
               gifPlayback: true,
             },
             { quoted: ms }
           );
         } catch (e) {
           console.error("Video sending error:", e);
-          await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  fumbled the video send: ${e.message} 😡 Here’s the repo info anyway! 😣\n${infoMsg}\n◈━━━━━━━━━━━━━━━━◈`);
+          await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Bois ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  fumbled the video send: ${e.message} ⚠️ Here’s the repo info anyway!\n${infoMsg}\n◈━━━━━━━━━━━━━━━━◈`);
         }
       }
       // Send the message with an image if the URL is an image (jpeg, png, jpg)
@@ -80,13 +80,13 @@ zokou(
             {
               image: { url: lien },
               caption: infoMsg,
-              footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by gifted_�{dave 😎`,
+              footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by 𝐃𝐀𝐕𝐄 😎`,
             },
             { quoted: ms }
           );
         } catch (e) {
           console.error("Image sending error:", e);
-          await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 botched the image send: ${e.message} 😡 Here’s the repo info anyway! 😣\n${infoMsg}\n◈━━━━━━━━━━━━━━━━◈`);
+          await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Bois ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 botched the image send: ${e.message} 😜 Here’s is 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 repo! ⚠️\n${infoMsg}\n◈━━━━━━━━━━━━━━━━◈`);
         }
       }
       // Fallback to text-only message if no valid media is provided
@@ -95,7 +95,7 @@ zokou(
       }
     } catch (e) {
       console.error("Error in repo command:", e);
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ TOTAL BUST, ${nomAuteurMessage}! 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 crashed while fetching repo info: ${e.message} 😡 Try again or flop! 😣\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ TOTAL BUST, ${nomAuteurMessage}! 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 crashed while fetching repo info: ${e.message} 😜 Try again later bois! 🤔\n◈━━━━━━━━━━━━━━━━◈`);
     }
   }
 );
