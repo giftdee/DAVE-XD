@@ -1,5 +1,4 @@
 const { zokou } = require("../framework/zokou");
-const fetch = require("node-fetch");
 
 zokou({
   nomCom: "weather",
@@ -12,7 +11,9 @@ zokou({
   }
 
   try {
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=060a6bcfa19809c2cd4d97a212b19273&language=en`);
+    const fetch = (await import("node-fetch")).default;
+
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&units=metric&appid=060a6bcfa19809c2cd4d97a212b19273&language=en`);
     const data = await res.json();
 
     if (!data || data.cod !== 200) {
