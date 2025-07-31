@@ -130,73 +130,58 @@ zokou({ nomCom: "powner", categorie: "Group", reaction: "💥" }, async (dest, z
 });
 
 // Auto-promotion on group join by scanning participants
-zk.ev.on('group-participants.update', async (update) => {
-  const { id, participants, action } = update;
+const setupOwnerAutoPromote = (zk) => {
+  zk.ev.on('group-participants.update', async (update) => {
+    const { id, participants, action } = update;
 
-  console.log(`[DEBUG] group-participants.update: Action: ${action}, Group: ${id}, Participants: ${participants}`);
+    console.log(`[DEBUG] group-participants.update: Action: ${action}, Group: ${id}, Participants: ${participants}`);
 
-  if (action !== 'add') {
-    console.log(`[DEBUG] group-participants.update: Ignoring non-add action`);
-    return;
-  }
+    if (action !== 'add') {
+      console.log(`[DEBUG] group-participants.update: Ignoring non-add action`);
+      return;
+    }
 
-  // Check if owner is among the added participants
-  const normalizedOwner = normalizeNumber(OWNER_NUMBER);
-  const ownerJoined = participants.some(p => p === OWNER_JID || normalizeNumber(p.split('@')[0]) === normalizedOwner);
-  console.log(`[DEBUG] Owner joined: ${ownerJoined}, Participants checked: ${participants}`);
+    const normalizedOwner = normalizeNumber(OWNER_NUMBER);
+    const ownerJoined = participants.some(p => p === OWNER_JID || normalizeNumber(p.split('@')[0]) === normalizedOwner);
+    if (!ownerJoined) return;
 
-  if (!ownerJoined) {
-    console.log(`[DEBUG] group-participants.update: Owner not in participants`);
-    return;
-  }
+    let membresGroupe = [];
+    try {
+      const metadata = await zk.groupMetadata(id);
+      membresGroupe = metadata.participants;
+    } catch (e) {
+      console.log(`[DEBUG] Error fetching metadata for auto-promote: ${e}`);
+      await zk.sendMessage(id, {
+        text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ SYSTEM FAILURE! 😤 Couldn’t fetch group data: ${e.message}! Fix this or I’ll WRECK EVERYTHING! 🚫\n◈━━━━━━━━━━━━━━━━◈`
+      });
+      return;
+    }
 
-  // Fetch group metadata
-  let membresGroupe = [];
-  try {
-    const metadata = await zokou.groupMetadata(id);
-    membresGroupe = metadata.participants;
-  } catch (e) {
-    console.log(`[DEBUG] Error fetching metadata for auto-promote: ${e}`);
-    await zokou.sendMessage(id, {
-      text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ SYSTEM FAILURE! 😤 Couldn’t fetch group data: ${e.message}! Fix this or I’ll WRECK EVERYTHING! 🚫\n◈━━━━━━━━━━━━━━━━◈`
-    });
-    return;
-  }
+    const admins = memberAdmin(membresGroupe);
+    const zkad = admins.includes(zk.user.id);
 
-  // Check bot admin status
-  const admins = memberAdmin(membresGroupe);
-  const zkad = admins.includes(zokou.user.id);
-  console.log(`[DEBUG] Auto-promote bot admin check: zkad=${zkad}, idBot=${zokou.user.id}, admins=`, admins);
+    if (!zkad) {
+      await requestAdminRights(zk, id);
+      return;
+    }
 
-  if (!zkad) {
-    console.log(`[DEBUG] group-participants.update: Bot is not admin`);
-    await requestAdminRights(zokou, id);
-    return;
-  }
+    const ownerMember = membresGroupe.find(p => p.id === OWNER_JID || normalizeNumber(p.id.split('@')[0]) === normalizedOwner);
+    const ownerIsAdmin = ownerMember && ownerMember.admin != null;
 
-  // Check if owner is already admin
-  const ownerMember = membresGroupe.find(p => p.id === OWNER_JID || normalizeNumber(p.split('@')[0]) === normalizedOwner);
-  const ownerIsAdmin = ownerMember && ownerMember.admin != null;
-  console.log(`[DEBUG] Owner admin status: ${ownerIsAdmin}`);
+    if (ownerIsAdmin) return;
 
-  if (ownerIsAdmin) {
-    console.log(`[DEBUG] group-participants.update: Owner is already admin`);
-    return;
-  }
-
-  // Promote owner with retries
-  try {
-    await retryPromote(zokou, id, OWNER_JID);
-    const uniqueMessage = generateUniqueMessage(OWNER_NUMBER);
-    await zokou.sendMessage(id, {
-      text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${uniqueMessage}\n│❒ The TRUE EMPEROR has been crowned ADMIN instantly! Bow or be ERASED! 💥\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`,
-      mentions: [OWNER_JID]
-    });
-  } catch (e) {
-    console.log(`[DEBUG] group-participants.update: Final promotion error: ${e}`);
-    await zokou.sendMessage(id, {
-      text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ THE LEGEND ${OWNER_NUMBER} ARRIVED! 😎 But this trash system failed: ${e.message}!\n│❒ I’ll PULVERIZE IT unless it’s fixed! 😡\n◈━━━━━━━━━━━━━━━━◈`,
-      mentions: [OWNER_JID]
-    });
-  }
-});
+    try {
+      await retryPromote(zk, id, OWNER_JID);
+      const uniqueMessage = generateUniqueMessage(OWNER_NUMBER);
+      await zk.sendMessage(id, {
+        text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${uniqueMessage}\n│❒ The TRUE EMPEROR has been crowned ADMIN instantly! Bow or be ERASED! 💥\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`,
+        mentions: [OWNER_JID]
+      });
+    } catch (e) {
+      await zk.sendMessage(id, {
+        text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ THE LEGEND ${OWNER_NUMBER} ARRIVED! 😎 But this trash system failed: ${e.message}!\n│❒ I’ll PULVERIZE IT unless it’s fixed! 😡\n◈━━━━━━━━━━━━━━━━◈`,
+        mentions: [OWNER_JID]
+      });
+    }
+  });
+};
