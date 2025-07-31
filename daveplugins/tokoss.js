@@ -22,7 +22,7 @@ zokou(
 │❒ Yo ${nomAuteurMessage}, here’s the dope on 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇! 🔥
 │❒ *📩 𝐆𝐫𝐨𝐮𝐩*: ${groupLink}
 │❒ *📢 𝐂𝐡𝐚𝐧𝐧𝐞𝐥*: ${channelLink}
-│❒ Wanna vibe with the owner? Use *${prefix}owner*! 😎
+│❒ In need of vibe? Use *${prefix}owner*! 💱
 │❒ Powered by kn_dave
 ◈━━━━━━━━━━━━━━━━◈
       `;
@@ -32,14 +32,14 @@ zokou(
         dest,
         {
           text: infoMsg,
-          footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧 😎`
+          footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by Gifted_Dave⚠️`
         },
         { quoted: ms }
       );
 
     } catch (error) {
       console.error("Error in info command:", error.stack);
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ TOTAL BUST, ${nomAuteurMessage}! 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 tripped while dropping the info: ${error.message} 😡 Try again or flop! 😣\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ TOTAL BUST, ${nomAuteurMessage}! 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  tripped while dropping the info: ${error.message} 😡 Try again or flop! 😣\n◈━━━━━━━━━━━━━━━━◈`);
     }
   }
 );
