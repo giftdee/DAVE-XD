@@ -84,7 +84,7 @@ zokou(
 
     } catch (error) {
       console.error('allvar error:', error);
-      await repondre(`TOXIC-MD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ CRASH AND BURN! Error: ${error.message} 😡 Get it together!\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ CRASH AND BURN! Error: ${error.message} 😡 Get it together!\n◈━━━━━━━━━━━━━━━━◈`);
     }
   }
 );
