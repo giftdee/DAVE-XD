@@ -2,7 +2,7 @@ const { zokou } = require("../framework/zokou");
 const axios = require("axios"); // Replaced node-fetch with axios
 
 // 𝐀𝐈 𝐌𝐨𝐝𝐮𝐥𝐞
-// 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧
+// 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 Gifted_dave
 
 zokou(
   {
