@@ -1,13 +1,8 @@
-import { createRequire } from 'module';
-import path from 'path';
-import axios from 'axios';
-import FormData from 'form-data';
-import fs from 'fs-extra';
-import { zokou } from "../framework/zokou.js";
-
-const require = createRequire(import.meta.url);
-const __filename = new URL(import.meta.url).pathname;
-const __dirname = path.dirname(__filename);
+const path = require('path');
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs-extra');
+const { zokou } = require("../framework/zokou");
 
 class ImgLarger {
     constructor() {
@@ -100,29 +95,24 @@ zokou(
     const { ms, msgRepondu, repondre } = commandeOptions;
 
     try {
-      // Enhanced validation checks
       if (!msgRepondu) {
         return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Please reply to an image message to use this command!\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
-      // Check for different media types
       if (!['imageMessage', 'stickerMessage', 'documentMessage'].includes(msgRepondu.mtype)) {
         return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Unsupported media type! Please reply to an image or sticker.\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
-      // Additional check for document messages (must be image)
       if (msgRepondu.mtype === 'documentMessage' && !msgRepondu.mimetype.includes('image')) {
         return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ The document must be an image file (jpg, png, etc.)\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
-      // Check file size (max 10MB)
       if (msgRepondu.size > 10 * 1024 * 1024) {
         return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Image is too large! Maximum size is 10MB.\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       const media = await zk.downloadMediaMessage(msgRepondu, 'buffer');
-      
-      // Verify the downloaded media is actually an image
+
       if (!media || media.length === 0) {
         return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Failed to download the image. Please try again.\n◈━━━━━━━━━━━━━━━━◈`);
       }
