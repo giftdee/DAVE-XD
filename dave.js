@@ -206,7 +206,7 @@ setTimeout(() => {
                 mybotpic
             };
             
-            if (conf.AUTO_READ_MESSAGES === "yes") {
+            if (conf.AUTO_READ_MESSAGES === "no") {
         zk.ev.on("messages.upsert", async m => {
           const {
             messages
@@ -341,7 +341,7 @@ if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf
             if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.AUTO_READ_STATUS === "yes") {
                 await zk.readMessages([ms.key]);
             }
-            if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.AUTO_DOWNLOAD_STATUS === "yes") {
+            if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.AUTO_DOWNLOAD_STATUS === "no") {
                 /* await zk.readMessages([ms.key]);*/
                 if (ms.message.extendedTextMessage) {
                     var stTxt = ms.message.extendedTextMessage.text;
