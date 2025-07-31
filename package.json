@@ -1,23 +1,21 @@
 {
   "name": "DAVE-XMD",
   "version": "2.0.0",
-  "description": "",
+  "description": "A simple baileys powered WhatsApp bot xmd",
   "main": "dave.js",
-  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "s": "node dave.js", 
-    "start": "node dave.js", 
-    "dave": "pm2 start dave.js --attach --max-memory-restart 490M",
+    "test": "node dave.js",
+    "s": "node dave.js",
+    "toxictech": "pm2 start dave.js --attach",
     "c": "tsc"
   },
   "keywords": [
-    "bot",
-    "Baileys",
-    "Lucky-Xforce",
-    "whatsapp",
-    "whatsapp-bot",
-    "gifteddave"
+    "davexmdbot",
+    "Baileyspowerd",
+    "DAVE-XMD",
+    "davexmd",
+    "whatsappbot",
+    "Dave-Bot"
   ],
   "author": "gifteddave",
   "license": "ISC",
