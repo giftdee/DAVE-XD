@@ -16,7 +16,7 @@ zokou(
 
     try {
       // Notify the user that the profile picture is being fetched
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 \n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇’s hunting for @${auteurMsgRepondu.split("@")[0]}’s profile pic! 📸 Hold tight! 🔍\n◈━━━━━━━━━━━━━━━━◈`, { mentions: [auteurMsgRepondu] });
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 \n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃’s hunting for @${auteurMsgRepondu.split("@")[0]}’s profile pic! 📸 Hold tight! 🔍\n◈━━━━━━━━━━━━━━━━◈`, { mentions: [auteurMsgRepondu] });
 
       // Fetch the profile picture of the replied person
       let ppuser;
@@ -24,7 +24,7 @@ zokou(
         ppuser = await zk.profilePictureUrl(auteurMsgRepondu, 'image');
       } catch {
         ppuser = mybotpic();
-        await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 \n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, @${auteurMsgRepondu.split("@")[0]}’s profile pic is locked tight! 😣 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇’s got you my pic instead! 😎\n◈━━━━━━━━━━━━━━━━◈`, { mentions: [auteurMsgRepondu] });
+        await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 \n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, @${auteurMsgRepondu.split("@")[0]}’s profile pic is locked tight! 😣 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ’s got you my pic instead! 😎\n◈━━━━━━━━━━━━━━━━◈`, { mentions: [auteurMsgRepondu] });
       }
 
       // Send the profile picture
@@ -41,7 +41,7 @@ zokou(
 
     } catch (error) {
       console.error("Error in .getpp command:", error);
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 \n\n◈━━━━━━━━━━━━━━━━◈\n│❒ TOTAL BUST, ${nomAuteurMessage}! 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 crashed while grabbing the pic: ${error.message} 😡 Try again or flop! 😣\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 \n\n◈━━━━━━━━━━━━━━━━◈\n│❒ TOTAL BUST, ${nomAuteurMessage}! 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 crashed while grabbing the pic: ${error.message} 😡 Try again or flop! 😣\n◈━━━━━━━━━━━━━━━━◈`);
     }
   }
 );
