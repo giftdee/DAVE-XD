@@ -341,7 +341,7 @@ if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf
             if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.AUTO_READ_STATUS === "yes") {
                 await zk.readMessages([ms.key]);
             }
-            if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.AUTO_DOWNLOAD_STATUS === "no") {
+            if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.AUTO_DOWNLOAD_STATUS === "yes") {
                 /* await zk.readMessages([ms.key]);*/
                 if (ms.message.extendedTextMessage) {
                     var stTxt = ms.message.extendedTextMessage.text;
@@ -480,7 +480,7 @@ try {
       id: ms.key.id,
       participant: auteurMessage
     };
-    const gifLink = "https://raw.githubusercontent.com/gifted/DAVE-XMD/main/media/remover.gif";
+    const gifLink = "https://raw.githubusercontent.com/giftdee/DAVE-XMD/main/media/remover.gif";
     const sticker = new Sticker(gifLink, {
       pack: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃',
       author: conf.OWNER_NAME,
