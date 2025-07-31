@@ -206,7 +206,7 @@ setTimeout(() => {
                 mybotpic
             };
             
-            if (conf.AUTO_READ_MESSAGES === "no") {
+            if (conf.AUTO_READ_MESSAGES === "yes") {
         zk.ev.on("messages.upsert", async m => {
           const {
             messages
