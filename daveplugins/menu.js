@@ -134,7 +134,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
           {
             image: { url: lien },
             caption: infoMsg + menuMsg,
-            footer: "◄⏤͟͞ꭙͯ͢³➤⃝ ⃝⃪⃕𝚣⃪ꙴ-〭⃛〬𓆩〭⃛〬❥",
+            footer: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
             mentions: mentionedJids,
           },
           { quoted: ms }
