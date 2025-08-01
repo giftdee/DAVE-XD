@@ -49,26 +49,26 @@ zokou(
     try {
       // Validate message type
       if (!msgRepondu) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Please reply to a media message (image/video/audio)\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Please reply to a media message (image/video/audio)\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       const validTypes = ['imageMessage', 'videoMessage', 'audioMessage'];
       if (!validTypes.includes(msgRepondu.mtype)) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Unsupported media type! Only images, videos and audio\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Unsupported media type! Only images, videos and audio\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
-      await repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Uploading your media, please wait... ⏳\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Uploading your media, please wait... ⏳\n◈━━━━━━━━━━━━━━━━◈`);
 
       // Download and validate media
       const media = await zk.downloadMediaMessage(msgRepondu, 'buffer');
       if (!media || media.length === 0) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Failed to download media. Please try again\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Failed to download media. Please try again\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       // Check file size
       const fileSizeMB = media.length / (1024 * 1024);
       if (fileSizeMB > MAX_FILE_SIZE_MB) {
-        return repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ File too large! Max ${MAX_FILE_SIZE_MB}MB\n│❒ Your file: ${fileSizeMB.toFixed(2)}MB\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre('𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ File too large! Max ${MAX_FILE_SIZE_MB}MB\n│❒ Your file: ${fileSizeMB.toFixed(2)}MB\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       // Upload and validate response
@@ -80,7 +80,7 @@ zokou(
       // Determine media type for response
       const mediaType = getMediaType(msgRepondu.mtype);
       const successMessage = {
-        text: `DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${mediaType.toUpperCase()} URL 🔗\n│❒ ${mediaUrl}\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`
+        text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${mediaType.toUpperCase()} URL 🔗\n│❒ ${mediaUrl}\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`
       };
 
       // For non-audio media, send as media message with caption
@@ -94,7 +94,7 @@ zokou(
 
     } catch (error) {
       console.error('Command error:', error);
-      await repondre(`DAVE-XMD\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Error: ${error.message}\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Error: ${error.message}\n◈━━━━━━━━━━━━━━━━◈`);
     }
   }
 );
@@ -106,4 +106,4 @@ function getMediaType(mtype) {
     audioMessage: 'audio'
   };
   return typeMap[mtype] || 'file';
-    }
+  }
