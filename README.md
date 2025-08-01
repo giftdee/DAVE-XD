@@ -1,10 +1,9 @@
 [![Fork](https://img.shields.io/badge/Fork%20Repo-DAVE--XMD-blue?style=for-the-badge&logo=github)](https://github.com/giftdee/DAVE-XMD/fork)
 
-###Deployment###
-
 [![Pair WhatsApp](https://img.shields.io/badge/Pair_WhatsApp-Click_Here-blue?style=for-the-badge&logo=whatsapp)](https://toxicpairing.site)
 
 
+## Deployment
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/giftdee/DAVE-XMD)
 
