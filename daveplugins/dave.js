@@ -13,7 +13,7 @@ zokou({
   const { ms: quotedMessage, repondre: reply, arg: args } = command;
 
   if (!args[0]) {
-    return reply(`⚠️ *Usage*:\n.pair 2547XXXXXX\n\nExample: .pair ${COUNTRY_CODE}712345678`);
+    return reply(`⚠️ *Usage*:\n.pair 2547XXXXXX\n\nExample: .pair ${COUNTRY_CODE}111687009`);
   }
 
   // Validate and format phone number
@@ -27,7 +27,7 @@ zokou({
     } else if (phoneNumber.startsWith('7')) {
       phoneNumber = COUNTRY_CODE + phoneNumber;
     } else {
-      return reply(`❌ *Invalid Number*\nPlease use format: ${COUNTRY_CODE}7XXXXXXX\nExample: ${COUNTRY_CODE}712345678`);
+      return reply(`❌ *Invalid Number*\nPlease use format: ${COUNTRY_CODE}7XXXXXXX\nExample: ${COUNTRY_CODE}111687009`);
     }
   }
 
