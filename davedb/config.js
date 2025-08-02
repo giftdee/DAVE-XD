@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { database } = require('../Env/settings');
+const { database } = require('../set');
 
 const pool = new Pool({
     connectionString: database,
