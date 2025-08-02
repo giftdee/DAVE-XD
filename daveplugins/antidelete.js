@@ -2,7 +2,7 @@ const { loadChatData, saveChatData } = require("../lib/Store");
 
 module.exports = async (client, m, store, pict) => {
     try {
-        const settings = await require('../Database/config').getSettings();
+        const settings = await require('../davedb/config').getSettings();
         if (!settings || !settings.antidelete || !m.message || m.key.fromMe) {
             return;
         }
