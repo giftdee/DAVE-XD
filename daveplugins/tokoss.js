@@ -19,11 +19,11 @@ zokou(
 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
 
 ◈━━━━━━━━━━━━━━━━◈
-│❒ Yo ${nomAuteurMessage}, here’s the dope on 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇! 🔥
+│❒ Yo ${nomAuteurMessage}, here’s the dope on 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃! 🔥
 │❒ *📩 𝐆𝐫𝐨𝐮𝐩*: ${groupLink}
 │❒ *📢 𝐂𝐡𝐚𝐧𝐧𝐞𝐥*: ${channelLink}
 │❒ In need of vibe? Use *${prefix}owner*! 💱
-│❒ Powered by kn_dave
+│❒ Powered by Gifted_dave
 ◈━━━━━━━━━━━━━━━━◈
       `;
 
