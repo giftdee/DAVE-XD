@@ -12,7 +12,7 @@ zokou(
 
     try {
       if (!msgRepondu) {
-        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, reply to a media message (image, video, or audio) first! 😡 Don’t waste 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇’s time! 🤔\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, reply to a media message (image, video, or audio) first! 😡 Don’t waste 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃’s time! 🤔\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       // Extract the message content
@@ -37,20 +37,20 @@ zokou(
       const messageType = Object.keys(msg)[0];
       if (!['imageMessage', 'videoMessage', 'audioMessage'].includes(messageType)) {
         console.log("DEBUG - Message type:", messageType);
-        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, that’s not a supported media type (image, video, or audio)! 😣 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 can’t work with that! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, that’s not a supported media type (image, video, or audio)! 😣 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  can’t work with that! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       // Notify the user that media is being processed
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇’s cracking open that media! 📦 Hold tight! 🔍\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃’s cracking open that media! 📦 Hold tight! 🔍\n◈━━━━━━━━━━━━━━━━◈`);
 
       // Download the media
       const buffer = await downloadMediaMessage(msgRepondu, 'buffer', {});
       if (!buffer) {
-        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 couldn’t download the media! 😓 Try again or check the message! 🚨\n◈━━━━━━━━━━━━━━━━◈`);
+        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Yo ${nomAuteurMessage}, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 couldn’t download the media! 😓 Try again or check the message! 🚨\n◈━━━━━━━━━━━━━━━━◈`);
       }
 
       // Prepare media details
-      const caption = msg[messageType].caption || `BOOM! Retrieved by 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 | Powered by kn_dave 🔥`;
+      const caption = msg[messageType].caption || `BOOM! Retrieved by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 | Powered by Gifted_dave 🔥`;
       const mediaOptions = {
         caption,
         footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by gifted_dave 😎`,
@@ -70,7 +70,7 @@ zokou(
       );
 
       // Notify success
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BOOM, ${nomAuteurMessage}! 𝔗𝔬𝔵𝔦𝔠 𝔐𝔇 decrypted and dropped the media right here! 🗿🔥\n◈━━━━━━━━━━━━━━━━◈`);
+      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BOOM, ${nomAuteurMessage}! 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 decrypted and dropped the media right here! 🗿🔥\n◈━━━━━━━━━━━━━━━━◈`);
 
     } catch (error) {
       console.error("Error in vv command:", error.stack);
