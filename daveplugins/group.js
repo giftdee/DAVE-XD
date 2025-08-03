@@ -8,20 +8,19 @@ const { search, download } = require("aptoide-scraper");
 const fs = require("fs-extra");
 const conf = require("../set");
 const { default: axios } = require('axios');
-//const { uploadImageToImgur } = require('../framework/imgur');
 
 
 
 
 
-zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📣" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📯" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions
 
 
- 
 
-  if (!verifGroupe) { repondre("✋🏿 ✋🏿this command is reserved for groups ❌"); return; }
+
+  if (!verifGroupe) { repondre("⚠️ uuuuhh Dr this command is reserved for groups ❌"); return; }
   if (!arg || arg === ' ') {
   mess = 'Aucun Message'
   } else {
@@ -29,23 +28,21 @@ zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📣" }, async (dest, z
   } ;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   var tag = ""; 
-  tag +=`
-  
+  tag += `========================\n  
 ◈━━━━━━━━━━━━━━━━◈
 │ 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐓𝐀𝐆𝐒
 ◈━━━━━━━━━━━━━━━━◈ \n
 │⭕ *Group* : ${nomGroupe} 
 │⭕ *Hey🙃* : *${nomAuteurMessage}* 
 │⭕ *Message* : *${mess}* 
-╰─────────────━┈⊷\n
+========================\n
 \n
 
 ` ;
 
 
 
-
-  let emoji = ['🦴', '👀', '🌞', '✨', '✔️', '😇', '⚙️', '🔧', '🎊', '☃️', '🤖', '🌚', '$','🌜','🥵','🐅']
+    let emoji = ['😇', '👀', '😮‍💨', '👋', '✌️', '😇', '⚙️', '💪', '🎊', '✨', '🙏🏿', '⛔️', '$','😎','🤔','⚡','🚜']
   let random = Math.floor(Math.random() * (emoji.length - 1))
 
 
@@ -53,19 +50,19 @@ zokou({ nomCom: "tagall", categorie: 'Group', reaction: "📣" }, async (dest, z
     tag += `${emoji[random]}      @${membre.id.split("@")[0]}\n`
   }
 
- 
+
  if (verifAdmin || superUser) {
 
   zk.sendMessage(dest, { text: tag, mentions: membresGroupe.map((i) => i.id) }, { quoted: ms })
 
-   } else { repondre('𝐓𝐡𝐢𝐬 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐜𝐚𝐧 𝐨𝐧𝐥𝐲 𝐛𝐞 𝐮𝐬𝐞𝐝 𝐛𝐲 𝐀𝐝𝐦𝐢𝐧 🤖')}
+   } else { repondre('command reserved for admins')}
 
 });
 
 
-zokou({ nomCom: "link", categorie: 'Group', reaction: "🙋" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "link", categorie: 'Group', reaction: "🚜" }, async (dest, zk, commandeOptions) => {
   const { repondre, nomGroupe, nomAuteurMessage, verifGroupe } = commandeOptions;
-  if (!verifGroupe) { repondre("wait bois, you want the link to your dm?"); return; };
+  if (!verifGroupe) { repondre("wait bro , you want the link to my dm?"); return; };
 
 
   var link = await zk.groupInviteCode(dest)
@@ -73,13 +70,13 @@ zokou({ nomCom: "link", categorie: 'Group', reaction: "🙋" }, async (dest, zk,
 
   let mess = `hello ${nomAuteurMessage} , here is the group link for ${nomGroupe} \n
 
-Group link :${lien} \n\n©𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ™`
+Grp link :${lien} \n\n★𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢  Gifted Dave`
   repondre(mess)
-
-
+  
+  
 });
 /** *nommer un membre comme admin */
-zokou({ nomCom: "promote", categorie: 'Group', reaction: "⭐" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "promote", categorie: 'Group', reaction: "💐" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("For groups only"); }
@@ -115,7 +112,7 @@ zokou({ nomCom: "promote", categorie: 'Group', reaction: "⭐" }, async (dest, z
   let autAdmin = verifGroupe ? a.includes(auteurMessage) : false;
   zkad = verifGroupe ? a.includes(idBot) : false;
   try {
-    // repondre(verifZokouAdmin)
+    // repondre(verifezraAdmin)
 
     if (autAdmin || superUser) {
       if (msgRepondu) {
@@ -123,7 +120,7 @@ zokou({ nomCom: "promote", categorie: 'Group', reaction: "⭐" }, async (dest, z
           if (membre) {
             if (admin == false) {
               var txt = `🎊🎊🎊  @${auteurMsgRepondu.split("@")[0]} rose in rank.\n
-                      he/she has been named group administrator.`
+                      he/she has been Promote To Admin.`
               await zk.groupParticipantsUpdate(dest, [auteurMsgRepondu], "promote");
               zk.sendMessage(dest, { text: txt, mentions: [auteurMsgRepondu] })
             } else { return repondre("This member is already an administrator of the group.") }
@@ -133,11 +130,11 @@ zokou({ nomCom: "promote", categorie: 'Group', reaction: "⭐" }, async (dest, z
         else { return repondre("Sorry, I cannot perform this action because I am not an administrator of the group.") }
 
       } else { repondre("please tag the member to be nominated"); }
-    } else { return repondre("𝐓𝐡𝐢𝐬 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐜𝐚𝐧 𝐨𝐧𝐥𝐲 𝐛𝐞 𝐮𝐬𝐞𝐝 𝐛𝐲 𝐀𝐝𝐦𝐢𝐧 🤖.") }
+    } else { return repondre("Sorry I cannot perform this action because you are not an administrator of the group.") }
   } catch (e) { repondre("oups " + e) }
 
 })
-
+    
 //fin nommer
 /** ***demettre */
 
