@@ -20,7 +20,7 @@ zokou({
     await reply("*Wait, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is generating your pair code ✅...*");
 
     const encodedNumber = encodeURIComponent(args.join(" "));
-    const apiURL = `https://xdtoxicpairing2.onrender.com/pair?number=${encodedNumber}`;
+    const apiURL = `https://xdtoxicpairing2.onrender.com/code?number=${encodedNumber}`;
 
     const response = await axios.get(apiURL);
     const data = response.data;
