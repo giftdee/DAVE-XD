@@ -1,39 +1,60 @@
-const chalk = require("chalk");
+const { zokou } = require("../framework/zokou");
+const { getSettings, updateSetting } = require("../lib/database/settings");
 
-async function autolike(client, message) {
-  try {
-    const { key, message: msg } = message;
-    const remoteJid = key.remoteJid;
-
-    // Skip non-status messages and protocol messages
-    if (remoteJid !== "status@broadcast" || !key.id || msg.protocolMessage) {
-      return;
-    }
-
-    // Log status processing
-    console.log(chalk.blue(`Processing status ${key.id}, Key:`, JSON.stringify(key, null, 2)));
-
-    // React with ❤️
-    const reactionResult = await client.sendMessage(remoteJid, {
-      react: { key, text: "❤️" },
-    });
-    console.log(chalk.blue(`Reacted with ❤️ to status ${key.id}, Result:`, JSON.stringify(reactionResult, null, 2)));
-
-    // View status (mark as read)
-    await client.readMessages([key]);
-    console.log(chalk.blue(`Viewed status ${key.id}`));
-  } catch (error) {
-    console.error(chalk.red(`Error in autolike for status ${message.key.id}:`, error));
-    // Fallback reaction method
+zokou(
+  {
+    nomCom: "autolike",
+    categorie: "automation",
+    desc: "Toggle auto-like for status updates",
+    fromMe: true,
+  },
+  async (zk, m, args) => {
     try {
-      await client.sendMessage(message.key.remoteJid, {
-        reactionMessage: { key: message.key, text: "❤️" },
-      });
-      console.log(chalk.blue(`Fallback reaction sent to status ${message.key.id}`));
-    } catch (fallbackError) {
-      console.error(chalk.red(`Fallback reaction failed for status ${message.key.id}:`, fallbackError));
+      const settings = await getSettings();
+
+      if (!settings || Object.keys(settings).length === 0) {
+        return await zk.sendMessage(
+          m.chat,
+          { text: "⚠️ No settings found in database." },
+          { quoted: m }
+        );
+      }
+
+      const value = args.join(" ").toLowerCase();
+
+      if (value === "on" || value === "off") {
+        const isOn = value === "on";
+        if (settings.autolike === isOn) {
+          return await zk.sendMessage(
+            m.chat,
+            { text: `Autolike is already ${value.toUpperCase()}.` },
+            { quoted: m }
+          );
+        }
+
+        await updateSetting("autolike", isOn);
+        return await zk.sendMessage(
+          m.chat,
+          { text: `✅ Autolike has been turned ${value.toUpperCase()}.` },
+          { quoted: m }
+        );
+      }
+
+      // If no args provided
+      return await zk.sendMessage(
+        m.chat,
+        {
+          text: `Current status: Autolike is ${settings.autolike ? "ON 🟢" : "OFF 🔴"}.\n\nUse:\n- autolike on\n- autolike off`,
+        },
+        { quoted: m }
+      );
+    } catch (err) {
+      console.error(err);
+      return await zk.sendMessage(
+        m.chat,
+        { text: "❌ Error: Could not toggle Autolike." },
+        { quoted: m }
+      );
     }
   }
-}
-
-module.exports = autolike;
+);
