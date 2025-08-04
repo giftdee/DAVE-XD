@@ -53,7 +53,8 @@ ${message || 'Bot is running smoothly ✅'}
           if (fs.existsSync(audioPath)) {
             await zk.sendMessage(dest, {
               audio: { url: audioPath },
-              mimetype: 'audio/mp4',
+              audio: { url: audioPath },
+              mimetype: "audio/mpeg",
               ptt: true
             }, { quoted: ms });
           }
