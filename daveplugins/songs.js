@@ -1,48 +1,91 @@
 const { zokou } = require('../framework/zokou');
-const yts = require('yt-search');
 const axios = require('axios');
+const ytSearch = require('yt-search');
 
+// Define the command with aliases
 zokou({
-  nomCom: 'song',
-  categorie: 'join',
-  reaction: '🎧'
-}, async (msg, sock, { ms, repondre, arg }) => {
+  nomCom: "song",
+  aliases: ["musicdoc", "ytmp3doc", "audiodoc", "mp3doc"],
+  categorie: "Music",
+  reaction: "🎙️"
+}, async (dest, zk, commandOptions) => {
+  const { arg, ms, repondre } = commandOptions;
 
-  if (!arg[0]) return repondre('𝗣𝗹𝗲𝗮𝘀𝗲 insert a song name.');
+  // Check if a query is provided
+  if (!arg[0]) {
+    return repondre("Please provide a audio document name.");
+  }
+
+  const query = arg.join(" ");
 
   try {
-    const songName = arg.join(' ');
-    repondre('𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 searching for the song 🎵');
+    // Perform a YouTube search based on the query
+    const searchResults = await ytSearch(query);
 
-    const searchResults = await yts(songName);
-    const videos = searchResults.videos;
-
-    if (videos.length === 0)
-      return repondre('𝗡𝗼 audio found. Try a different song! 😕');
-
-    const video = videos[0];
-    const url = video.url;
-
-    const apiUrl = `https://api.giftedtech.web.id/api/download/dlmp3?apikey=gifted&url=${encodeURIComponent(url)}`;
-    const response = await axios.get(apiUrl);
-    const data = response.data;
-
-    if (data.status === 200 && data.success) {
-      const audioUrl = data.result.download_url;
-
-      await sock.sendMessage(msg, {
-        audio: { url: audioUrl },
-        mimetype: 'audio/mp4'
-      }, { quoted: ms });
-
-      await sock.sendMessage(msg, {
-        text: '𝗝𝗼𝗶𝗻 for updates https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k'
-      }, { quoted: ms });
-    } else {
-      repondre('𝗙𝗮𝗶𝗹𝗲𝗱 to download audio. Try again later. 😓');
+    // Check if any videos were found
+    if (!searchResults || !searchResults.videos.length) {
+      return repondre('No audio document found for the specified query.');
     }
-  } catch (err) {
-    console.error('Error:', err);
-    repondre('𝗔𝗻 error occurred while processing your request. 😵');
+
+    const firstVideo = searchResults.videos[0];
+    const videoUrl = firstVideo.url;
+
+    // Function to get download data from APIs
+    const getDownloadData = async (url) => {
+      try {
+        const response = await axios.get(url);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching data from API:', error);
+        return { success: false };
+      }
+    };
+
+    // List of APIs to try
+    const apis = [
+      `https://api-rin-tohsaka.vercel.app/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
+      `https://api.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+      `https://www.dark-yasiya-api.site/download/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+      `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(videoUrl)}&apikey=gifted-md`,
+      `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(videoUrl)}`
+    ];
+
+    let downloadData;
+    for (const api of apis) {
+      downloadData = await getDownloadData(api);
+      if (downloadData && downloadData.success) break;
+    }
+
+    // Check if a valid download URL was found
+    if (!downloadData || !downloadData.success) {
+      return repondre('Failed to retrieve download URL from all sources. Please try again later.');
+    }
+
+    const downloadUrl = downloadData.result.download_url;
+    const videoDetails = downloadData.result;
+
+    // Prepare the message payload with external ad details
+    const messagePayload = {
+      document: { url: downloadUrl },
+      mimetype: 'audio/mp4',
+      contextInfo: {
+        externalAdReply: {
+          title: videoDetails.title,
+          body: videoDetails.title,
+          mediaType: 1,
+          sourceUrl: 'https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k',
+          thumbnailUrl: firstVideo.thumbnail,
+          renderLargerThumbnail: false,
+          showAdAttribution: true,
+        },
+      },
+    };
+
+    // Send the download link to the user
+    await zk.sendMessage(dest, messagePayload, { quoted: ms });
+
+  } catch (error) {
+    console.error('Error during download process:', error);
+    return repondre(`Download failed due to an error: ${error.message || error}`);
   }
 });
