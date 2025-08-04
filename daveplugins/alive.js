@@ -2,60 +2,85 @@ const { zokou } = require('../framework/zokou');
 const { addOrUpdateDataInAlive, getDataFromAlive } = require('../bdd/alive');
 const moment = require("moment-timezone");
 const s = require(__dirname + "/../set");
+const fs = require("fs");
+const path = require("path");
 
 zokou(
-    {
-        nomCom: 'alive',
-        categorie: 'General',
-        reaction: "⚡"
-    },
-    async (dest, zk, { ms, arg, repondre, superUser }) => {
-        const data = await getDataFromAlive();
-        const time = moment().tz('Etc/GMT').format('HH:mm:ss');
-        const date = moment().format('DD/MM/YYYY');
-        const mode = (s.MODE.toLowerCase() === "yes") ? "public" : "private";
+  {
+    nomCom: 'alive',
+    categorie: 'General'
+  },
+  async (dest, zk, commandeOptions) => {
+    const { ms, arg, repondre, superUser } = commandeOptions;
+    const data = await getDataFromAlive();
 
-        if (!arg || !arg[0]) {
-            let aliveMsg;
+    // 🌍 Set default timezone
+    moment.tz.setDefault('Etc/GMT');
+    const timeNow = moment().format('HH:mm:ss');
+    const dateNow = moment().format('DD/MM/YYYY');
+    const mode = s.MODE.toLowerCase() === 'yes' ? 'public' : 'private';
 
-            if (data) {
-                const { message, lien } = data;
-                aliveMsg = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ *🔥 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐢𝐬 𝐀𝐋𝐈𝐕𝐄, bois!* 🔥\n│❒ *👑 𝐎𝐰𝐧𝐞𝐫*: ${s.OWNER_NAME}\n│❒ *🌐 𝐌𝐨𝐝𝐞*: ${mode}\n│❒ *📅 𝐃𝐚𝐭𝐞*: ${date}\n│❒ *⏰ 𝐓𝐢𝐦𝐞 (GMT)*: ${time}\n│❒ *😏 𝐌𝐞𝐬𝐬𝐚𝐠𝐞*: ${message}\n│❒ *🤖 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 Gifted_Dave*\n◈━━━━━━━━━━━━━━━━◈`;
-                try {
-                    if (lien) {
-                        if (lien.match(/\.(mp4|gif)$/i)) {
-                            await zk.sendMessage(dest, { 
-                                video: { url: lien }, 
-                                caption: aliveMsg 
-                            }, { quoted: ms });
-                        } else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-                            await zk.sendMessage(dest, { 
-                                image: { url: lien }, 
-                                caption: aliveMsg 
-                            }, { quoted: ms });
-                        } else {
-                            repondre(aliveMsg);
-                        }
-                    } else {
-                        repondre(aliveMsg);
-                    }
-                } catch (e) {
-                    console.error("Error:", e);
-                    repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ waah! 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 failed to show off: ${e.message} 😡 Try again! 😣\n◈━━━━━━━━━━━━━━━━◈`);
-                }
-            } else {
-                aliveMsg = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ *🔥 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐢𝐬 𝐀𝐋𝐈𝐕𝐄, bois!* 🔥\n│❒ *👑 𝐎𝐰𝐧𝐞𝐫*: ${s.OWNER_NAME}\n│❒ *🌐 𝐌𝐨𝐝𝐞*: ${mode}\n│❒ *📅 𝐃𝐚𝐭𝐞*: ${date}\n│❒ *⏰ 𝐓𝐢𝐦𝐞 (GMT)*: ${time}\n│❒ *😏 𝐌𝐞𝐬𝐬𝐚𝐠𝐞*: bois, Ni 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃, ready to rock! Set a custom vibe with *alive [message];[link]*! 😎\n│❒ *🤖 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 Gifted_dave*\n◈━━━━━━━━━━━━━━━━◈`;
-                repondre(aliveMsg);
-            }
-        } else {
-            if (!superUser) { 
-                repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ 🛑 bois, only Gifted_dave can mess with 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃’s vibe! 😡\n◈━━━━━━━━━━━━━━━━◈`); 
-                return;
-            }
+    if (!arg || !arg[0] || arg.join('') === '') {
+      if (data) {
+        const { message, lien } = data;
 
-            const [texte, tlien] = arg.join(' ').split(';');
-            await addOrUpdateDataInAlive(texte, tlien);
-            repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ✅ 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃’s alive message updated! You’re killing it! 🔥\n◈━━━━━━━━━━━━━━━━◈`);
+        const aliveText = `
+╭━━ ⪩ 𝗕𝗢𝗧 𝗦𝗧𝗔𝗧𝗨𝗦 ⪨ ━━╮
+┃ 🧑 Owner: ${s.OWNER_NAME}
+┃ 🤖 Bot: ${s.bot}
+┃ 🛠 Mode: ${mode}
+┃ 📅 Date: ${dateNow}
+┃ 🕒 Time: ${timeNow} GMT
+┃ 🌍 Location: Global
+╰━━━━━━━━━━━━━━━━━━╯
+
+${message || 'Bot is running smoothly ✅'}
+`;
+
+        try {
+          if (lien?.match(/\.(mp4|gif)$/i)) {
+            await zk.sendMessage(dest, { video: { url: lien }, caption: aliveText }, { quoted: ms });
+          } else if (lien?.match(/\.(jpeg|jpg|png)$/i)) {
+            await zk.sendMessage(dest, { image: { url: lien }, caption: aliveText }, { quoted: ms });
+          } else {
+            await repondre(aliveText);
+          }
+
+          // 🎵 Send random audio after the text/media
+          const randomNum = Math.floor(Math.random() * 9) + 1;
+          const audioPath = path.join(__dirname, '..', 'kn_dave', `menu${randomNum}.mp3`);
+
+          if (fs.existsSync(audioPath)) {
+            await zk.sendMessage(dest, {
+              audio: { url: audioPath },
+              mimetype: 'audio/mp4',
+              ptt: true
+            }, { quoted: ms });
+          }
+        } catch (err) {
+          console.error("❌ Error sending alive message:", err);
+          repondre("❌ Failed to send alive message. Check your media URL or file.");
         }
+      } else {
+        if (!superUser) {
+          return repondre("⚠️ No alive message saved. Only the owner can set it.");
+        }
+        repondre("ℹ️ Use `.alive message;lien` to save a custom alive message and image/video.");
+      }
+    } else {
+      if (!superUser) {
+        return repondre("❌ Only the owner can update the alive message.");
+      }
+
+      const inputText = arg.join(' ').split(';')[0];
+      const inputLink = arg.join(' ').split(';')[1];
+
+      if (!inputText || !inputLink) {
+        return repondre("⚠️ Invalid format. Use: `.alive your_message;media_url`");
+      }
+
+      await addOrUpdateDataInAlive(inputText, inputLink);
+      repondre("✅ Alive message saved successfully.");
     }
+  }
 );
