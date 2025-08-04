@@ -22,12 +22,12 @@ function runtime(seconds) {
 // New loading animation with different symbols and larger progress bar
 async function loading(dest, zk) {
   const lod = [
-    "⏳ ⎯⎯⎯⎯⎯ ꧁ 𝟐𝟎% ꧂ 🟦🟦⬜⬜⬜⬜⬜⬜",
-    "⏳ ⎯⎯⎯⎯⎯ ꧁ 𝟒𝟎% ꧂ 🟦🟦🟦🟦⬜⬜⬜⬜",
-    "⏳ ⎯⎯⎯⎯⎯ ꧁ 𝟔𝟎% ꧂ 🟩🟩🟦🟦🟦🟦⬜⬜",
-    "⏳ ⎯⎯⎯⎯⎯ ꧁ 𝟖𝟎% ꧂ 🟩🟩🟩🟩🟦🟦🟦🟦",
-    "✅ ⎯⎯⎯⎯⎯ ꧁ 𝟏𝟎𝟎% ꧂ 🟩🟩🟩🟩🟩🟩🟩🟩",
-    "*🔁 𝙇𝙊𝘼𝘿𝙄𝙉𝙂... 𝙏𝙃𝘼𝙉𝙆 𝙔𝙊𝙐 🧠*"
+    "⏳ ⎯⎯⎯⎯⎯ 20%  🟦🟦⬜⬜⬜⬜⬜⬜",
+    "⏳ ⎯⎯⎯⎯⎯ 40%  🟦🟦🟦🟦⬜⬜⬜⬜",
+    "⏳ ⎯⎯⎯⎯⎯ 60%  🟩🟩🟦🟦🟦🟦⬜⬜",
+    "⏳ ⎯⎯⎯⎯⎯ 80%  🟩🟩🟩🟩🟦🟦🟦🟦",
+    "✅ ⎯⎯⎯⎯⎯ 100% 🟩🟩🟩🟩🟩🟩🟩🟩",
+    "*🔁 LOADING... THANK YOU 😊*"
   ];
 
   let { key } = await zk.sendMessage(dest, { text: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is loading Wait' });
@@ -324,7 +324,7 @@ zokou(
     const pingResults = Array.from({ length: 3 }, () => Math.floor(Math.random() * 10000 + 1000));
 
     // Create larger font for ping results (using special characters for a bigger look)
-    const formattedResults = pingResults.map(ping => `${conf.OWNER_NAME} ʂ℘ɛɛɖ ${ping} 𝐌/𝐒  `);
+    const formattedResults = pingResults.map(ping => `${conf.OWNER_NAME} 𝙨𝙥𝙚𝙚𝙙 ${ping} 𝐌/𝐒  `);
 
     // Send the ping results with the updated text and format
     await zk.sendMessage(dest, {
