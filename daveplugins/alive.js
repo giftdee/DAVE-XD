@@ -1,4 +1,6 @@
+const util = require("util");
 const { zokou } = require('../framework/zokou');
+const { format } = require(__dirname + "/../framework/mesfonctions");
 const { addOrUpdateDataInAlive, getDataFromAlive } = require('../bdd/alive');
 const moment = require("moment-timezone");
 const s = require(__dirname + "/../set");
