@@ -9,81 +9,79 @@ const path = require("path");
 
 zokou(
   {
-    nomCom: 'alive',
-    categorie: 'General'
+    nomCom: "alive",
+    categorie: "General",
   },
   async (dest, zk, commandeOptions) => {
     const { ms, arg, repondre, superUser } = commandeOptions;
+
     const data = await getDataFromAlive();
 
-    // 🌍 Set default timezone
-    moment.tz.setDefault('Etc/GMT');
-    const timeNow = moment().format('HH:mm:ss');
-    const dateNow = moment().format('DD/MM/YYYY');
-    const mode = s.MODE.toLowerCase() === 'yes' ? 'public' : 'private';
-
-    if (!arg || !arg[0] || arg.join('') === '') {
+    if (!arg || !arg[0] || arg.join("") === "") {
       if (data) {
         const { message, lien } = data;
 
-        const aliveText = `
-╭━━ ⪩ 𝗕𝗢𝗧 𝗦𝗧𝗔𝗧𝗨𝗦 ⪨ ━━╮
-┃ 🧑 Owner: ${s.OWNER_NAME}
-┃ 🤖 Bot: ${s.bot}
-┃ 🛠 Mode: ${mode}
-┃ 📅 Date: ${dateNow}
-┃ 🕒 Time: ${timeNow} GMT
-┃ 🌍 Location: Global
-╰━━━━━━━━━━━━━━━━━━╯
+        const mode = (s.MODE || "").toLowerCase() === "yes" ? "public" : "private";
+        moment.tz.setDefault("Etc/GMT");
+        const temps = moment().format("HH:mm:ss");
+        const date = moment().format("DD/MM/YYYY");
 
-${message || 'Bot is running smoothly ✅'}
-`;
+        const alivemsg = `
+*Owner* : ${s.OWNER_NAME}
+*Mode* : ${mode}
+*Date* : ${date}
+*Hours (GMT)* : ${temps}
+*Bot* : ${s.bot}
+*Forks* : ${forks}
 
-        try {
-          if (lien?.match(/\.(mp4|gif)$/i)) {
-            await zk.sendMessage(dest, { video: { url: lien }, caption: aliveText }, { quoted: ms });
-          } else if (lien?.match(/\.(jpeg|jpg|png)$/i)) {
-            await zk.sendMessage(dest, { image: { url: lien }, caption: aliveText }, { quoted: ms });
-          } else {
-            await repondre(aliveText);
+${message}
+
+*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 2025*`;
+
+        // Send media if there's a link
+        if (lien?.match(/\.(mp4|gif)$/i)) {
+          try {
+            await zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
+          } catch (e) {
+            repondre("🥵 Menu error: " + e);
           }
-
-          // 🎵 Send random audio after the text/media
-          const randomNum = Math.floor(Math.random() * 9) + 1;
-          const audioPath = path.join(__dirname, '..', 'kn_dave', `menu${randomNum}.mp3`);
-
-          if (fs.existsSync(audioPath)) {
-            await zk.sendMessage(dest, {
-              audio: { url: audioPath },
-              audio: { url: audioPath },
-              mimetype: "audio/mpeg",
-              ptt: true
-            }, { quoted: ms });
+        } else if (lien?.match(/\.(jpeg|png|jpg)$/i)) {
+          try {
+            await zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+          } catch (e) {
+            repondre("🥵 Menu error: " + e);
           }
-        } catch (err) {
-          console.error("❌ Error sending alive message:", err);
-          repondre("❌ Failed to send alive message. Check your media URL or file.");
+        } else {
+          await repondre(alivemsg);
         }
+
+        // 🔊 Send random menu audio from kn_dave
+        const audioPath = path.join(__dirname, "../kn_dave");
+        const files = fs.readdirSync(audioPath).filter(f => /^menu\d\.mp3$/i.test(f));
+
+        if (files.length > 0) {
+          const randomAudio = files[Math.floor(Math.random() * files.length)];
+          const audioFilePath = path.join(audioPath, randomAudio);
+
+          await zk.sendMessage(dest, { audio: { url: audioFilePath }, mimetype: "audio/mpeg", ptt: true }, { quoted: ms });
+        }
+
       } else {
         if (!superUser) {
-          return repondre("⚠️ No alive message saved. Only the owner can set it.");
+          return repondre("🤖 Bot is alive and running 24/7! To customize this message, ask the owner.");
         }
-        repondre("ℹ️ Use `.alive message;lien` to save a custom alive message and image/video.");
+        return repondre("ℹ️ Use `.alive your message;text_or_video_link` to set a custom alive response.");
       }
     } else {
       if (!superUser) {
         return repondre("❌ Only the owner can update the alive message.");
       }
 
-      const inputText = arg.join(' ').split(';')[0];
-      const inputLink = arg.join(' ').split(';')[1];
+      const texte = arg.join(" ").split(";")[0];
+      const tlien = arg.join(" ").split(";")[1];
 
-      if (!inputText || !inputLink) {
-        return repondre("⚠️ Invalid format. Use: `.alive your_message;media_url`");
-      }
-
-      await addOrUpdateDataInAlive(inputText, inputLink);
-      repondre("✅ Alive message saved successfully.");
+      await addOrUpdateDataInAlive(texte, tlien);
+      repondre("✅ Alive message successfully updated!");
     }
   }
 );
