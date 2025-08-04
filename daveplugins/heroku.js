@@ -151,7 +151,7 @@ zokou({
 });
 
 
-ezra({
+zokou({
   nomCom: 'restart',
   aliases: ['reboot'],
   categorie: "system"
