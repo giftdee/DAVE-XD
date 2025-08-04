@@ -1,109 +1,60 @@
-import fetch from 'node-fetch';
-import FormData from 'form-data';
-import { fileTypeFromBuffer } from 'file-type';
-import { zokou } from "../framework/zokou.js";
+const { zokou } = require('../framework/zokou');
+const axios = require('axios');
+const conf = require(__dirname + '/../set');
+const { Catbox } = require("node-catbox");
+const fs = require('fs-extra');
+const { downloadAndSaveMediaMessage } = require('@whiskeysockets/baileys');
 
-const MAX_FILE_SIZE_MB = 200;
+zokou({
+  'nomCom': 'tourl',       // Command to trigger the function
+  'categorie': "download", // Command category
+  'reaction': '👨🏿‍💻'    // Reaction to use on command
+}, async (groupId, client, context) => {
+  const { msgRepondu, repondre } = context;
 
-async function uploadMedia(buffer) {
+  // If no message (image/video/audio) is mentioned, prompt user
+  if (!msgRepondu) {
+    return repondre("Please mention an image, video, or audio.");
+  }
+
+  let mediaPath;
+
+  // Check if the message contains a video
+  if (msgRepondu.videoMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
+  }
+ else if (msgRepondu.gifMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.gifMessage);
+  }
+ else if (msgRepondu.stickerMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.stickerMessage);
+  }
+else if (msgRepondu.documentMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.documentMessage);
+  }
+  // Check if the message contains an image
+  else if (msgRepondu.imageMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
+  }
+  // Check if the message contains an audio file
+  else if (msgRepondu.audioMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.audioMessage);
+  } else {
+    // If no media (image, video, or audio) is found, prompt user
+    return repondre("Please mention an image, video, or audio.");
+  }
+
   try {
-    const fileType = await fileTypeFromBuffer(buffer);
-    if (!fileType) {
-      throw new Error('Could not determine file type');
-    }
+    // Upload the media to Catbox and get the URL
+    const fileUrl = await uploadToCatbox(mediaPath);
 
-    const bodyForm = new FormData();
-    bodyForm.append("fileToUpload", buffer, `file.${fileType.ext}`);
-    bodyForm.append("reqtype", "fileupload");
+    // Delete the local media file after upload
+    fs.unlinkSync(mediaPath);
 
-    const res = await fetch("https://catbox.moe/user/api.php", {
-      method: "POST",
-      body: bodyForm,
-    });
-
-    if (!res.ok) {
-      throw new Error(`Upload failed with status ${res.status}`);
-    }
-
-    const data = await res.text();
-    if (!data.startsWith('http')) {
-      throw new Error('Invalid response from upload server');
-    }
-
-    return data;
+    // Respond with the URL of the uploaded file
+    repondre(fileUrl);
   } catch (error) {
-    console.error("Upload error:", error);
-    throw new Error(`Upload failed: ${error.message}`);
+    console.error("Error while creating your URL:", error);
+    repondre("Oops, there was an error.");
   }
-}
-
-zokou(
-  {
-    nomCom: "tourl",
-    categorie: "General",
-    reaction: "🔗",
-  },
-  async (dest, zk, commandeOptions) => {
-    const { ms, msgRepondu, repondre } = commandeOptions;
-
-    try {
-      // Validate message type
-      if (!msgRepondu) {
-        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Please reply to a media message (image/video/audio)\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      const validTypes = ['imageMessage', 'videoMessage', 'audioMessage'];
-      if (!validTypes.includes(msgRepondu.mtype)) {
-        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Unsupported media type! Only images, videos and audio\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Uploading your media, please wait... ⏳\n◈━━━━━━━━━━━━━━━━◈`);
-
-      // Download and validate media
-      const media = await zk.downloadMediaMessage(msgRepondu, 'buffer');
-      if (!media || media.length === 0) {
-        return repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Failed to download media. Please try again\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      // Check file size
-      const fileSizeMB = media.length / (1024 * 1024);
-      if (fileSizeMB > MAX_FILE_SIZE_MB) {
-        return repondre('𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ File too large! Max ${MAX_FILE_SIZE_MB}MB\n│❒ Your file: ${fileSizeMB.toFixed(2)}MB\n◈━━━━━━━━━━━━━━━━◈`);
-      }
-
-      // Upload and validate response
-      const mediaUrl = await uploadMedia(media);
-      if (!mediaUrl) {
-        throw new Error('No URL returned from upload service');
-      }
-
-      // Determine media type for response
-      const mediaType = getMediaType(msgRepondu.mtype);
-      const successMessage = {
-        text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${mediaType.toUpperCase()} URL 🔗\n│❒ ${mediaUrl}\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`
-      };
-
-      // For non-audio media, send as media message with caption
-      if (mediaType !== 'audio') {
-        successMessage[mediaType] = { url: mediaUrl };
-        successMessage.caption = successMessage.text;
-        delete successMessage.text;
-      }
-
-      await zk.sendMessage(dest, successMessage, { quoted: ms });
-
-    } catch (error) {
-      console.error('Command error:', error);
-      await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Error: ${error.message}\n◈━━━━━━━━━━━━━━━━◈`);
-    }
-  }
-);
-
-function getMediaType(mtype) {
-  const typeMap = {
-    imageMessage: 'image',
-    videoMessage: 'video',
-    audioMessage: 'audio'
-  };
-  return typeMap[mtype] || 'file';
-  }
+});
