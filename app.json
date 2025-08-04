@@ -2,7 +2,7 @@
   "name": "DAVE-XMD ✦ MULTI DEVICE BOT",
   "description": "DAVE-XMD is a WhatsApp Multi-Device Bot built with Node.js, Baileys, and advanced automation tools by GiftedSession Team.",
   "keywords": ["bot", "whatsapp", "nodejs", "baileys", "DAVE-XMD", "multi-device"],
-  "logo": "https://files.catbox.moe/nxzaly.jpg",
+  "logo": "https://files.catbox.moe/lidsgj.jpg",
   "repository": "https://github.com/giftdee/DAVE-XMD",
   "success_url": "/",
   "stack": "container",
@@ -12,129 +12,324 @@
     { "url": "https://github.com/duckyteam/heroku-buildpack-imagemagick.git" },
     { "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git" }
   ],
-  "env": {
-    "BOT_NAME": {
-      "description": "Your bot's name as it appears in alive message.",
-      "value": "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃"
-    },
+    "env": {
+
     "PREFIX": {
-      "description": "Choose command prefix like . or ! or #",
-      "value": "."
+
+      "description": "Choose your bot's prefix eg !,#,*,.",
+
+      "value": ".",
+
+      "required": true
+
     },
-    "OWNER_NAME": {
-      "description": "Your name",
-      "value": "Gifted Dave"
-    },
-    "NUMERO_OWNER": {
-      "description": "Your WhatsApp number without '+' (e.g. 254712345678)",
-      "value": "254104260236"
-    },
-    "SESSION_ID": {
-      "description": "Your Multi-Auth session ID (get from session generator)",
-      "value": ""
-    },
-    "URL": {
-      "description": "Bot profile image or video URL",
-      "value": "https://files.catbox.moe/nxzaly.jpg"
-    },
-    "PUBLIC_MODE": {
-      "description": "Set to yes to make bot public (anyone can use)",
-      "value": "yes"
-    },
-    "AUTO_REPLY": {
-      "description": "Enable auto reply to chat messages?",
-      "value": "no"
-    },
-    "AUDIO_REPLY": {
-      "description": "Reply with audio instead of text?",
-      "value": "no"
-    },
-    "AUTO_READ_MESSAGES": {
-      "description": "Automatically mark chats as read?",
-      "value": "no"
-    },
+
     "AUTO_READ_STATUS": {
-      "description": "Automatically mark contact statuses as viewed?",
-      "value": "yes"
+
+      "description": "Your contact status will be read automatically (type 'yes' to activate or 'no' to deactivate; don't write in capital letters)",
+
+      "value": "yes",
+
+      "required": false
+
     },
-    "AUTO_SAVE_CONTACTS": {
-      "description": "Save contacts automatically when messaged?",
-      "value": "no"
-    },
-    "AUTO_DOWNLOAD_STATUS": {
-      "description": "Auto download viewed status media?",
-      "value": "no"
-    },
-    "AUTO_REACT_STATUS": {
-      "description": "Auto react to statuses?",
-      "value": "no"
-    },
-    "AUTO_STATUS_REPLY": {
-      "description": "Auto reply to status updates?",
-      "value": "no"
-    },
-    "AUTO_STATUS_TEXT": {
-      "description": "Default auto-reply text for viewed statuses.",
-      "value": "👁‍🗨 Viewed by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃"
-    },
-    "ANTI_DELETE_MESSAGE": {
-      "description": "Enable anti-delete feature?",
-      "value": "yes"
-    },
-    "ANTI_CALL": {
-      "description": "Auto reject calls?",
-      "value": "yes"
-    },
-    "ANTI_CALL_TEXT": {
-      "description": "Reply message when rejecting a call.",
-      "value": "❌ Calls are not allowed. Please send a message."
-    },
-    "PM_PERMIT": {
-      "description": "Restrict private chat usage?",
-      "value": "yes"
-    },
-    "AUTO_BIO": {
-      "description": "Enable automatic bio updates?",
-      "value": "no"
-    },
-    "CHAT_BOT": {
-      "description": "Enable chatbot replies?",
-      "value": "no"
-    },
-    "AUTO_REACTION": {
-      "description": "React automatically to chat messages?",
-      "value": "no"
-    },
-    "WARN_COUNT": {
-      "description": "Maximum number of warnings before user is banned",
-      "value": "5"
-    },
-    "STARTING_BOT_MESSAGE": {
-      "description": "Show startup message when bot is ready?",
-      "value": "yes"
-    },
-    "PRESENCE": {
-      "description": "Bot presence (1=online, 2=typing, 3=recording)",
-      "value": "1"
-    },
-    "HEROKU_API_KEY": {
-      "description": "Heroku account API Key",
-      "value": ""
-    },
-    "HEROKU_APP_NAME": {
-      "description": "Heroku app name (e.g., dave-xmd-bot)",
-      "value": ""
-    }
-  },
-  "formation": {
-    "worker": {
-      "quantity": 1,
-      "size": "standard-2x"
-    }
-  },
-  "addons": [
+
+      "AUDIO_REPLY":
+
     {
-      "plan": "heroku-postgresql:essential-0"
+
+      "description":"Enter yes for your bot to auto reply audio in all chats",
+
+      "value":"no",
+
+      "required":false
+
+    },
+
+    "AUTO_REPLY": {
+
+      "description": "when enabled it automatically sends  auto reply message to members in your chattings",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "AUTO_REACT_STATUS": {
+
+      "description": "Your contact status will be react automatically (type 'yes' to activate or 'no' to deactivate; don't write in capital letters)",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "AUTO_BIO": {
+
+      "description": "This automatically update your bio status.Always make sure you insert your OWNER_NAME since it uses that to update your bio name status",
+
+      "value": "yes",
+
+      "required": false
+
+    },
+
+      "AUTO_SAVE_CONTACTS":
+
+    {
+
+      "description":"Enter yes for your bot to auto save contacts",
+
+      "value":"no",
+
+      "required":false
+
+    },
+
+    "AUTO_DOWNLOAD_STATUS": {
+
+      "description": "Your contact status will be downloaded automatically and sent to you (type 'yes' to activate or 'no' to deactivate; don't write in capital letters)",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "PM_PERMIT": {
+
+      "description": "Restrict other users from using your bot in private messages (type 'yes' to activate or 'no' to deactivate; don't write in capital letters)",
+
+      "value": "yes",
+
+      "required": false
+
+    },
+
+    "AUTO_STATUS_TEXT": {
+
+      "description": "type your genuine status message",
+
+      "value": "Your status have been viewed by DAVE-XMD.",
+
+      "required": false
+
+    },
+
+    "AUTO_STATUS_REPLY": {
+
+      "description": "type your genuine status message",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "ANTI_CALL_TEXT": {
+
+      "description": "Type your anticall message to always send when calls are declined.You can as well leave it blank",
+
+      "value": "cant pick calls know owner busy",
+
+      "required": false
+
+    },
+
+    "BOT_NAME": {
+
+      "description": "you must name your bot here",
+
+      "value": "DAVE-XMD",
+
+      "required": false 
+
+    },
+
+    "PUBLIC_MODE": {
+
+      "description": "Set 'yes' to make your bot public or 'no' to keep it private",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "HEROKU_API_KEY": {
+
+      "description": "Insert your Heroku API key (required)",
+
+      "value": "",
+
+      "required": true
+
+    },
+
+    "HEROKU_APP_NAME": {
+
+      "description": "Insert your Heroku app name (required)",
+
+      "value": "",
+
+      "required": true
+
+    },
+
+    "SESSION_ID": {
+
+      "description": "Enter your session ID, the code you receive after scanning the QR code",
+
+      "value": "",
+
+      "required": true
+
+    },
+
+    "OWNER_NAME": {
+
+      "description": "don't you have a name bro.Insert your name here!!",
+
+      "value": "DAVE-XMD ⚡",
+
+      "required": false
+
+    },
+
+    "URL": {
+
+      "description": "you must add your bot image url.Get your image url now and fill it here",
+
+      "value": "https://files.catbox.moe/lidsgj.jpg",
+
+      "required": true
+
+    },
+
+    "AUTO_READ_MESSAGES": {
+
+      "description": "yes toactivate no to deactivate",
+
+      "value": "no",
+
+      "required": false  
+
+    },
+
+    "NUMERO_OWNER": {
+
+      "description": "Your phone number (exclude '+' and area code, e.g., '254739385768')",
+
+      "value": "254104260236",
+
+      "required": false
+
+    },
+
+    "WARN_COUNT": {
+
+      "description": "Set the warning limit for warning commands",
+
+      "value": "5",
+
+      "required": false
+
+    },
+
+    "STARTING_BOT_MESSAGE": {
+
+      "description": "Set 'yes' to display a starting bot message or 'no' to disable it",
+
+      "value": "no",
+
+      "required": true
+
+    },
+
+    "PRESENCE": {
+
+      "description": "Mark your presence: 1 for online, 2 for typing, 3 for recording, or leave blank for real state",
+
+      "value": "1",
+
+      "required": false
+
+    },
+
+    "ANTI_DELETE_MESSAGE": {
+
+      "description": "Enable anti-delete message (set 'yes' to activate or 'no' to deactivate)",
+
+      "value": "yes",
+
+      "required": false
+
+    },
+
+    "ANTI_CALL": {
+
+      "description": "Automatically decline incoming calls (set 'on' to activate or 'off' to deactivate)",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "AUTO_BLOCK": {
+
+      "description": "Type true if you want bot to automatically  block those who spam your dm ",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "CHAT_BOT": {
+
+      "description": " If you want bot to chat an answer messages in dem's put 'yes' to activate and 'no' to deactivate.",
+
+      "value": "no",
+
+      "required": false
+
+    },
+
+    "AUTO_REACTION": {
+
+      "description": "Set 'yes' to enable bot reactions to messages in private chats",
+
+      "value": "no",
+
+      "required": false
+
     }
+
+  },
+
+  "formation": {
+
+    "worker": {
+
+      "quantity": 1,
+
+      "size": "standard-2x"
+
+    }
+
+  },
+
+  "addons": [
+
+    {
+
+      "plan": "heroku-postgresql:essential-0"
+
+    }
+
   ]
-  }
+
+}
