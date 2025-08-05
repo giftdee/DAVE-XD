@@ -15,7 +15,7 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
   forwardingScore: 999,
   isForwarded: true,
   forwardedNewsletterMessageInfo: {
-    newsletterJid: "120363400480173280@newsletter',
+    newsletterJid: "120363400480173280@newsletter",
     newsletterName: "DAVE-XMD updates",
     serverMessageId: Math.floor(100000 + Math.random() * 900000),
   },
@@ -192,7 +192,7 @@ zokou({
 
 // URL upload command
 zokou({
-  nomCom: 'url-link',
+  nomCom: 'url',
   categorie: "Dave-Download",
   reaction: '👨🏿‍💻'
 }, async (dest, zk, commandOptions) => {
