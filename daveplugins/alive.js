@@ -1,96 +1,154 @@
 const { zokou } = require('../framework/zokou');
-const { addOrUpdateDataInAlive, getDataFromAlive } = require('../bdd/alive');
-const moment = require("moment-timezone");
-const s = require(__dirname + "/../set");
+const axios = require('axios');
+const ytSearch = require('yt-search');
+const conf = require(__dirname + '/../set');
+const { repondre } = require(__dirname + "/../framework/context");
 
-zokou(
-    {
-        nomCom : 'alive',
-        categorie : 'General'
+// ContextInfo configuration
+const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', sourceUrl = '') => ({
+  mentionedJid: [userJid],
+  forwardingScore: 999,
+  isForwarded: true,
+  forwardedNewsletterMessageInfo: {
+    newsletterJid: '120363400480173280@newsletter',
+    newsletterName: 'DAVE-TECH updates',
+    serverMessageId: Math.floor(100000 + Math.random() * 900000),
+  },
+  externalAdReply: {
+    showAdAttribution: true,
+    title: conf.BOT || 'Music Downloader',
+    body: title || "Media Downloader",
+    thumbnailUrl: thumbnailUrl || conf.URL || '',
+    sourceUrl: sourceUrl || '',
+    mediaType: 1,
+    renderLargerThumbnail: false
+  }
+});
 
-    },async (dest,zk,commandeOptions) => {
+// Search Functions
+const searchSpotify = async (query) => {
+  try {
+    const response = await axios.get(`https://apis-keith.vercel.app/search/spotify?q=${encodeURIComponent(query)}`);
+    return response.data?.status && response.data.result?.length ? { platform: 'spotify', ...response.data.result[0] } : null;
+  } catch {
+    return null;
+  }
+};
 
- const {ms , arg, repondre,superUser} = commandeOptions;
+const searchSoundCloud = async (query) => {
+  try {
+    const response = await axios.get(`https://apis-keith.vercel.app/search/soundcloud?q=${encodeURIComponent(query)}`);
+    const tracks = response.data?.result?.result?.filter(track => track.timestamp) || [];
+    return tracks.length ? { platform: 'soundcloud', ...tracks[0] } : null;
+  } catch {
+    return null;
+  }
+};
 
- const data = await getDataFromAlive();
+const searchYouTube = async (query) => {
+  try {
+    const { videos } = await ytSearch(query);
+    return videos?.length ? { platform: 'youtube', title: videos[0].title, url: videos[0].url, thumbnail: videos[0].thumbnail } : null;
+  } catch {
+    return null;
+  }
+};
 
- if (!arg || !arg[0] || arg.join('') === '') {
+// Download Functions
+const downloadSpotify = async (url) => {
+  try {
+    const response = await axios.get(`https://api.siputzx.my.id/api/d/spotify?url=${encodeURIComponent(url)}`);
+    return response.data?.status && response.data.data?.download
+      ? { downloadUrl: response.data.data.download, format: 'mp3', artist: response.data.data.artis, thumbnail: response.data.data.image }
+      : null;
+  } catch {
+    return null;
+  }
+};
 
-    if(data) {
+const downloadSoundCloud = async (url) => {
+  try {
+    const response = await axios.get(`https://apis-keith.vercel.app/download/soundcloud?url=${encodeURIComponent(url)}`);
+    return response.data?.status && response.data.result?.track?.downloadUrl
+      ? { downloadUrl: response.data.result.track.downloadUrl, format: 'mp3' }
+      : null;
+  } catch {
+    return null;
+  }
+};
 
-        const {message , lien} = data;
+const downloadYouTube = async (url) => {
+  try {
+    const response = await axios.get(`https://apis-keith.vercel.app/download/dlmp3?url=${encodeURIComponent(url)}`);
+    return response.data?.status && response.data.result?.downloadUrl
+      ? { downloadUrl: response.data.result.downloadUrl, format: 'mp3' }
+      : null;
+  } catch {
+    return null;
+  }
+};
 
+//Main Command
+zokou({
+  nomCom: "play2",
+  aliases: ["song2", "playdoc", "audio", "mp3"],
+  categorie: "Download",
+  reaction: "📥"
+}, async (dest, zk, commandOptions) => {
+  const { arg, ms, userJid } = commandOptions;
 
-        var mode = "public";
-        if ((s.MODE).toLocaleLowerCase() != "yes") {
-            mode = "private";
-        }
+  if (!arg[0]) return repondre(zk, dest, ms, "Please provide a song name or URL.");
 
+  const query = arg.join(" ");
+  let track, downloadData;
 
+  // Determine platform priority (YouTube → SoundCloud → Spotify)
+  const platforms = [];
+  if (query.includes('youtube.com') || query.includes('youtu.be')) platforms.push('youtube');
+  if (query.includes('soundcloud.com')) platforms.push('soundcloud');
+  if (query.includes('spotify.com')) platforms.push('spotify');
 
-    moment.tz.setDefault('Etc/GMT');
+  if (platforms.length === 0) platforms.push('youtube', 'soundcloud', 'spotify');
 
-// Créer une date et une heure en GMT
-const temps = moment().format('HH:mm:ss');
-const date = moment().format('DD/MM/YYYY');
-
-    const alivemsg = `
-*Owner* : ${s.OWNER_NAME}
-*Mode* : ${mode}
-*Date* : ${date}
-*Hours(GMT)* : ${temps}
-*Bot* : ${s.bot} 
-*Forks* : ${forks} 
-
- ${message}
- 
- 
- *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*`
-
- if (lien.match(/\.(mp4|gif)$/i)) {
+  for (const platform of platforms) {
     try {
-        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
+      const searchFn = { 'youtube': searchYouTube, 'soundcloud': searchSoundCloud, 'spotify': searchSpotify }[platform];
+      track = await searchFn(query);
+      if (!track) continue;
+
+      const downloadFn = { 'youtube': downloadYouTube, 'soundcloud': downloadSoundCloud, 'spotify': downloadSpotify }[platform];
+      downloadData = await downloadFn(track.url);
+      if (downloadData) break;
+    } catch (error) {
+      console.error(`${platform} error:`, error);
+      continue;
     }
-    catch (e) {
-        console.log("🥵🥵 Menu erreur " + e);
-        repondre("🥵🥵 Menu erreur " + e);
-    }
-} 
-// Checking for .jpeg or .png
-else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-    try {
-        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
-    }
-    catch (e) {
-        console.log("🥵🥵 Menu erreur " + e);
-        repondre("🥵🥵 Menu erreur " + e);
-    }
-} 
-else {
+  }
 
-    repondre(alivemsg);
+  if (!track || !downloadData) {
+    return repondre(zk, dest, ms, "❌ Failed to find or download the track from all platforms.");
+  }
 
-}
+  const artist = downloadData.artist || track.artist || 'Unknown Artist';
+  const thumbnail = downloadData.thumbnail || track.thumbnail || track.thumb || '';
+  const fileName = `${track.title} - ${artist}.${downloadData.format}`.replace(/[^\w\s.-]/gi, '');
 
-    } else {
-        if(!superUser) { repondre("𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is alive") ; return};
+  try {
+    await zk.sendMessage(dest, {
+      audio: { url: downloadData.downloadUrl },
+      mimetype: `audio/mp4`,
+      contextInfo: getContextInfo(track.title, userJid, thumbnail, track.url)
+    }, { quoted: ms });
 
-      await   repondre("You have not yet saved your alive, to do this;  enter after alive your message and your image or video link in this context: .alive message;lien");
-         repondre("don't make 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 do extra work :)")
-     }
- } else {
-
-    if(!superUser) { repondre ("command reserved for 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner") ; return};
-
-
-    const texte = arg.join(' ').split(';')[0];
-    const tlien = arg.join(' ').split(';')[1]; 
-
-
-
-await addOrUpdateDataInAlive(texte , tlien)
-
-repondre('𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is alive')
-
-}
-    });
+    await zk.sendMessage(dest, {
+      document: { url: downloadData.downloadUrl },
+      mimetype: `audio/${downloadData.format}`,
+      fileName: fileName,
+      caption: `📁 *${track.title}* by ${artist} (Document)`,
+      contextInfo: getContextInfo(track.title, userJid, thumbnail, track.url)
+    }, { quoted: ms });
+  } catch (error) {
+    console.error('Message sending error:', error);
+    repondre(zk, dest, ms, "⚠️ Track downloaded but failed to send. Please try again.");
+  }
+});
