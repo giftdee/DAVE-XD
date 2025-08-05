@@ -1,99 +1,50 @@
-const { zokou } = require('../framework/zokou');
+const { zokou } = require("../framework/zokou");
 const axios = require('axios');
 const ytSearch = require('yt-search');
 const conf = require(__dirname + '/../set');
 const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
-const { repondre } = require(__dirname + "/../fredi/context");
+const { repondre } = require(__dirname + "/../framework/context");
 
-// Initialize Catbox
-const catbox = new Catbox();
-
-// Common contextInfo configuration
-const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
-  mentionedJid: [userJid],
-  forwardingScore: 999,
-  isForwarded: true,
-  forwardedNewsletterMessageInfo: {
-    newsletterJid: '120363400480173280@newsletter',
-    newsletterName: 'DAVE-XMD updates',
-    serverMessageId: Math.floor(100000 + Math.random() * 900000),
-  },
-  externalAdReply: {
-    showAdAttribution: true,
-    title: conf.BOT || 'YouTube Downloader',
-    body: title || "Media Downloader",
-    thumbnailUrl: thumbnailUrl || conf.URL || '',
-    sourceUrl: conf.GURL || '',
-    mediaType: 1,
-    renderLargerThumbnail: false
-  }
-});
-
-// Function to upload a file to Catbox and return the URL
-async function uploadToCatbox(filePath) {
-  try {
-    if (!fs.existsSync(filePath)) {
-      throw new Error("File does not exist");
-    }
-    const uploadResult = await catbox.uploadFile({ path: filePath });
-    return uploadResult || null;
-  } catch (error) {
-    console.error('Catbox upload error:', error);
-    throw new Error(`Failed to upload file: ${error.message}`);
-  }
-}
-
-// Common function for YouTube search
-async function searchYouTube(query) {
-  try {
-    const searchResults = await ytSearch(query);
-    if (!searchResults?.videos?.length) {
-      throw new Error('No video found for the specified query.');
-    }
-    return searchResults.videos[0];
-  } catch (error) {
-    console.error('YouTube search error:', error);
-    throw new Error(`YouTube search failed: ${error.message}`);
-  }
-}
-
-// Common function for downloading media from APIs
 async function downloadFromApis(apis) {
   for (const api of apis) {
     try {
       const response = await axios.get(api, { timeout: 15000 });
-      if (response.data?.success) {
-        return response.data;
+      console.log(`Response from ${api}:\n`, JSON.stringify(response.data, null, 2));
+
+      const result = response.data;
+      const isSuccess = result?.success || result?.status || result?.result?.download_url || result?.result?.url;
+
+      if (isSuccess && result.result) {
+        return result;
       }
     } catch (error) {
       console.warn(`API ${api} failed:`, error.message);
-      continue;
     }
   }
   throw new Error('Failed to retrieve download URL from all sources.');
 }
 
-// Audio download command
-zokou({
-  nomCom: "play2",
-  aliases: ["song", "playdoc", "audio", "mp3"],
-  categorie: "Download",
-  reaction: "📥"
-}, async (dest, zk, commandOptions) => {
-  const { arg, ms, userJid } = commandOptions;
-
-  try {
-    if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a song name.");
-    }
+// .play2 or .song command
+zokou(
+  {
+    nomCom: "play",
+    categorie: "Downloader",
+    reaction: "📥",
+  },
+  async (dest, zk, commandeOptions) => {
+    const { repondre, ms, arg, verifDroitAdmin, nomAuteurMessage, userJid } = commandeOptions;
 
     const query = arg.join(" ");
-    const video = await searchYouTube(query);
+    if (!query) return repondre("❌ Please provide the name of the song.");
 
+    const video = await searchYouTube(query);
+    if (!video) return repondre("❌ Song not found.");
+
+    const thumbnail = video.thumbnail || conf.URL || "";
     await zk.sendMessage(dest, {
       text: "⬇️ Downloading audio... This may take a moment...",
-      contextInfo: getContextInfo("Downloading", userJid, video.thumbnail)
+      contextInfo: getContextInfo("Downloading", userJid, thumbnail)
     }, { quoted: ms });
 
     const apis = [
@@ -103,55 +54,44 @@ zokou({
       `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
     ];
 
-    const downloadData = await downloadFromApis(apis);
-    const { download_url, title } = downloadData.result;
+    try {
+      const downloadData = await downloadFromApis(apis);
+      const download_url = downloadData.result.download_url || downloadData.result.url;
+      const title = downloadData.result.title || video.title || "Audio";
 
-    const messagePayloads = [
-      {
+      await zk.sendMessage(dest, {
         audio: { url: download_url },
-        mimetype: 'audio/mp4',
-        caption: `🎵 *${title}*`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      },
-      {
-        document: { url: download_url },
-        mimetype: 'audio/mpeg',
-        fileName: `${title}.mp3`.replace(/[^\w\s.-]/gi, ''),
-        caption: `📁 *${title}* (Document)`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      }
-    ];
+        mimetype: "audio/mpeg",
+        ptt: false,
+        contextInfo: getContextInfo(title, userJid, thumbnail)
+      }, { quoted: ms });
 
-    for (const payload of messagePayloads) {
-      await zk.sendMessage(dest, payload, { quoted: ms });
+    } catch (e) {
+      repondre("❌ Failed to download audio. Try again later.");
     }
-
-  } catch (error) {
-    console.error('Audio download error:', error);
-    repondre(zk, dest, ms, `Download failed: ${error.message}`);
   }
-});
+);
 
-// Video download command
-zokou({
-  nomCom: "video",
-  aliases: ["videodoc", "film", "mp4"],
-  categorie: "Download",
-  reaction: "📥"
-}, async (dest, zk, commandOptions) => {
-  const { arg, ms, userJid } = commandOptions;
-
-  try {
-    if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a video name.");
-    }
+// .video command
+zokou(
+  {
+    nomCom: "video",
+    categorie: "Download",
+    reaction: "📥",
+  },
+  async (dest, zk, commandeOptions) => {
+    const { repondre, ms, arg, verifDroitAdmin, nomAuteurMessage, userJid } = commandeOptions;
 
     const query = arg.join(" ");
-    const video = await searchYouTube(query);
+    if (!query) return repondre("❌ Please provide the name of the video.");
 
+    const video = await searchYouTube(query);
+    if (!video) return repondre("❌ Video not found.");
+
+    const thumbnail = video.thumbnail || conf.URL || "";
     await zk.sendMessage(dest, {
-      text: "⬇️ Downloading video... This may take a moment...",
-      contextInfo: getContextInfo("Downloading", userJid, video.thumbnail)
+      text: "⬇️ Downloading video... Please wait...",
+      contextInfo: getContextInfo("Downloading", userJid, thumbnail)
     }, { quoted: ms });
 
     const apis = [
@@ -161,69 +101,20 @@ zokou({
       `https://api.dreaded.site/api/ytdl/video?url=${encodeURIComponent(video.url)}`
     ];
 
-    const downloadData = await downloadFromApis(apis);
-    const { download_url, title } = downloadData.result;
+    try {
+      const downloadData = await downloadFromApis(apis);
+      const download_url = downloadData.result.download_url || downloadData.result.url;
+      const title = downloadData.result.title || video.title || "Video";
 
-    const messagePayloads = [
-      {
+      await zk.sendMessage(dest, {
         video: { url: download_url },
-        mimetype: 'video/mp4',
-        caption: `🎥 *${title}*`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      },
-      {
-        document: { url: download_url },
-        mimetype: 'video/mp4',
-        fileName: `${title}.mp4`.replace(/[^\w\s.-]/gi, ''),
-        caption: `📁 *${title}* (Document)`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      }
-    ];
+        mimetype: "video/mp4",
+        caption: title,
+        contextInfo: getContextInfo(title, userJid, thumbnail)
+      }, { quoted: ms });
 
-    for (const payload of messagePayloads) {
-      await zk.sendMessage(dest, payload, { quoted: ms });
+    } catch (e) {
+      repondre("❌ Failed to download video. Try again later.");
     }
-
-  } catch (error) {
-    console.error('Video download error:', error);
-    repondre(zk, dest, ms, `Download failed: ${error.message}`);
   }
-});
-
-// URL upload command
-zokou({
-  nomCom: 'url-link',
-  categorie: "Download",
-  reaction: '📤'
-}, async (dest, zk, commandOptions) => {
-  const { msgRepondu, userJid, ms } = commandOptions;
-
-  try {
-    if (!msgRepondu) {
-      return repondre(zk, dest, ms, "Please mention an image, video, or audio.");
-    }
-
-    const mediaTypes = [
-      'videoMessage', 'gifMessage', 'stickerMessage',
-      'documentMessage', 'imageMessage', 'audioMessage'
-    ];
-
-    const mediaType = mediaTypes.find(type => msgRepondu[type]);
-    if (!mediaType) {
-      return repondre(zk, dest, ms, "Unsupported media type.");
-    }
-
-    const mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu[mediaType]);
-    const fileUrl = await uploadToCatbox(mediaPath);
-    fs.unlinkSync(mediaPath);
-
-    await zk.sendMessage(dest, {
-      text: `✅ Here's your file URL:\n${fileUrl}`,
-      contextInfo: getContextInfo("Upload Complete", userJid)
-    });
-
-  } catch (error) {
-    console.error("Upload error:", error);
-    repondre(zk, dest, ms, `Upload failed: ${error.message}`);
-  }
-});
+);
