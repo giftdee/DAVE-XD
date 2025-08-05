@@ -1,4 +1,4 @@
-const { zokou } = require(__dirname + '/../framework/zokou'
+const { zokou } = require('../framework/zokou');
 const axios = require('axios');
 const ytSearch = require('yt-search');
 const conf = require(__dirname + '/../set');
@@ -6,7 +6,6 @@ const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
 const { repondre } = require(__dirname + "/../framework/context");
 
-// Initialize Catbox
 const catbox = new Catbox();
 
 // Common contextInfo configuration
@@ -30,12 +29,9 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
   }
 });
 
-// Function to upload a file to Catbox and return the URL
 async function uploadToCatbox(filePath) {
   try {
-    if (!fs.existsSync(filePath)) {
-      throw new Error("File does not exist");
-    }
+    if (!fs.existsSync(filePath)) throw new Error("File does not exist");
     const uploadResult = await catbox.uploadFile({ path: filePath });
     return uploadResult || null;
   } catch (error) {
@@ -44,7 +40,6 @@ async function uploadToCatbox(filePath) {
   }
 }
 
-// Common function for YouTube search
 async function searchYouTube(query) {
   try {
     const searchResults = await ytSearch(query);
@@ -58,12 +53,11 @@ async function searchYouTube(query) {
   }
 }
 
-// Common function for downloading media from APIs
 async function downloadFromApis(apis) {
   for (const api of apis) {
     try {
-      const response = await axios.get(api, { timeout: 15000 });
-      if (response.data?.success) {
+      const response = await axios.get(api, { timeout: 25000 });
+      if (response.data?.success && response.data?.result?.download_url) {
         return response.data;
       }
     } catch (error) {
@@ -74,19 +68,17 @@ async function downloadFromApis(apis) {
   throw new Error('Failed to retrieve download URL from all sources.');
 }
 
-// Audio download command
+// Audio Download
 zokou({
   nomCom: "play2",
   aliases: ["song", "playdoc", "audio", "mp3"],
-  categorie: "Fredi-Download",
+  categorie: "Framework-Download",
   reaction: "🎵"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, userJid } = commandOptions;
 
   try {
-    if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a song name.");
-    }
+    if (!arg[0]) return repondre(zk, dest, ms, "Please provide a song name.");
 
     const query = arg.join(" ");
     const video = await searchYouTube(query);
@@ -104,6 +96,8 @@ zokou({
     ];
 
     const downloadData = await downloadFromApis(apis);
+    if (!downloadData || !downloadData.result) throw new Error("Invalid response from the API.");
+
     const { download_url, title } = downloadData.result;
 
     const messagePayloads = [
@@ -128,29 +122,27 @@ zokou({
 
   } catch (error) {
     console.error('Audio download error:', error);
-    repondre(zk, dest, ms, `i hit a snag😩: ${error.message}`);
+    repondre(zk, dest, ms, `Download failed: ${error.message}`);
   }
 });
 
-// Video download command
+// Video Download
 zokou({
   nomCom: "video",
   aliases: ["videodoc", "film", "mp4"],
-  categorie: "Fredi-Download",
+  categorie: "Framework-Download",
   reaction: "🎥"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, userJid } = commandOptions;
 
   try {
-    if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a video name.");
-    }
+    if (!arg[0]) return repondre(zk, dest, ms, "Please provide a video name.");
 
     const query = arg.join(" ");
     const video = await searchYouTube(query);
 
     await zk.sendMessage(dest, {
-      text: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is Downloading video... hold tight...",
+      text: "⬇️ Downloading video... This may take a moment...",
       contextInfo: getContextInfo("Downloading", userJid, video.thumbnail)
     }, { quoted: ms });
 
@@ -162,6 +154,8 @@ zokou({
     ];
 
     const downloadData = await downloadFromApis(apis);
+    if (!downloadData || !downloadData.result) throw new Error("Invalid response from the API.");
+
     const { download_url, title } = downloadData.result;
 
     const messagePayloads = [
@@ -190,16 +184,16 @@ zokou({
   }
 });
 
-// URL upload command
+// Media Upload via URL
 zokou({
-  nomCom: 'url',
-  categorie: "Dave-Download",
+  nomCom: 'url-link',
+  categorie: "Framework-Download",
   reaction: '👨🏿‍💻'
 }, async (dest, zk, commandOptions) => {
   const { msgRepondu, userJid, ms } = commandOptions;
 
   try {
-    if (!msgRepondu) {
+    if (!msgRepondu || !msgRepondu.message) {
       return repondre(zk, dest, ms, "Please mention an image, video, or audio.");
     }
 
@@ -208,14 +202,14 @@ zokou({
       'documentMessage', 'imageMessage', 'audioMessage'
     ];
 
-    const mediaType = mediaTypes.find(type => msgRepondu[type]);
+    const mediaType = mediaTypes.find(type => msgRepondu.message?.[type]);
     if (!mediaType) {
       return repondre(zk, dest, ms, "Unsupported media type.");
     }
 
-    const mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu[mediaType]);
+    const mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.message[mediaType]);
     const fileUrl = await uploadToCatbox(mediaPath);
-    fs.unlinkSync(mediaPath);
+    await fs.unlink(mediaPath); // async delete
 
     await zk.sendMessage(dest, {
       text: `✅ Here's your file URL:\n${fileUrl}`,
