@@ -47,21 +47,6 @@ zokou({ nomCom: "facebook", categorie: "Download", reaction: "📽️" }, async 
   }
 });
 
-zokou({ nomCom: "tiktok", categorie: "Download", reaction: "🎵" }, async (dest, zk, commandeOptions) => {
-  const { arg, ms, prefixe, repondre } = commandeOptions;
-  if (!arg[0]) {
-    repondre(`𝐇𝐨𝐰 𝐭𝐨 𝐮𝐬𝐞:\n${prefixe}tiktok <video_link>`);
-    return;
-  }
-
-  const videoUrl = arg.join(" ");
-  let data = await axios.get('https://api.dreaded.site/api/tiktok?url=' + videoUrl);
-  let tik = data.data.data;
-
-  const caption = `𝐀𝐮𝐭𝐡𝐨𝐫: ${tik.author}\n𝐃𝐞𝐬𝐜: ${tik.desc}`;
-  zk.sendMessage(dest, { video: { url: tik.links[0].a }, caption: caption }, { quoted: ms });
-});
-
 zokou({ nomCom: "facebook2", categorie: "Download", reaction: "📽️" }, async (dest, zk, commandeOptions) => {
   const { repondre, ms, arg } = commandeOptions;
 
