@@ -6,7 +6,7 @@ const { default: axios } = require('axios');
 
 
 
-zokou({nomCom:"davlo",reaction:"🤷",categorie:"DAVE-IA"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"davlo",reaction:"✨",categorie:"AI"},async(dest,zk,commandeOptions)=>{
 
   const {repondre,ms,arg}=commandeOptions;
 
@@ -45,7 +45,7 @@ fetch(`http://api.brainshop.ai/get?bid=177607&key=NwzhALqeO1kubFVD&uid=[uid]&msg
 
 
 
-  zokou({ nomCom: "bing4", reaction: "🌀", categorie: "DAVE-IA" }, async (dest, zk, commandeOptions) => {
+  zokou({ nomCom: "bing4", reaction: "✨", categorie: "AI" }, async (dest, zk, commandeOptions) => {
     const { repondre, arg, ms } = commandeOptions;
 
     try {
@@ -73,7 +73,7 @@ fetch(`http://api.brainshop.ai/get?bid=177607&key=NwzhALqeO1kubFVD&uid=[uid]&msg
     }
   });
 
-  zokou({ nomCom: "ai2", reaction: "🌀", categorie: "DAVE-IA" }, async (dest, zk, commandeOptions) => {
+  zokou({ nomCom: "ai2", reaction: "✨", categorie: "AI" }, async (dest, zk, commandeOptions) => {
     const { repondre, arg, ms } = commandeOptions;
 
     try {
@@ -98,7 +98,7 @@ fetch(`http://api.brainshop.ai/get?bid=177607&key=NwzhALqeO1kubFVD&uid=[uid]&msg
   });
 
 
-zokou({ nomCom: "gpt-all", reaction: "🌀", categorie: "DAVE-IA" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "gpt-all", reaction: "✨", categorie: "AI" }, async (dest, zk, commandeOptions) => {
     const { repondre, arg, ms } = commandeOptions;
 
     try {
