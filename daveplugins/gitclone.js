@@ -8,7 +8,7 @@ zokou(
   {
     nomCom: "gitclone",
     aliases: ["zip", "clone"],
-    categorie: "Framework-Download"
+    categorie: "General"
   },
   async (dest, zk, context) => {
     const { ms, repondre, arg } = context;
