@@ -6,8 +6,8 @@ const Client = new Genius.Client("your-genius-api-key"); // Replace with actual 
 // ==================== BIBLE COMMAND ====================
 zokou({
   nomCom: "bible",
-  reaction: "📖",
-  categorie: "General"
+  reaction: "🤲",
+  categorie: "God"
 }, async (message, sender, args) => {
   const { repondre, arg, ms } = args;
   const searchQuery = arg.join(" ");
@@ -48,7 +48,7 @@ zokou({
     return repondre(`
 𝐈𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭 𝐟𝐨𝐫𝐦𝐚𝐭!
 𝐄𝐱𝐚𝐦𝐩𝐥𝐞: 
-.𝐩𝐨𝐥𝐥 𝐖𝐡𝐢𝐜𝐡 𝐢𝐬 𝐛𝐞𝐭𝐭𝐞𝐫?/𝐃𝐀𝐕𝐄-𝐗𝐌𝐃,𝐄𝐧𝐳𝐨,𝐙𝐨𝐤𝐨𝐮
+.𝐩𝐨𝐥𝐥 𝐖𝐡𝐢𝐜𝐡 𝐢𝐬 𝐛𝐞𝐭𝐭𝐞𝐫?/𝐃𝐀𝐕𝐄-𝐗𝐌𝐃,deno,dave
     `);
   }
 
