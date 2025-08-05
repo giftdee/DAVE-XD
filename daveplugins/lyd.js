@@ -5,7 +5,7 @@ const isIdeaCommandEnabled = true;
 
 zokou({
   nomCom: "lydea", // Command name
-  categorie: "IA", // Category: AI
+  categorie: "AI", // Category: AI
   reaction: "🧜",   // Emoji shown on trigger
   active: isIdeaCommandEnabled
 }, async (dest, zk, commandeOptions) => {
