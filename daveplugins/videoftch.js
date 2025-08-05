@@ -70,8 +70,8 @@ async function downloadFromApis(apis) {
 
 // Audio Download
 zokou({
-  nomCom: "play2",
-  aliases: ["song", "playdoc", "audio", "mp3"],
+  nomCom: "play3",
+  aliases: ["song3", "playdoc", "audio", "mp3"],
   categorie: "Download",
   reaction: "📥"
 }, async (dest, zk, commandOptions) => {
