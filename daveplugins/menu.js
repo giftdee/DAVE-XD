@@ -42,7 +42,7 @@ zokou(
     let infoMsg = `
 ◈━━━━━━━━━━━━━━━━◈
   
-     𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐕𝟐
+     𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
   
 > ✦ 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫: 
 @254111687009
@@ -81,6 +81,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Utilities: { icon: "🛠", decor: "┃" },
       Adult: { icon: "🔞", decor: "┃" },      // Added for .xxxvideo
       Download: { icon: "📥", decor: "┃" },   // Added for .apk, .twitterdl
+      tradeplace: { icon: "💲", decor: "┃" },
     };
 
     // Build menu with all categories and vertical command listing
@@ -101,7 +102,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
   @254111687009 (𝐌𝐚𝐢𝐧)
   @254104260236 (Dave)
   
- ⃝⃪⃕🥀-〭⃛〬𓆩〭⃛〬❥
+𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
 ◈━━━━━━━━━━━━━━━━◈
 `;
 
