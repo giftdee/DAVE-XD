@@ -103,36 +103,3 @@ zokou({
 });
 
 // ==================== DEFINITION COMMAND ====================
-zokou({
-  nomCom: "define",
-  reaction: "📚",
-  categorie: "Search"
-}, async (message, sender, args) => {
-  const { repondre, arg } = args;
-  
-  if (!arg[0]) {
-    return repondre("𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐚 𝐭𝐞𝐫𝐦 𝐭𝐨 𝐝𝐞𝐟𝐢𝐧𝐞");
-  }
-
-  try {
-    const term = arg.join(" ");
-    const { data } = await axios.get(`http://api.urbandictionary.com/v0/define?term=${term}`);
-    
-    if (!data.list[0]) {
-      return repondre(`❌ 𝐍𝐨 𝐝𝐞𝐟𝐢𝐧𝐢𝐭𝐢𝐨𝐧 𝐟𝐨𝐮𝐧𝐝 𝐟𝐨𝐫 "${term}"`);
-    }
-
-    const definition = data.list[0].definition.replace(/\[|\]/g, '');
-    const example = data.list[0].example.replace(/\[|\]/g, '');
-    
-    repondre(`
-╔════◇ *𝐃𝐄𝐅𝐈𝐍𝐈𝐓𝐈𝐎𝐍* ◇════╗
-🔤 *𝐓𝐞𝐫𝐦:* ${term}
-📝 *𝐃𝐞𝐟𝐢𝐧𝐢𝐭𝐢𝐨𝐧:* ${definition}
-💡 *𝐄𝐱𝐚𝐦𝐩𝐥𝐞:* ${example}
-╚════◇ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* ◇════╝
-    `);
-  } catch {
-    repondre("❌ 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐝𝐞𝐟𝐢𝐧𝐢𝐭𝐢𝐨𝐧. 𝐓𝐫𝐲 𝐚𝐠𝐚𝐢𝐧!");
-  }
-});
