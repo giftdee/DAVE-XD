@@ -5,8 +5,8 @@ const conf = require(__dirname + "/../set");
 
 zokou({
   nomCom: "technews",
-  reaction: '📰',
-  categorie: 'new'
+  reaction: ' 🔍',
+  categorie: 'search'
 }, async (dest, zk, context) => {
   const { repondre, ms } = context;
 
@@ -39,8 +39,8 @@ zokou({
 
 zokou({
   nomCom: "biblie",
-  reaction: '📖',
-  categorie: "new"
+  reaction: '⭐',
+  categorie: "General"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const reference = arg.join(" ");
@@ -127,8 +127,8 @@ zokou({
 zokou({
   nomCom: "describe",
   aliases: ["dictionaries", "dict", "def"],
-  reaction: '😁',
-  categorie: "new"
+  reaction: '⭐',
+  categorie: "General"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const term = arg.join(" ");
@@ -227,8 +227,8 @@ zokou({
 
 zokou({
   nomCom: "elements",
-  reaction: '📓',
-  categorie: "new"
+  reaction: '⭐',
+  categorie: "General"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const elementQuery = arg.join(" ").trim();
@@ -283,8 +283,8 @@ Regards ${conf.BOT} `;
 zokou({
   nomCom: "githubs",
   aliases: ["gits"],
-  reaction: '💻',
-  categorie: "new"
+  reaction: '⭐',
+  categorie: "General"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const githubUsername = arg.join(" ");
@@ -343,8 +343,8 @@ zokou({
 zokou({
   nomCom: "tempmaile",
   aliases: ['maile', 'tempe'],
-  reaction: '📧',
-  categorie: "new"
+  reaction: '⭐',
+  categorie: "General"
 }, async (dest, zk, context) => {
   const { repondre: replyToUser, prefix, ms: messageQuote } = context;
 
@@ -441,8 +441,8 @@ You can use this email for temporary purposes. I will notify you if you receive 
 zokou({
   nomCom: "wikipedia",
   aliases: ["wiki", "wikipeda"],
-  reaction: '🌚',
-  categorie: "new"
+  reaction: '🔍',
+  categorie: "Search"
 }, async (zk, dest, context) => {
   const { repondre, arg, ms } = context;
 
