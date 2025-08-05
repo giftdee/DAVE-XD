@@ -24,6 +24,7 @@
     "@hapi/boom": "^10.0.1",
     "pm2": "^6.0.8",
     "@types/node": "^18.0.6",
+    "@vitalets/google-translate-api": "^9.2.0",
     "@whiskeysockets/baileys": "npm:asitha-new-v99",
     "ytdl-core": "github:franceking1/flash-dls",
     "@xaviabot/fb-downloader": "^1.0.14",
