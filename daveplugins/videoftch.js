@@ -72,8 +72,8 @@ async function downloadFromApis(apis) {
 zokou({
   nomCom: "play2",
   aliases: ["song", "playdoc", "audio", "mp3"],
-  categorie: "Framework-Download",
-  reaction: "🎵"
+  categorie: "Download",
+  reaction: "📥"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, userJid } = commandOptions;
 
@@ -130,8 +130,8 @@ zokou({
 zokou({
   nomCom: "video",
   aliases: ["videodoc", "film", "mp4"],
-  categorie: "Framework-Download",
-  reaction: "🎥"
+  categorie: "Download",
+  reaction: "📥"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, userJid } = commandOptions;
 
@@ -187,7 +187,7 @@ zokou({
 // Media Upload via URL
 zokou({
   nomCom: 'url-link',
-  categorie: "Framework-Download",
+  categorie: "📥Download",
   reaction: '👨🏿‍💻'
 }, async (dest, zk, commandOptions) => {
   const { msgRepondu, userJid, ms } = commandOptions;
