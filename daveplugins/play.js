@@ -1,120 +1,351 @@
-const { zokou } = require("../framework/zokou");
+const { zokou } = require('../framework/zokou');
 const axios = require('axios');
 const ytSearch = require('yt-search');
 const conf = require(__dirname + '/../set');
 const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
-const { repondre } = require(__dirname + "/../framework/context");
+const { downloadAndSaveMediaMessage } = require('@whiskeysockets/baileys');
 
-async function downloadFromApis(apis) {
-  for (const api of apis) {
-    try {
-      const response = await axios.get(api, { timeout: 15000 });
-      console.log(`Response from ${api}:\n`, JSON.stringify(response.data, null, 2));
+// Initialize Catbox
+const catbox = new Catbox();
 
-      const result = response.data;
-      const isSuccess = result?.success || result?.status || result?.result?.download_url || result?.result?.url;
-
-      if (isSuccess && result.result) {
-        return result;
-      }
-    } catch (error) {
-      console.warn(`API ${api} failed:`, error.message);
-    }
+// Function to upload a file to Catbox and return the URL
+async function uploadToCatbox(filePath) {
+  if (!fs.existsSync(filePath)) {
+    throw new Error("File does not exist");
   }
-  throw new Error('Failed to retrieve download URL from all sources.');
+  try {
+    const uploadResult = await catbox.uploadFile({ path: filePath });
+    if (uploadResult) {
+      return uploadResult;
+    } else {
+      throw new Error("Error retrieving file link");
+    }
+  } catch (error) {
+    throw new Error(String(error));
+  }
 }
+// Define the command with aliases for play
+zokou({
+  nomCom: "play",
+  aliases: ["song", "playdoc", "audio", "mp3"],
+  categorie: "download",
+  reaction: "🎧"
+}, async (dest, zk, commandOptions) => {
+  const { arg, ms, repondre } = commandOptions;
 
-// .play2 or .song command
-zokou(
-  {
-    nomCom: "play",
-    categorie: "Downloader",
-    reaction: "📥",
-  },
-  async (dest, zk, commandeOptions) => {
-    const { repondre, ms, arg, verifDroitAdmin, nomAuteurMessage, userJid } = commandeOptions;
+  // Check if a query is provided
+  if (!arg[0]) {
+    return repondre("Please provide a song name.");
+  }
 
-    const query = arg.join(" ");
-    if (!query) return repondre("❌ Please provide the name of the song.");
+  const query = arg.join(" ");
 
-    const video = await searchYouTube(query);
-    if (!video) return repondre("❌ Song not found.");
+  try {
+    // Perform a YouTube search based on the query
+    const searchResults = await ytSearch(query);
 
-    const thumbnail = video.thumbnail || conf.URL || "";
-    await zk.sendMessage(dest, {
-      text: "⬇️ Downloading audio... This may take a moment...",
-      contextInfo: getContextInfo("Downloading", userJid, thumbnail)
-    }, { quoted: ms });
+    // Check if any videos were found
+    if (!searchResults || !searchResults.videos.length) {
+      return repondre('No song found for the specified query.');
+    }
 
+    const firstVideo = searchResults.videos[0];
+    const videoUrl = firstVideo.url;
+
+    // Function to get download data from APIs
+    const getDownloadData = async (url) => {
+      try {
+        const response = await axios.get(url);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching data from API:', error);
+        return { success: false };
+      }
+    };
+
+    // List of APIs to try
     const apis = [
-      `https://api.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(video.url)}`,
-      `https://www.dark-yasiya-api.site/download/ytmp3?url=${encodeURIComponent(video.url)}`,
-      `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
-      `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
+      `https://api-rin-tohsaka.vercel.app/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
+      `https://apis.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+      `https://www.dark-yasiya-api.site/download/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+      `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(videoUrl)}&apikey=gifted-md`,
+      `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(videoUrl)}`
     ];
 
-    try {
-      const downloadData = await downloadFromApis(apis);
-      const download_url = downloadData.result.download_url || downloadData.result.url;
-      const title = downloadData.result.title || video.title || "Audio";
-
-      await zk.sendMessage(dest, {
-        audio: { url: download_url },
-        mimetype: "audio/mpeg",
-        ptt: false,
-        contextInfo: getContextInfo(title, userJid, thumbnail)
-      }, { quoted: ms });
-
-    } catch (e) {
-      repondre("❌ Failed to download audio. Try again later.");
+    let downloadData;
+    for (const api of apis) {
+      downloadData = await getDownloadData(api);
+      if (downloadData && downloadData.success) break;
     }
-  }
-);
 
-// .video command
-zokou(
-  {
-    nomCom: "video",
-    categorie: "Download",
-    reaction: "📥",
-  },
-  async (dest, zk, commandeOptions) => {
-    const { repondre, ms, arg, verifDroitAdmin, nomAuteurMessage, userJid } = commandeOptions;
+    // Check if a valid download URL was found
+    if (!downloadData || !downloadData.success) {
+      return repondre('Failed to retrieve download URL from all sources. Please try again later.');
+    }
 
-    const query = arg.join(" ");
-    if (!query) return repondre("❌ Please provide the name of the video.");
+    const downloadUrl = downloadData.result.download_url;
+    const videoDetails = downloadData.result;
 
-    const video = await searchYouTube(query);
-    if (!video) return repondre("❌ Video not found.");
+    // Prepare the message payload with external ad details
+    const messagePayloads = [
+      {
+      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
+╭┈┈┈⊷
+┊ *Quality:* Premium
+┊ *Powered:* by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
+╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
+🛡️ *Bot Repo:* https://github.com/giftdee/DAVE-XMD
 
-    const thumbnail = video.thumbnail || conf.URL || "";
-    await zk.sendMessage(dest, {
-      text: "⬇️ Downloading video... Please wait...",
-      contextInfo: getContextInfo("Downloading", userJid, thumbnail)
-    }, { quoted: ms });
+> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  `,
+        audio: { url: downloadUrl },
+        mimetype: 'audio/mp4',
+        contextInfo: {
+          externalAdReply: {
+            title: conf.BOT,
+            body: videoDetails.title,
+            mediaType: 1,
+            sourceUrl: conf.GURL,
+            thumbnailUrl: firstVideo.thumbnail,
+            renderLargerThumbnail: false,
+            showAdAttribution: true,
+          },
+        },
+      },
+      {
+      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
+╭┈┈┈⊷
+┊ *Quality:* Premium
+┊ *Powered:* by makamescotech 
+╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
+🛡️ *Bot Repo:* https://github.com/giftdee/DAVE-XMD
 
-    const apis = [
-      `https://api.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`,
-      `https://www.dark-yasiya-api.site/download/ytmp4?url=${encodeURIComponent(video.url)}`,
-      `https://api.giftedtech.web.id/api/download/dlmp4?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
-      `https://api.dreaded.site/api/ytdl/video?url=${encodeURIComponent(video.url)}`
+> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 `,
+        document: { url: downloadUrl },
+        mimetype: 'audio/mpeg',
+        contextInfo: {
+          externalAdReply: {
+            title: conf.BOT,
+            body: videoDetails.title,
+            mediaType: 1,
+            sourceUrl: conf.GURL,
+            thumbnailUrl: firstVideo.thumbnail,
+            renderLargerThumbnail: false,
+            showAdAttribution: true,
+          },
+        },
+      },
+      {
+      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
+╭┈┈┈⊷
+┊ *Quality:* Premium
+┊ *Powered:* by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
+╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
+🛡️ *Bot Repo:* https://github.com/giftdee/DAVE-XMD
+
+> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 `,
+        document: { url: downloadUrl },
+        mimetype: 'audio/mp4',
+        contextInfo: {
+          externalAdReply: {
+            title: conf.BOT,
+            body: videoDetails.title,
+            mediaType: 1,
+            sourceUrl: conf.GURL,
+            thumbnailUrl: firstVideo.thumbnail,
+            renderLargerThumbnail: false,
+            showAdAttribution: true,
+          },
+        },
+      }
     ];
 
-    try {
-      const downloadData = await downloadFromApis(apis);
-      const download_url = downloadData.result.download_url || downloadData.result.url;
-      const title = downloadData.result.title || video.title || "Video";
-
-      await zk.sendMessage(dest, {
-        video: { url: download_url },
-        mimetype: "video/mp4",
-        caption: title,
-        contextInfo: getContextInfo(title, userJid, thumbnail)
-      }, { quoted: ms });
-
-    } catch (e) {
-      repondre("❌ Failed to download video. Try again later.");
+    // Send the download link to the user for each payload
+    for (const messagePayload of messagePayloads) {
+      await zk.sendMessage(dest, messagePayload, { quoted: ms });
     }
+
+  } catch (error) {
+    console.error('Error during download process:', error);
+    return repondre(`Download failed due to an error: ${error.message || error}`);
   }
-);
+});
+
+// Define the command with aliases for video
+zokou({
+  nomCom: "video",
+  aliases: ["videodoc", "film", "mp4"],
+  categorie: "download",
+  reaction: "📥"
+}, async (dest, zk, commandOptions) => {
+  const { arg, ms, repondre } = commandOptions;
+
+  // Check if a query is provided
+  if (!arg[0]) {
+    return repondre("Please provide a video name.");
+  }
+
+  const query = arg.join(" ");
+
+  try {
+    // Perform a YouTube search based on the query
+    const searchResults = await ytSearch(query);
+
+    // Check if any videos were found
+    if (!searchResults || !searchResults.videos.length) {
+      return repondre('No video found for the specified query.');
+    }
+
+    const firstVideo = searchResults.videos[0];
+    const videoUrl = firstVideo.url;
+
+    // Function to get download data from APIs
+    const getDownloadData = async (url) => {
+      try {
+        const response = await axios.get(url);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching data from API:', error);
+        return { success: false };
+      }
+    };
+
+    // List of APIs to try
+    const apis = [
+      `https://api-rin-tohsaka.vercel.app/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
+      `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
+      `https://www.dark-yasiya-api.site/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
+      `https://api.giftedtech.web.id/api/download/dlmp4?url=${encodeURIComponent(videoUrl)}&apikey=gifted-md`,
+      `https://api.dreaded.site/api/ytdl/video?url=${encodeURIComponent(videoUrl)}`
+    ];
+
+    let downloadData;
+    for (const api of apis) {
+      downloadData = await getDownloadData(api);
+      if (downloadData && downloadData.success) break;
+    }
+
+    // Check if a valid download URL was found
+    if (!downloadData || !downloadData.success) {
+      return repondre('Failed to retrieve download URL from all sources. Please try again later.');
+    }
+
+    const downloadUrl = downloadData.result.download_url;
+    const videoDetails = downloadData.result;
+
+    // Prepare the message payload with external ad details
+    const messagePayloads = [
+      {
+      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
+╭┈┈┈⊷ 
+┊ *Quality:* Premium
+┊ *Powered:* by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
+╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
+🛡️ *Bot Repo:* https://github.com/giftdee/DAVE-XMD
+
+> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 `,
+        video: { url: downloadUrl },
+        mimetype: 'video/mp4',
+        contextInfo: {
+          externalAdReply: {
+            title: conf.BOT,
+            body: videoDetails.title,
+            mediaType: 1,
+            sourceUrl: conf.GURL,
+            thumbnailUrl: firstVideo.thumbnail,
+            renderLargerThumbnail: false,
+            showAdAttribution: true,
+          },
+        },
+      },
+      {
+      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
+╭┈┈┈⊷
+┊ *Quality:* Premium 
+┊ *Powered:* by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
+╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
+🛡️ *Bot Repo:* https://github.com/giftdee/DAVE_XMD
+
+> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 `,
+        document: { url: downloadUrl },
+        mimetype: 'video/mp4',
+        contextInfo: {
+          externalAdReply: {
+            title: conf.BOT,
+            body: videoDetails.title,
+            mediaType: 1,
+            sourceUrl: conf.GURL,
+            thumbnailUrl: firstVideo.thumbnail,
+            renderLargerThumbnail: false,
+            showAdAttribution: true,
+          },
+        },
+      }
+    ];
+
+    // Send the download link to the user
+    for (const messagePayload of messagePayloads) {
+      await zk.sendMessage(dest, messagePayload, { quoted: ms });
+    }
+
+  } catch (error) {
+    console.error('Error during download process:', error);
+    return repondre(`Download failed due to an error: ${error.message || error}`);
+  }
+});
+
+
+// Command to upload image, video, or audio file
+zokou({
+  'nomCom': 'tourl',       // Command to trigger the function
+  'categorie': "download", // Command category
+  'reaction': '📥'    // Reaction to use on command
+}, async (groupId, client, context) => {
+  const { msgRepondu, repondre } = context;
+
+  // If no message (image/video/audio) is mentioned, prompt user
+  if (!msgRepondu) {
+    return repondre("Please mention an image, video, or audio.");
+  }
+
+  let mediaPath;
+
+  // Check if the message contains a video
+  if (msgRepondu.videoMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
+  }
+ else if (msgRepondu.gifMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.gifMessage);
+  }
+ else if (msgRepondu.stickerMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.stickerMessage);
+  }
+else if (msgRepondu.documentMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.documentMessage);
+  }
+  // Check if the message contains an image
+  else if (msgRepondu.imageMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
+  }
+  // Check if the message contains an audio file
+  else if (msgRepondu.audioMessage) {
+    mediaPath = await client.downloadAndSaveMediaMessage(msgRepondu.audioMessage);
+  } else {
+    // If no media (image, video, or audio) is found, prompt user
+    return repondre("Please mention an image, video, or audio.");
+  }
+
+  try {
+    // Upload the media to Catbox and get the URL
+    const fileUrl = await uploadToCatbox(mediaPath);
+
+    // Delete the local media file after upload
+    fs.unlinkSync(mediaPath);
+
+    // Respond with the URL of the uploaded file
+    repondre(fileUrl);
+  } catch (error) {
+    console.error("Error while creating your URL:", error);
+    repondre("Oops, there was an error.");
+  }
+});
