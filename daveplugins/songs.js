@@ -6,8 +6,8 @@ const ytSearch = require('yt-search');
 zokou({
   nomCom: "song",
   aliases: ["musicdoc", "ytmp3doc", "audiodoc", "mp3doc"],
-  categorie: "Music",
-  reaction: "🎙️"
+  categorie: "Download",
+  reaction: "📥"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, repondre } = commandOptions;
 
