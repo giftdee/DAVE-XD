@@ -35,7 +35,7 @@ zokou({
     return repondre("𝐈𝐧𝐯𝐚𝐥𝐢𝐝 𝐅𝐢𝐥𝐞𝐧𝐚𝐦𝐞!\n\nPlease use a .js file name (e.g., logo.js).");
   }
 
-  const repoOwner = "gifteddave";
+  const repoOwner = "giftdee";
   const repoName = "DAVE-XMD";
   const folder = "daveplugins";
   const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${folder}/${filename}`;
