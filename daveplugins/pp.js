@@ -6,8 +6,8 @@ const fs = require("fs");
 zokou({
   nomCom: "fullpp",
   aliases: ["updatepp", "ppfull"],
-  reaction: '🍂',
-  categorie: "new"
+  reaction: '🌟',
+  categorie: "General"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, msgRepondu, auteurMessage } = commandeOptions;
 
