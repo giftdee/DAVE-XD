@@ -4,7 +4,7 @@ const axios = require("axios");
 const config = {
   nomCom: "book",
   reaction: '📙',
-  categorie: 'IA'
+  categorie: 'AI'
 };
 
 zokou(config, async (responseHandler, args, context) => {
@@ -12,7 +12,7 @@ zokou(config, async (responseHandler, args, context) => {
 
   try {
     if (!arg || arg.length === 0) {
-      return repondre("Ask for any book-related news, and lucky md will provide updates.");
+      return repondre("Ask for any book-related news, and 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 will provide updates.");
     }
 
     const query = arg.join(" ");
