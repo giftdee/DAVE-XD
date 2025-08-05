@@ -3,7 +3,7 @@ const { default: axios } = require("axios");
 
 zokou({
   nomCom: "logo",
-  categorie: "logo",
+  categorie: "Tools",
   reaction: "🔥"
 }, async (m, sock, commandInfo) => {
   const { repondre, arg, ms } = commandInfo;
