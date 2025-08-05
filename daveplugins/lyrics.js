@@ -6,7 +6,7 @@ zokou(
   {
     nomCom: 'lyrics',
     categorie: 'Search',
-    reaction: '🎵',
+    reaction: '🔍',
   },
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, nomAuteurMessage } = commandeOptions;
