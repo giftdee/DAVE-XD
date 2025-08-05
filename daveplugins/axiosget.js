@@ -38,9 +38,9 @@ zokou({
 
 
 zokou({
-  nomCom: "biblie",
+  nomCom: "bibilia",
   reaction: '⭐',
-  categorie: "General"
+  categorie: "God"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const reference = arg.join(" ");
@@ -128,7 +128,7 @@ zokou({
   nomCom: "describe",
   aliases: ["dictionaries", "dict", "def"],
   reaction: '⭐',
-  categorie: "General"
+  categorie: "Tool"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const term = arg.join(" ");
