@@ -3,8 +3,8 @@ const { getJson } = require("../framework/utils");
 
 zokou({
   nomCom: "movie",
-  categorie: "Dave-xmd-search",
-  reaction: "🎥"
+  categorie: "Search",
+  reaction: "🔍"
 }, async (origineMessage, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
 
