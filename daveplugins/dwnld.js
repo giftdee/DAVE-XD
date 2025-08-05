@@ -45,21 +45,21 @@ const handleDownload = async (dest, zk, params, serviceName, apiUrl, exampleUsag
 const downloaders = [
   { name: "ytmp3", aliases: ["yt-audio", "youtube-mp3"], url: "https://bk9.fun/download/ytmp3?q=", example: "Example: ytmp3 https://youtube.com/watch?v=xyz" },
   { name: "ytmp4", aliases: ["yt-video", "youtube-mp4"], url: "https://bk9.fun/download/ytmp4?q=", example: "Example: ytmp4 https://youtube.com/watch?v=xyz" },
-  { name: "facebooka", aliases: ["fb", "fbdown"], url: "https://bk9.fun/download/facebook?q=", example: "Example: facebook https://facebook.com/video/xyz" },
-  { name: "instagramu", aliases: ["ig", "igdown"], url: "https://bk9.fun/download/instagram?q=", example: "Example: instagram https://instagram.com/reel/xyz" },
-  { name: "tiktoka", aliases: ["tt", "ttdown"], url: "https://bk9.fun/download/tiktok?q=", example: "Example: tiktok https://tiktok.com/@user/video/xyz" },
+  { name: "facebooka", aliases: ["fb", "facebook", "fbdown"], url: "https://bk9.fun/download/facebook?q=", example: "Example: facebook https://facebook.com/video/xyz" },
+  { name: "instagramu", aliases: ["ig", "Instagram", "igdown"], url: "https://bk9.fun/download/instagram?q=", example: "Example: instagram https://instagram.com/reel/xyz" },
+  { name: "tiktoka", aliases: ["tt", "tiktok", "ttdown"], url: "https://bk9.fun/download/tiktok?q=", example: "Example: tiktok https://tiktok.com/@user/video/xyz" },
   { name: "twitters", aliases: ["x", "twdown"], url: "https://bk9.fun/download/twitter?q=", example: "Example: twitter https://twitter.com/user/status/xyz" },
   { name: "soundcloud", aliases: ["sc", "scdown"], url: "https://bk9.fun/download/soundcloud?q=", example: "Example: soundcloud https://soundcloud.com/user/songxyz" },
-  { name: "spotifye", aliases: ["sp", "spotifydown"], url: "https://bk9.fun/download/spotify?q=", example: "Example: spotify https://open.spotify.com/track/xyz" },
+  { name: "spotifye", aliases: ["sp", "Spotify", "spotifydown"], url: "https://bk9.fun/download/spotify?q=", example: "Example: spotify https://open.spotify.com/track/xyz" },
 ];
 
 // Register Downloader Commands
 downloaders.forEach(downloader => {
-  ezra({
+  zokou({
     nomCom: downloader.name,
     aliases: downloader.aliases,
     reaction: '📥',
-    categorie: "Downloader"
+    categorie: "Download"
   }, async (dest, zk, params) => {
     handleDownload(dest, zk, params, downloader.name.toUpperCase(), downloader.url, downloader.example);
   });
