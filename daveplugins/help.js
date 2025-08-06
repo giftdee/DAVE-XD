@@ -24,7 +24,7 @@ zokou({
     reaction: "🛠️",
     aliases: ["panelist", "commandlist", "cmdlist", "list"],
     desc: "Get bot command list.",
-    categorie: "utilities"
+    categorie: "Utilities"
 }, async (dest, zk, context) => {
     const { respond, prefix, nomAuteurMessage } = context;
     const commands = require(__dirname + "/../framework/zokou").cm;
