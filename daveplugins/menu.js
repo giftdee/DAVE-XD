@@ -99,6 +99,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       New: { icon: "💦", decor: "┃" },
       Audioedit: { icon: "🎵", decor: "┃" },
       God: { icon: "🧘", decor: "┃" },
+      Privacy: { icon: "🔐", decor: "┃" },
   };
 
         // Build menu with all categories and vertical command listing
