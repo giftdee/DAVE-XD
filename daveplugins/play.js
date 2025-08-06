@@ -89,30 +89,7 @@ zokou({
 
     // Prepare the message payload with external ad details
     const messagePayloads = [
-      {
-      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
-╭┈┈┈⊷
-┊ *Quality:* Premium
-┊ *Powered:* by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
-╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
-🛡️ *Bot Repo:* https://github.com/giftdee/DAVE-XMD
-
-> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  `,
-        audio: { url: downloadUrl },
-        mimetype: 'audio/mp4',
-        contextInfo: {
-          externalAdReply: {
-            title: conf.BOT,
-            body: videoDetails.title,
-            mediaType: 1,
-            sourceUrl: conf.GURL,
-            thumbnailUrl: firstVideo.thumbnail,
-            renderLargerThumbnail: false,
-            showAdAttribution: true,
-          },
-        },
-      },
-      {
+      {      
       caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
 ╭┈┈┈⊷
 ┊ *Quality:* Premium
@@ -235,30 +212,7 @@ zokou({
 
     // Prepare the message payload with external ad details
     const messagePayloads = [
-      {
-      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
-╭┈┈┈⊷ 
-┊ *Quality:* Premium
-┊ *Powered:* by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
-╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
-🛡️ *Bot Repo:* https://github.com/giftdee/DAVE-XMD
-
-> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 `,
-        video: { url: downloadUrl },
-        mimetype: 'video/mp4',
-        contextInfo: {
-          externalAdReply: {
-            title: conf.BOT,
-            body: videoDetails.title,
-            mediaType: 1,
-            sourceUrl: conf.GURL,
-            thumbnailUrl: firstVideo.thumbnail,
-            renderLargerThumbnail: false,
-            showAdAttribution: true,
-          },
-        },
-      },
-      {
+      {      
       caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n
 ╭┈┈┈⊷
 ┊ *Quality:* Premium 
