@@ -3,8 +3,6 @@ const Heroku = require('heroku-client');
 const fs = require('fs');
 const s = require("../set");
 const axios = require("axios");
-const speed = require("performance-now");
-const { exec } = require("child_process");
 const conf = require(__dirname + "/../set");
 
 // Function to get a description of an environment variable
