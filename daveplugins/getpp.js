@@ -1,15 +1,16 @@
-const { zokou } = require("../framework/zokou");
-const fs = require("fs");
 const config = require("../set");
 const path = require('path');
 const axios = require("axios");
-
+const { zokou } = require("../framework/zokou");
+const { generateProfilePicture } = require("../framework/dl/Function");
+const { S_WHATSAPP_NET } = require('@whiskeysockets/baileys');
+const fs = require("fs");
 
 zokou({
     pattern: "privacy",
     alias: ["privacymenu"],
     desc: "Privacy settings menu",
-    category: "privacy",
+    category: "Utilities",
     react: "🔐",
     filename: __filename
 }, 
@@ -67,7 +68,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 zokou({
     pattern: "blocklist",
     desc: "View the list of blocked users.",
-    category: "privacy",
+    category: "Utilities",
     react: "📋",
     filename: __filename
 },
@@ -98,7 +99,7 @@ async (conn, mek, m, { from, isOwner, reply }) => {
 zokou({
     pattern: "getbio",
     desc: "Displays the user's bio.",
-    category: "privacy",
+    category: "Utilities",
     filename: __filename,
 }, async (conn, mek, m, { args, reply }) => {
     try {
@@ -114,7 +115,7 @@ zokou({
 zokou({
     pattern: "setppall",
     desc: "Update Profile Picture Privacy",
-    category: "privacy",
+    category: "Utilities",
     react: "🔐",
     filename: __filename
 }, 
@@ -138,7 +139,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
 zokou({
     pattern: "setonline",
     desc: "Update Online Privacy",
-    category: "privacy",
+    category: "Utilities",
     react: "🔐",
     filename: __filename
 }, 
@@ -163,7 +164,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
 zokou({
     pattern: "setpp",
     desc: "Set bot profile picture.",
-    category: "privacy",
+    category: "Utilities",
     react: "🖼️",
     filename: __filename
 },
@@ -192,7 +193,7 @@ async (conn, mek, m, { from, isOwner, quoted, reply }) => {
 zokou({
     pattern: "setmyname",
     desc: "Set your WhatsApp display name.",
-    category: "privacy",
+    category: "Utilities",
     react: "⚙️",
     filename: __filename
 },
@@ -226,7 +227,7 @@ zokou({
     pattern: "updatebio",
     react: "🥏",
     desc: "Change the Bot number Bio.",
-    category: "privacy",
+    category: "Utilities",
     use: '.updatebio',
     filename: __filename
 },
@@ -246,7 +247,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
 zokou({
     pattern: "groupsprivacy",
     desc: "Update Group Add Privacy",
-    category: "privacy",
+    category: "Utilities",
     react: "🔐",
     filename: __filename
 }, 
@@ -271,7 +272,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
 zokou({
     pattern: "getprivacy",
     desc: "Get the bot Number Privacy Setting Updates.",
-    category: "privacy",
+    category: "Utilities",
     use: '.getprivacy',
     filename: __filename
 },
