@@ -82,7 +82,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Adult: { icon: "🔞", decor: "┃" },      // Added for .xxxvideo
       Download: { icon: "📥", decor: "┃" },   // Added for .apk, .twitterdl
       tradeplace: { icon: "💲", decor: "┃" },
-      Footballive: { icon: "⚽", decor: "┃" },
+      Sportslive: { icon: "⚽", decor: "┃" },
       AI: { icon: "🤔", decor: "┃" },
       Tools: { icon: "⚒️", decor: "┃" },
       Games: { icon: "🎮", decor: "┃" },
