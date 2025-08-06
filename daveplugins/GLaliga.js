@@ -24,7 +24,7 @@ const fetchFootballData = async (url) => {
 /** ✅ laliga standings */
 zokou({
   nomCom: "laliga_table",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -49,7 +49,7 @@ zokou({
 /** ✅ laliga matchday */
 zokou({
   nomCom: "laliga_matchday",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📅"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -74,7 +74,7 @@ zokou({
 /** ✅ laliga top scorers */
 zokou({
   nomCom: "laliga_top_scorer",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -99,7 +99,7 @@ zokou({
 /** ✅ laliga top assists */
 zokou({
   nomCom: "laliga_top_assist",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "🎯"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -124,7 +124,7 @@ zokou({
 /** ✅ laliga news */
 zokou({
   nomCom: "laliga_news",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📰"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -151,7 +151,7 @@ zokou({
 /** ✅ laliga highlights (You can integrate video highlight API) */
 zokou({
   nomCom: "laliga_highlights",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📺"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
