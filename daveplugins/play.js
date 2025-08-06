@@ -94,28 +94,6 @@ zokou({
 ╭┈┈┈⊷
 ┊ *Quality:* Premium
 ╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
-💦 *Bot Repo:* https://github.com/goftdee/DAVE-XMD/fork
-
-> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃`,
-        document: { url: downloadUrl },
-        mimetype: 'audio/mpeg',
-        contextInfo: {
-          externalAdReply: {
-            title: conf.BOT,
-            body: videoDetails.title,
-            mediaType: 1,
-            sourceUrl: conf.GURL,
-            thumbnailUrl: firstVideo.thumbnail,
-            renderLargerThumbnail: false,
-            showAdAttribution: true,
-          },
-        },
-      },
-      {
-      caption: `\n*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 AUDIOS*\n
-╭┈┈┈⊷
-┊ *Quality:* Premium
-╰┈┈┈┈┈┈┈┈┈┈┈┈┈⊷
 💦 *Bot Repo:* https://github.com/giftdee/DAVE-XMD/fork
 > 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃`,
         document: { url: downloadUrl },
