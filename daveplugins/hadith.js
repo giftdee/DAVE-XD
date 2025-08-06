@@ -2,7 +2,7 @@ const { zokou } = require('../framework/zokou');
 const axios = require('axios'); // Ensure axios is imported
 const conf = require(__dirname + "/../set");
 
-ezra({
+zokou({
   nomCom: "hadith",
   aliases: ["islam", "hadees"],
   reaction: '📖',
