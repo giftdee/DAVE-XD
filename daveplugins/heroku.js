@@ -586,7 +586,7 @@ zokou({
   }
 });
 
-ezra({
+zokou({
   nomCom: 'alwaysonline',
   categorie: "JEEPERS CREEPER-XMD-SETTING"
 }, async (chatId, zk, context) => {
