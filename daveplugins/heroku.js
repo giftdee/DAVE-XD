@@ -588,7 +588,7 @@ zokou({
 
 zokou({
   nomCom: 'alwaysonline',
-  categorie: "JEEPERS CREEPER-XMD-SETTING"
+  categorie: "Mods"
 }, async (chatId, zk, context) => {
   const { ms, repondre, superUser, auteurMessage, arg } = context;
 
