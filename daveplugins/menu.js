@@ -82,6 +82,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Adult: { icon: "🔞", decor: "┃" },      // Added for .xxxvideo
       Download: { icon: "📥", decor: "┃" },   // Added for .apk, .twitterdl
       tradeplace: { icon: "💲", decor: "┃" },
+      Footballive: { icon: " ⚽", decor: "┃" },
     };
 
     // Build menu with all categories and vertical command listing
@@ -214,21 +215,3 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
   }
 );
 
-await zk.sendMessage(dest, {
-  text: '🛡️ *Powered by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* 🛡️',
-  contextInfo: {
-    externalAdReply: {
-      showAdAttribution: true,
-      title: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 MENU',
-      body: 'Multi-Device WhatsApp Bot',
-      sourceUrl: global.link,
-      mediaType: 1,
-      renderLargerThumbnail: false
-    },
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363400480173280@newsletter',
-      newsletterName: 'DAVE-XMD Updates',
-      serverMessageId: 143
-    }
-  }
-}, { quoted: ms });
