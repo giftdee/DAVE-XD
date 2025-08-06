@@ -1,6 +1,6 @@
 const { zokou } = require('../framework/zokou');
 const fs = require('fs');
-const { getAnti, setAnti } = require('../lib/antidel');
+const { getAnti, setAnti } = require('../bdd/antidel');
 
 zokou({
     pattern: "antidelete",
