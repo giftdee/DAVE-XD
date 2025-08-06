@@ -629,7 +629,3 @@ ezra({
   }
 });
 
-zokou({
-  nomCom: 'privatemode',
-  categorie: "Mods"
-}, async (chatId, zk, contexX
