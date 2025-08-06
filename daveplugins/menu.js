@@ -93,12 +93,12 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Tts: { icon: "🛡️", decor: "┃" },
       Weeb: { icon: "🛡️",decor: "┃" },
       Bug: { icon: "🗿", decor: "┃" },
-      Coding: { icon: "🗿", decor "┃" },
-      Imageedit: { icon: "🛡️", decor "┃" },
-      Conversation: { icon: "💦", decor "┃" },
-      New: { icon: "💦", decor "┃" },
-      Audioedit: { icon: "🎵", decor "┃" },
-      God: { icon: "🧘", decor "┃" },
+      Coding: { icon: "🗿", decor: "┃" },
+      Imageedit: { icon: "🛡️", decor: "┃" },
+      Conversation: { icon: "💦", decor: "┃" },
+      New: { icon: "💦", decor: "┃" },
+      Audioedit: { icon: "🎵", decor: "┃" },
+      God: { icon: "🧘", decor: "┃" },
   };
 
         // Build menu with all categories and vertical command listing
