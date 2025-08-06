@@ -62,7 +62,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
     // Menu section
     let menuMsg = `
 ◈━━━━━━━━━━━━━━━━◈
-  💱 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 💱
+  🐺 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 🐺
   
   𝐔𝐬𝐞 ${prefixe}help <command>
   𝐟𝐨𝐫 𝐝𝐞𝐭𝐚𝐢𝐥𝐬
@@ -82,12 +82,28 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Adult: { icon: "🔞", decor: "┃" },      // Added for .xxxvideo
       Download: { icon: "📥", decor: "┃" },   // Added for .apk, .twitterdl
       tradeplace: { icon: "💲", decor: "┃" },
-      Footballive: { icon: " ⚽", decor: "┃" },
+      Footballive: { icon: "⚽", decor: "┃" },
+      AI: { icon: "🤔", decor: "┃" },
+      Tools: { icon: "⚒️", decor: "┃" },
+      Games: { icon: "🎮", decor: "┃" },
+      Davelogo: { icon: "👾", decor: "┃" },
+      Script: { icon: "🗿", decor: "┃" },
+      Images: { icon: "👽", decor: "┃" },
+      Reaction: { icon: "🔥", decor: "┃" },
+      Tts: { icon: "🛡️", decor: "┃" },
+      Weeb: { icon: "🛡️",decor: "┃" },
+      Bug: {icon: "🗿", decor: "┃" },
+      Coding: {icon: "🗿", decor "┃" },
+      Imageedit: {icon: "🛡️", decor "┃" },
+      Conversation: {icon: "💦", decor "┃" },
+      New: {icon: "💦", decor "┃" },
+      Audioedit: {icon: "🎵", decor "┃" },
+      God: {icon: "🧘", decor "┃" },
     };
 
     // Build menu with all categories and vertical command listing
     for (const cat in coms) {
-      const style = categoryStyles[cat] || { icon: "💱", decor: "⋯" };
+      const style = categoryStyles[cat] || { icon: "🌍", decor: "⋯" };
       menuMsg += `\n  ${style.decor} ${style.icon} *${cat.toUpperCase()}* ${style.icon} ${style.decor}\n`;
 
       // List commands vertically with a bullet point
