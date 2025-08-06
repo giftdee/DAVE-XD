@@ -24,7 +24,7 @@ const fetchFootballData = async (url) => {
 /** ✅ eredivisie standings */
 zokou({
   nomCom: "eredivisie_table",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -49,7 +49,7 @@ zokou({
 /** ✅ eredivisie matchday */
 zokou({
   nomCom: "eredivisie_matchday",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📅"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -74,7 +74,7 @@ zokou({
 /** ✅ eredivisie top scorers */
 zokou({
   nomCom: "eredivisie_top_scorer",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -99,7 +99,7 @@ zokou({
 /** ✅ eredivisie top assists */
 zokou({
   nomCom: "eredivisie_top_assist",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "🎯"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -124,7 +124,7 @@ zokou({
 /** ✅ eredivisie news */
 zokou({
   nomCom: "eredivisie_news",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📰"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -151,7 +151,7 @@ zokou({
 /** ✅ eredivisie highlights (You can integrate video highlight API) */
 zokou({
   nomCom: "eredivisie_highlights",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📺"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
