@@ -24,7 +24,7 @@ const fetchFootballData = async (url) => {
 /** ✅ FIFA World Cup Standings */
 zokou({
   nomCom: "wc_table",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -49,7 +49,7 @@ zokou({
 /** ✅ FIFA World Cup Matchday */
 zokou({
   nomCom: "wc_matchday",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📅"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -74,7 +74,7 @@ zokou({
 /** ✅ FIFA World Cup Top Scorers */
 zokou({
   nomCom: "wc_top_scorer",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -99,7 +99,7 @@ zokou({
 /** ✅ FIFA World Cup Top Assists */
 zokou({
   nomCom: "wc_top_assist",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "🎯"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -124,7 +124,7 @@ zokou({
 /** ✅ FIFA World Cup News */
 zokou({
   nomCom: "wc_news",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📰"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -151,7 +151,7 @@ zokou({
 /** ✅ FIFA World Cup Highlights (You can integrate video highlight API) */
 zokou({
   nomCom: "wc_highlights",
-  categorie: "football live",
+  categorie: "Sports live",
   reaction: "📺"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
