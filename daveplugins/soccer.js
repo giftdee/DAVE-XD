@@ -3,7 +3,7 @@ const axios = require("axios");
 
 zokou({
   nomCom: "cricket",
-  categorie: "SPORTS-GAMES",
+  categorie: "SPORTS",
   desc: "Sends info of given query from soccer Search.",
   reaction: "🏏",
 }, async (dest, zk, commandeOptions) => {
