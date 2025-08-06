@@ -98,7 +98,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Conversation: {icon: "💦", decor "┃" },
       New: {icon: "💦", decor "┃" },
       Audioedit: {icon: "🎵", decor "┃" },
-      God: {icon: "🧘", decor "┃" },
+      God: {icon: "🧘", decor "┃" }
     };
 
     // Build menu with all categories and vertical command listing
