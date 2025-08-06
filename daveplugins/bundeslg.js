@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { zokou } = require('../framework/zokou');
+const { ezra } = require("../framework/zokou");
 const conf = require(__dirname + '/../set');
 
 // Football Data API URL and your API key
@@ -21,24 +21,24 @@ const fetchFootballData = async (url) => {
   }
 };
 
-/** ✅ laliga standings */
+/** ✅ bundesliga standings */
 zokou({
-  nomCom: "laliga_table",
-  categorie: "SPORTS-GAMES",
+  nomCom: "bundesliga_table",
+  categorie: "football live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
 
-  // API URL for La Liga standings
-  const standingsUrl = `${apiUrl}/PD/standings`;
+  // API URL for Bundesliga standings
+  const standingsUrl = `${apiUrl}/BL1/standings`;
 
   const data = await fetchFootballData(standingsUrl);
   if (!data || !data.standings) {
-    return repondre("❌ Error fetching La Liga standings.");
+    return repondre("❌ Error fetching Bundesliga standings.");
   }
 
   const standings = data.standings[0].table;
-  let standingsMessage = "📊 *La Liga Table*\n";
+  let standingsMessage = "📊 *Bundesliga Table*\n";
   standings.forEach((team, index) => {
     standingsMessage += `${index + 1}. ${team.team.name} - ${team.points} Points\n`;
   });
@@ -46,24 +46,24 @@ zokou({
   repondre(standingsMessage);
 });
 
-/** ✅ laliga matchday */
+/** ✅ bundesliga matchday */
 zokou({
-  nomCom: "laliga_matchday",
-  categorie: "SPORTS-GAMES",
+  nomCom: "bundesliga_matchday",
+  categorie: "football live",
   reaction: "📅"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
 
-  // API URL for upcoming La Liga matches
-  const matchesUrl = `${apiUrl}/PD/matches`;
+  // API URL for upcoming Bundesliga matches
+  const matchesUrl = `${apiUrl}/BL1/matches`;
 
   const data = await fetchFootballData(matchesUrl);
   if (!data || !data.matches) {
-    return repondre("❌ Error fetching La Liga matchday.");
+    return repondre("❌ Error fetching Bundesliga matchday.");
   }
 
   const matches = data.matches;
-  let matchdayMessage = "🗓️ *Upcoming La Liga Matches*\n";
+  let matchdayMessage = "🗓️ *Upcoming Bundesliga Matches*\n";
   matches.forEach(match => {
     matchdayMessage += `${match.homeTeam.name} vs ${match.awayTeam.name} - ${match.utcDate}\n`;
   });
@@ -71,24 +71,24 @@ zokou({
   repondre(matchdayMessage);
 });
 
-/** ✅ laliga top scorers */
+/** ✅ bundesliga top scorers */
 zokou({
-  nomCom: "laliga_top_scorer",
-  categorie: "SPORTS-GAMES",
+  nomCom: "bundesliga_top_scorer",
+  categorie: "football live",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
 
-  // API URL for La Liga top scorers
-  const topScorerUrl = `${apiUrl}/PD/scorers`;
+  // API URL for Bundesliga top scorers
+  const topScorerUrl = `${apiUrl}/BL1/scorers`;
 
   const data = await fetchFootballData(topScorerUrl);
   if (!data || !data.scorers) {
-    return repondre("❌ Error fetching La Liga top scorers.");
+    return repondre("❌ Error fetching Bundesliga top scorers.");
   }
 
   const topScorers = data.scorers;
-  let topScorerMessage = "🏆 *La Liga Top Scorers*\n";
+  let topScorerMessage = "🏆 *Bundesliga Top Scorers*\n";
   topScorers.forEach((scorer, index) => {
     topScorerMessage += `${index + 1}. ${scorer.player.name} - ${scorer.numberOfGoals} Goals\n`;
   });
@@ -96,24 +96,24 @@ zokou({
   repondre(topScorerMessage);
 });
 
-/** ✅ laliga top assists */
+/** ✅ bundesliga top assists */
 zokou({
-  nomCom: "laliga_top_assist",
-  categorie: "SPORTS-GAMES",
+  nomCom: "bundesliga_top_assist",
+  categorie: "football live",
   reaction: "🎯"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
 
-  // API URL for La Liga top assists
-  const topAssistUrl = `${apiUrl}/PD/assists`;
+  // API URL for Bundesliga top assists
+  const topAssistUrl = `${apiUrl}/BL1/assists`;
 
   const data = await fetchFootballData(topAssistUrl);
   if (!data || !data.assists) {
-    return repondre("❌ Error fetching La Liga top assists.");
+    return repondre("❌ Error fetching Bundesliga top assists.");
   }
 
   const topAssists = data.assists;
-  let topAssistMessage = "🎯 *La Liga Top Assists*\n";
+  let topAssistMessage = "🎯 *Bundesliga Top Assists*\n";
   topAssists.forEach((assist, index) => {
     topAssistMessage += `${index + 1}. ${assist.player.name} - ${assist.numberOfAssists} Assists\n`;
   });
@@ -121,22 +121,22 @@ zokou({
   repondre(topAssistMessage);
 });
 
-/** ✅ laliga news */
+/** ✅ bundesliga news */
 zokou({
-  nomCom: "laliga_news",
-  categorie: "SPORTS-GAMES",
+  nomCom: "bundesliga_news",
+  categorie: "football live",
   reaction: "📰"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
 
-  // API URL for La Liga news (You may need to use another news API for this)
-  const newsUrl = `https://newsapi.org/v2/everything?q=La Liga&apiKey=YOUR_NEWSAPI_KEY`; // Replace with your NewsAPI key
+  // API URL for Bundesliga news (You may need to use another news API for this)
+  const newsUrl = `https://newsapi.org/v2/everything?q=Bundesliga&apiKey=YOUR_NEWSAPI_KEY`; // Replace with your NewsAPI key
 
   try {
     const response = await axios.get(newsUrl);
-    if (response.data.status !== "ok") return repondre("❌ Error fetching La Liga news.");
+    if (response.data.status !== "ok") return repondre("❌ Error fetching Bundesliga news.");
 
-    let newsMessage = "📰 *La Liga News*\n";
+    let newsMessage = "📰 *Bundesliga News*\n";
     response.data.articles.forEach((article, index) => {
       newsMessage += `${index + 1}. [${article.title}](${article.url})\n`;
     });
@@ -144,26 +144,26 @@ zokou({
     repondre(newsMessage);
   } catch (error) {
     console.error(error);
-    repondre("❌ Error fetching La Liga news.");
+    repondre("❌ Error fetching Bundesliga news.");
   }
 });
 
-/** ✅ laliga highlights (You can integrate video highlight API) */
+/** ✅ bundesliga highlights (You can integrate video highlight API) */
 zokou({
-  nomCom: "laliga_highlights",
-  categorie: "SPORTS-GAMES",
+  nomCom: "bundesliga_highlights",
+  categorie: "football live",
   reaction: "📺"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
 
   // Example placeholder for video highlights (Consider using a video API)
-  const highlightsUrl = `https://api.example.com/pd-highlights`; // Replace with actual highlight API
+  const highlightsUrl = `https://api.example.com/bl1-highlights`; // Replace with actual highlight API
 
   try {
     const response = await axios.get(highlightsUrl);
     if (!response.data.highlights) return repondre("❌ No highlights found.");
 
-    let highlightsMessage = "🎬 *La Liga Highlights*\n";
+    let highlightsMessage = "🎬 *Bundesliga Highlights*\n";
     response.data.highlights.forEach((highlight, index) => {
       highlightsMessage += `${index + 1}. [Watch Highlight](${highlight.url})\n`;
     });
@@ -171,6 +171,6 @@ zokou({
     repondre(highlightsMessage);
   } catch (error) {
     console.error(error);
-    repondre("❌ Error fetching La Liga highlights.");
+    repondre("❌ Error fetching Bundesliga highlights.");
   }
 });
