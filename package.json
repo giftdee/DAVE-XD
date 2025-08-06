@@ -32,6 +32,7 @@
     "acrcloud": "^1.4.0", 
     "aptoide-scraper": "^1.0.1",
     "axios": "^1.4.0",
+    "adm-zip": "^0.5.16", 
     "cache-manager": "latest",
     "canvacord": "^5.4.8",
     "chal": "^0.0.1-security.0", 
