@@ -2,7 +2,6 @@ const { zokou } = require('../framework/zokou');
 const axios = require('axios');
 const ytSearch = require('yt-search');
 const conf = require(__dirname + '/../set');
-const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
 const { repondre } = require(__dirname + "/../framework/context");
 
@@ -126,40 +125,4 @@ zokou({
   }
 });
 
-// Media Upload via URL
-zokou({
-  nomCom: 'url-link',
-  categorie: "Download",
-  reaction: '👨🏿‍💻'
-}, async (dest, zk, commandOptions) => {
-  const { msgRepondu, userJid, ms } = commandOptions;
 
-  try {
-    if (!msgRepondu || !msgRepondu.message) {
-      return repondre(zk, dest, ms, "Please mention an image, video, or audio.");
-    }
-
-    const mediaTypes = [
-      'videoMessage', 'gifMessage', 'stickerMessage',
-      'documentMessage', 'imageMessage', 'audioMessage'
-    ];
-
-    const mediaType = mediaTypes.find(type => msgRepondu.message?.[type]);
-    if (!mediaType) {
-      return repondre(zk, dest, ms, "Unsupported media type.");
-    }
-
-    const mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.message[mediaType]);
-    const fileUrl = await uploadToCatbox(mediaPath);
-    await fs.unlink(mediaPath); // async delete
-
-    await zk.sendMessage(dest, {
-      text: `✅ Here's your file URL:\n${fileUrl}`,
-      contextInfo: getContextInfo("Upload Complete", userJid)
-    });
-
-  } catch (error) {
-    console.error("Upload error:", error);
-    repondre(zk, dest, ms, `Upload failed: ${error.message}`);
-  }
-});
