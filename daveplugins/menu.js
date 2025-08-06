@@ -86,7 +86,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 
     // Build menu with all categories and vertical command listing
     for (const cat in coms) {
-      const style = categoryStyles[cat] || { icon: "✨", decor: "⋯" };
+      const style = categoryStyles[cat] || { icon: "💱", decor: "⋯" };
       menuMsg += `\n  ${style.decor} ${style.icon} *${cat.toUpperCase()}* ${style.icon} ${style.decor}\n`;
 
       // List commands vertically with a bullet point
@@ -102,7 +102,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
   @254111687009 (𝐌𝐚𝐢𝐧)
   @254104260236 (Dave)
   
-𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
+> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
 ◈━━━━━━━━━━━━━━━━◈
 `;
 
@@ -213,3 +213,22 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
     }
   }
 );
+
+await zk.sendMessage(dest, {
+  text: '🛡️ *Powered by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* 🛡️',
+  contextInfo: {
+    externalAdReply: {
+      showAdAttribution: true,
+      title: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 MENU',
+      body: 'Multi-Device WhatsApp Bot',
+      sourceUrl: global.link,
+      mediaType: 1,
+      renderLargerThumbnail: false
+    },
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363400480173280@newsletter',
+      newsletterName: 'DAVE-XMD Updates',
+      serverMessageId: 143
+    }
+  }
+}, { quoted: ms });
