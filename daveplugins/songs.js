@@ -1,4 +1,4 @@
-const { zokou } = require('../framework/zokou');
+const { zokou } = require("../framework/zokou");
 const axios = require('axios');
 const ytSearch = require('yt-search');
 
@@ -6,8 +6,8 @@ const ytSearch = require('yt-search');
 zokou({
   nomCom: "song",
   aliases: ["musicdoc", "ytmp3doc", "audiodoc", "mp3doc"],
-  categorie: "Download",
-  reaction: "📥"
+  categorie: "Music",
+  reaction: "🎙️"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, repondre } = commandOptions;
 
@@ -58,7 +58,7 @@ zokou({
 
     // Check if a valid download URL was found
     if (!downloadData || !downloadData.success) {
-      return repondre('Failed to retrieve download URL from all sources. Please try again later.');
+      return repondre('Failed to retrieve download URL  Please try again later.');
     }
 
     const downloadUrl = downloadData.result.download_url;
