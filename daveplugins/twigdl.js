@@ -1,143 +1,65 @@
-const { zokou } = require("../framework/zokou");
-const { default: axios } = require('axios');
+const { ezra } = require('../framework/zokou');
+const axios = require("axios");
 
-const DAVE_XMD = "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃";
+zokou({
+  nomCom: "twittersearch",
+  aliases: ["xsearch", "twitterlist", "tweetsearch", "xsearch"],
+  categorie: "Search",
+  reaction: "📽️"
+}, async (dest, zk, commandeOptions) => {
+  const { repondre, arg } = commandeOptions;
 
-// Twitter Download Command
-zokou({ nomCom: "twitter", categorie: 'Download', reaction: "🐦" }, async (dest, zk, commandeOptions) => {
-  const { repondre, arg, ms } = commandeOptions;
-
-  let twitterUrl = arg.join(' ').trim();
-  if (!twitterUrl && ms.quoted && ms.quoted.text) {
-    twitterUrl = ms.quoted.text.trim();
-  }
-
-  if (!twitterUrl) {
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Please provide a Twitter link 🚫
-│❒ Example: .twitter https://twitter.com/elonmusk/status/1234567890
-◈━━━━━━━━━━━━━━━━◈
-    `);
-  }
-
-  const twitterRegex = /^https:\/\/(twitter|x)\.com\/[\w-]+\/status\/\d+/;
-  if (!twitterRegex.test(twitterUrl)) {
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Invalid Twitter link format 🚫
-│❒ Example: https://twitter.com/user/status/1234567890
-◈━━━━━━━━━━━━━━━━◈
-    `);
+  // Ensure a query is provided in the arguments
+  if (!arg[0]) {
+    return repondre('🤦Please provide a thing!');
   }
 
   try {
-    const apiUrl = `https://api.giftedtech.web.id/api/download/aiodl2?apikey=gifted&url=${encodeURIComponent(twitterUrl)}`;
-    const response = await axios.get(apiUrl);
+    // Define the search API URL
+    const searchApiUrl = `https://apis-starlights-team.koyeb.app/starlight/Twitter-Posts?text=${encodeURIComponent(arg[0])}`;
+    const response = await axios.get(searchApiUrl);
+    const searchData = response.data.result;  // Assuming 'result' contains an array of tweets
 
-    if (!response.data.success || response.data.status !== 200) {
-      return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Failed to download Twitter media 😓
-│❒ Error: ${response.data.message || 'Unknown error'}
-◈━━━━━━━━━━━━━━━━◈
-      `);
+    // Check if no results are found
+    if (!searchData || searchData.length === 0) {
+      return repondre("❌No Twitter search results found.");
     }
 
-    const media = response.data.result;
-    return repondre(`
-${DAVE_XMD}
+    // Construct the search message
+    let searchMessage = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 TWITTER SEARCH\n\n`;
+    searchMessage += `Creator: ${response.data.creator}\n\n`;  // Include the creator info
 
-◈━━━━━━━━━━━━━━━━◈
-│❒ Twitter Download Success 🐦
-│❒ Title: ${media.title || 'No title available'}
-│❒ Type: ${media.type || 'unknown'}
-│❒ URL: ${media.download_url}
-◈━━━━━━━━━━━━━━━━◈
-    `);
+    // Loop through search results and append details to the message
+    searchData.forEach((track, index) => {
+      const trackNumber = index + 1; // Number tracks starting from 1
+      searchMessage += `*☞${trackNumber}.* ${track.user}\n`;
+      searchMessage += `*☞Profile*: ${track.profile || "Unknown"}\n`;
+      searchMessage += `*☞Post*: ${track.post}\n`;  // The text of the tweet
+      searchMessage += `*☞User Link*: ${track.user_link}\n`;  // Link to the user's profile
+      searchMessage += `──────────────\n\n`;
+    });
+
+    // Send the search result message
+    await zk.sendMessage(
+      dest,
+      {
+        text: searchMessage,
+        contextInfo: {
+          mentionedJid: [dest],
+          externalAdReply: {
+            showAdAttribution: true,
+            title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 TWITTER SEARCH",
+            body: "DAVE TECH",
+            sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
+            mediaType: 1,
+            renderLargerThumbnail: false,
+          },
+        },
+      }
+    );
   } catch (error) {
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Error downloading Twitter media 😓
-│❒ Error: ${error.message || 'Unknown error'}
-◈━━━━━━━━━━━━━━━━◈
-    `);
-  }
-});
-
-// Instagram Download Command
-zokou({ nomCom: "ig", categorie: 'Download', reaction: "📸" }, async (dest, zk, commandeOptions) => {
-  const { repondre, arg, ms } = commandeOptions;
-
-  let igUrl = arg.join(' ').trim();
-  if (!igUrl && ms.quoted && ms.quoted.text) {
-    igUrl = ms.quoted.text.trim();
-  }
-
-  if (!igUrl) {
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Please provide an Instagram link 🚫
-│❒ Example: .ig https://www.instagram.com/reel/C9bjQfRprHK/
-◈━━━━━━━━━━━━━━━━◈
-    `);
-  }
-
-  const igRegex = /^https:\/\/(www\.)?instagram\.com\/(reel|p|tv)\/[\w-]+/;
-  if (!igRegex.test(igUrl)) {
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Invalid Instagram link format 🚫
-│❒ Example: https://www.instagram.com/reel/C9bjQfRprHK/
-◈━━━━━━━━━━━━━━━━◈
-    `);
-  }
-
-  try {
-    const apiUrl = `https://api.giftedtech.web.id/api/download/instadl?apikey=gifted&type=video&url=${encodeURIComponent(igUrl)}`;
-    const response = await axios.get(apiUrl);
-
-    if (!response.data.success || response.data.status !== 200) {
-      return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Failed to download Instagram media 😓
-│❒ Error: ${response.data.message || 'Unknown error'}
-◈━━━━━━━━━━━━━━━━◈
-      `);
-    }
-
-    const media = response.data.result;
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Instagram Download Success 📸
-│❒ Type: ${media.type || 'unknown'}
-│❒ URL: ${media.download_url}
-◈━━━━━━━━━━━━━━━━◈
-    `);
-  } catch (error) {
-    return repondre(`
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ Error downloading Instagram media 😓
-│❒ Error: ${error.message || 'Unknown error'}
-◈━━━━━━━━━━━━━━━━◈
-    `);
+    // Log and respond with the error message
+    console.error(error);  // Log the error to the console
+    repondre(`❌Error: ${error.message || 'Something went wrong.'}`);
   }
 });
