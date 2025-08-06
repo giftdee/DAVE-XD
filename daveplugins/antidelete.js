@@ -77,7 +77,7 @@ zokou({
   nomCom: "blocklist",
   aliases: ["listblock", "blacklist"],
   reaction: '🍂',
-  categorie: "dave-Search"
+  categorie: "Mods"
 }, async (dest, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
 
