@@ -29,7 +29,7 @@ async function uploadToCatbox(filePath) {
 zokou({
   nomCom: "play",
   aliases: ["song", "playdoc", "audio", "mp3"],
-  categorie: "download",
+  categorie: "Download",
   reaction: "🎧"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, repondre } = commandOptions;
