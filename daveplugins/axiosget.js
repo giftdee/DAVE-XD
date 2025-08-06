@@ -5,8 +5,8 @@ const conf = require(__dirname + "/../set");
 
 zokou({
   nomCom: "technews",
-  reaction: ' 🔍',
-  categorie: 'search'
+  reaction: '📰',
+  categorie: 'New'
 }, async (dest, zk, context) => {
   const { repondre, ms } = context;
 
@@ -19,116 +19,26 @@ zokou({
     await zk.sendMessage(dest, {
       text: news,
       contextInfo: {
-        externalAdReply: {
-          title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 NEWS",
-          body: "Learning never ends", 
-          thumbnailUrl: thumbnail, 
-          sourceUrl: conf.GURL, 
-          mediaType: 1,
-          showAdAttribution: true, 
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
         },
       },
     }, { quoted: ms });
 
   } catch (error) {
     console.error("Error fetching tech news:", error);
-    await repondre("oh sorry, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 hit  a snag retrieving the news. Please try again later.\n" + error);
+    await repondre("Sorry, there was an error retrieving the news. Please try again later.\n" + error);
   }
 });
-
-
+       
 zokou({
-  nomCom: "bibilia",
-  reaction: '⭐',
-  categorie: "God"
-}, async (dest, zk, commandeOptions) => {
-  const { repondre, arg, ms } = commandeOptions;
-  const reference = arg.join(" ");
-
-  if (!reference) {
-    return repondre("Please specify the book, chapter, and verse you want to read. Example: bible Mathew 3:16", {
-      contextInfo: {
-        externalAdReply: {
-          title: "Bible Reference Required",
-          body: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 says provide a book, chapter, and verse.",
-          thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg", // Replace with a suitable thumbnail URL
-          sourceUrl: conf.GURL,
-          mediaType: 1,
-          showAdAttribution: true,
-        },
-      },
-    });
-  }
-
-  try {
-    const response = await axios.get(`https://bible-api.com/${reference}`);
-
-    if (!response.data) {
-      return repondre("Invalid reference. Example: bible john 3:16", {
-        contextInfo: {
-          externalAdReply: {
-            title: "Invalid Bible Reference don't make me do extra work ",
-            body: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 says provide a valid book, chapter, and verse.",
-            thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg", // Replace with a suitable thumbnail URL
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true,
-          },
-        },
-      });
-    }
-
-    const data = response.data;
-    const messageText = `
-ᕙ⁠ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 HOLY BIBLE* ᕗ
-
-✿⁠ *_WE'RE READING:_* ${data.reference}
-
-✿⁠ *_NUMBER OF VERSES:_* ${data.verses.length}
-
-✿⁠ *_NOW READ:_* ${data.text}
-
-✿ ⁠*_LANGUAGE:_* ${data.translation_name}
-╭────────────────◆
-│ *_Powered by ${conf.OWNER_NAME}*
-╰─────────────────◆ `;
-
-    await zk.sendMessage(dest, {
-      text: messageText,
-      contextInfo: {
-        externalAdReply: {
-          title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 HOLY BIBLE",
-          body: `We're reading: ${data.reference}`,
-          mediaType: 1,
-          thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg", 
-          sourceUrl: conf.GURL,
-          showAdAttribution: true, 
-        },
-      },
-    }, { quoted: ms });
-
-  } catch (error) {
-    console.error("Error fetching Bible passage:", error);
-    await repondre("An error occurred while fetching the Bible passage. Please try again later.", {
-      contextInfo: {
-        externalAdReply: {
-          title: "Error Fetching Bible Passage",
-          body: "Please try again later.",
-          thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg", // Replace with a suitable thumbnail URL
-          sourceUrl: conf.GURL,
-          mediaType: 1,
-          showAdAttribution: true,
-        },
-      },
-    });
-  }
-});
-
-zokou({
-  nomCom: "describe",
+  nomCom: "define",
   aliases: ["dictionaries", "dict", "def"],
-  reaction: '⭐',
-  categorie: "Tool"
+  reaction: '😁',
+  categorie: "New"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const term = arg.join(" ");
@@ -151,13 +61,11 @@ zokou({
       await zk.sendMessage(dest, {
         text: definitionMessage,
         contextInfo: {
-          externalAdReply: {
-            title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 DICTIONARY",
-            body: `Definition of ${term}`,
-            mediaType: 1,
-            thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg", 
-            sourceUrl: conf.GURL,
-            showAdAttribution: true, 
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
           },
         },
       }, { quoted: ms });
@@ -171,11 +79,11 @@ zokou({
   }
 });
 
-zokou({
-  nomCom: "paircode",
+Zokou({
+  nomCom: "pair",
   aliases: ["session", "qrcode"],
-  reaction: '🚀',
-  categorie: 'new'
+  reaction: '🌟',
+  categorie: 'General'
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
 
@@ -186,12 +94,12 @@ zokou({
 
   try {
     // Notify user that pairing is in progress
-    const replyText = "*Hold bois 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  is getting your pair code 🌚...*";
+    const replyText = "*hold 🛡️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃🛡️ is getting your pair code ...*";
     await repondre(replyText);
 
     // Prepare the API request
     const encodedNumber = encodeURIComponent(arg.join(" "));
-    const apiUrl = `https://xdtoxicpairing2.onrender.com/pair?number=${encodedNumber}`;
+    const apiUrl = `https://dacmvexmd-pair-site-2.onrender.com/pair/code?number=${encodedNumber}`;
 
     // Fetch the pairing code from the API
     const response = await axios.get(apiUrl);
@@ -202,13 +110,11 @@ zokou({
       await zk.sendMessage(dest, {
         text: pairingCode,
         contextInfo: {
-          externalAdReply: {
-            title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 CODE",
-            body: "Here is 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 pairing code:",
-            mediaType: 1,
-            thumbnailUrl: conf.URL, 
-            sourceUrl: conf.GURL,
-            showAdAttribution: true, 
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
           },
         },
       }, { quoted: ms });
@@ -227,8 +133,8 @@ zokou({
 
 zokou({
   nomCom: "elements",
-  reaction: '⭐',
-  categorie: "General"
+  reaction: '📓',
+  categorie: "New"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const elementQuery = arg.join(" ").trim();
@@ -248,28 +154,26 @@ zokou({
     const thumb = data.image; // Assuming the API returns an 'image' property for the element thumbnail
 
     const formattedMessage = `
-*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Element Information:*
-💱 *Name:* ${data.name}
-💱 *Symbol:* ${data.symbol}
-💱 *Atomic Number:* ${data.atomic_number}
-💱 *Atomic Mass:* ${data.atomic_mass}
-💱 *Period:* ${data.period}
-💱 *Phase:* ${data.phase}
-💱 *Discovered By:* ${data.discovered_by}
-💱 *Summary:* ${data.summary}
+*🛡️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 🛡️ ELEMENT INFO:*
+🛡️ *Name:* ${data.name}
+🛡️ *Symbol:* ${data.symbol}
+🛡️ *Atomic Number:* ${data.atomic_number}
+🛡️ *Atomic Mass:* ${data.atomic_mass}
+🛡️ *Period:* ${data.period}
+🛡️ *Phase:* ${data.phase}
+🛡️ *Discovered By:* ${data.discovered_by}
+🛡️ *Summary:* ${data.summary}
    
-Regards ${conf.BOT} `;
+Regards ${conf.OWNER_NAME} `;
 
     await zk.sendMessage(dest, {
       text: formattedMessage,
       contextInfo: {
-        externalAdReply: {
-          title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ELEMENT INFORMATION",
-          body: "Here is the information you requested dear:",
-          mediaType: 1,
-          thumbnailUrl: thumb,
-          sourceUrl: conf.GURL,
-          showAdAttribution: true, 
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
         },
       },
     }, { quoted: ms });
@@ -283,14 +187,14 @@ Regards ${conf.BOT} `;
 zokou({
   nomCom: "githubs",
   aliases: ["gits"],
-  reaction: '⭐',
-  categorie: "General"
+  reaction: '💻',
+  categorie: "New"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const githubUsername = arg.join(" ");
 
   if (!githubUsername) {
-    return repondre("Give me a valid GitHub username like: github giftdee");
+    return repondre("Give me a valid GitHub username like: github giftdee or gifteddev");
   }
 
   try {
@@ -304,32 +208,29 @@ zokou({
     const thumb = data.avatar_url; // Using the avatar_url as the thumbnail
 
     const githubMessage = `
-╭─── 𝐆𝐢𝐭𝐇𝐮𝐛 𝐔𝐬𝐞𝐫 𝐈𝐧𝐟𝐨 ───╮
-🚩 *ID:* ${data.id}
-🎟️ *Name:* ${data.name}
-💻 *Username:* ${data.login}
-🧠 *Bio:* ${data.bio}
-🏢 *Company:* ${data.company}
-📍 *Location:* ${data.location}
-📧 *Email:* ${data.email || "Not provided"}
-🌐 *Blog:* ${data.blog || "Not provided"}
-📁 *Public Repos:* ${data.public_repos}
-📄 *Public Gists:* ${data.public_gists}
-👥 *Followers:* ${data.followers}
-🤝 *Following:* ${data.following}
-╰── Powered by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ──╯
+°GITHUB USER INFO°
+🚩 Id: ${data.id}
+🔖 Name: ${data.name}
+🔖 Username: ${data.login}
+✨ Bio: ${data.bio}
+🏢 Company: ${data.company}
+📍 Location: ${data.location}
+📧 Email: ${data.email || "Not provided"}
+📰 Blog: ${data.blog || "Not provided"}
+🔓 Public Repos: ${data.public_repos}
+🔐 Public Gists: ${data.public_gists}
+👪 Followers: ${data.followers}
+🫶 Following: ${data.following}
 `;
 
     await zk.sendMessage(dest, {
       text: githubMessage,
       contextInfo: {
-        externalAdReply: {
-          title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 GITHUB USER INFO",
-          body: `Information about ${data.login}`,
-          mediaType: 1,
-          thumbnailUrl: thumb,
-          sourceUrl: conf.GURL,
-          showAdAttribution: true,
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
         },
       },
     }, { quoted: ms });
@@ -341,10 +242,10 @@ zokou({
 });
 
 zokou({
-  nomCom: "tempmaile",
+  nomCom: "tempmail",
   aliases: ['maile', 'tempe'],
-  reaction: '⭐',
-  categorie: "General"
+  reaction: '📧',
+  categorie: "New"
 }, async (dest, zk, context) => {
   const { repondre: replyToUser, prefix, ms: messageQuote } = context;
 
@@ -356,13 +257,11 @@ zokou({
 
 You can use this email for temporary purposes. I will notify you if you receive any emails.`,
       contextInfo: {
-        externalAdReply: {
-          title: "Temporary Email Service",
-          body: "Create temporary emails quickly and easily for privacy and security.",
-          thumbnailUrl: conf.URL,
-          sourceUrl: conf.GURL,
-          mediaType: 1,
-          showAdAttribution: true
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
         }
       }
     }, { quoted: messageQuote });
@@ -383,13 +282,11 @@ You can use this email for temporary purposes. I will notify you if you receive 
             await zk.sendMessage(dest, {
               text: `You have received a new email!\n\nFrom: ${emailData.from}\nSubject: ${emailData.subject}\n\n${emailData.textBody}\nLinks found:\n${linksText}`,
               contextInfo: {
-                externalAdReply: {
-                  title: "Temporary Email Notification",
-                  body: "You received a new email on your temporary inbox. Check it out now!",
-                  thumbnailUrl: conf.URL,
-                  sourceUrl: conf.GURL,
-                  mediaType: 1,
-                  showAdAttribution: true
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
                 }
               }
             }, { quoted: messageQuote });
@@ -409,13 +306,11 @@ You can use this email for temporary purposes. I will notify you if you receive 
       zk.sendMessage(dest, {
         text: "Your temporary email session has ended. Please create a new temporary email if needed.",
         contextInfo: {
-          externalAdReply: {
-            title: "Temporary Email Session Ended",
-            body: "Your temporary email session has ended. Need another one? Just ask!",
-            thumbnailUrl: conf.URL,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
           }
         }
       }, { quoted: messageQuote });
@@ -426,13 +321,11 @@ You can use this email for temporary purposes. I will notify you if you receive 
     await zk.sendMessage(dest, {
       text: "Error generating temporary email. Please try again later.",
       contextInfo: {
-        externalAdReply: {
-          title: "Temporary Email Error",
-          body: "There was an issue generating your temporary email. Please try again later.",
-          thumbnailUrl: conf.URL,
-          sourceUrl: conf.GURL,
-          mediaType: 1,
-          showAdAttribution: true
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
         }
       }
     }, { quoted: messageQuote });
@@ -441,8 +334,8 @@ You can use this email for temporary purposes. I will notify you if you receive 
 zokou({
   nomCom: "wikipedia",
   aliases: ["wiki", "wikipeda"],
-  reaction: '🔍',
-  categorie: "Search"
+  reaction: '🤡',
+  categorie: "New"
 }, async (zk, dest, context) => {
   const { repondre, arg, ms } = context;
 
@@ -457,18 +350,58 @@ zokou({
 
     // Format the reply message
     const texa = `
-*🌐 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Wikipedia Summary 🌐*
+*📚 Wikipedia Summary 📚*
 
-📌 *Title:* _${con.title}_  
-🗒️ *Description:* _${con.description}_  
-📖 *Summary:* _${con.extract}_  
-🔗 *Read more:* ${con.content_urls.mobile.page}
+🔍 *Title*: _${con.title}_
 
-> 🔧 Powered by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
+📝 *Description*: _${con.description}_
+
+🛡️ *Summary*: _${con.extract}_
+
+🔗 *URL*: ${con.content_urls.mobile.page}
+
+> Powered by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
     `;
     repondre(texa);
   } catch (err) {
     console.error(err);
     repondre(`Got 404. I did not find anything!`);
+  }
+});
+
+// Request for Islam Hadith
+zokou({
+  nomCom: "hadith",
+  aliases: ["islam", "hadees"],
+  reaction: '📖',
+  categorie: "New"
+}, async (dest, zk, params) => {
+  const { repondre } = params;
+
+  try {
+    const response = await axios.get("https://bk9.fun/Islam/hadith", {
+      timeout: 10000 // 10 seconds timeout
+    });
+
+    if (response.status === 200 && response.data) {
+      const hadithText = response.data.hadith || response.data; // Adjust based on API response format
+
+      await zk.sendMessage(dest, {
+        text: `📜 *Hadith of the Day:*\n\n"${hadithText}"`,
+        contextInfo: {
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "DAVE-XMD updates",
+         serverMessageId: 143,
+          },
+        },
+      });
+    } else {
+      throw new Error("Invalid response from Hadith API");
+    }
+  } catch (error) {
+    console.error("Error fetching Hadith:", error.message);
+    await repondre("Sorry, I couldn't fetch a Hadith at the moment.");
   }
 });
