@@ -1,41 +1,96 @@
-const { zokou } = require('../framework/zokou');
-const axios = require('axios'); // Ensure axios is imported
-const conf = require(__dirname + "/../set");
+const { zokou } = require('../framework/ezra');
+const {addOrUpdateDataInAlive , getDataFromAlive} = require('../bdd/alive')
+const moment = require("moment-timezone");
+const s = require(__dirname + "/../set");
 
-zokou({
-  nomCom: "hadith",
-  aliases: ["islam", "hadees"],
-  reaction: '📖',
-  categorie: "God"
-}, async (dest, zk, params) => {
-  const { repondre } = params;
+zokou(
+    {
+        nomCom : 'alive',
+        categorie : 'General'
 
-  try {
-    const response = await axios.get("https://bk9.fun/Islam/hadith", {
-      timeout: 10000 // 10 seconds timeout
-    });
+    },async (dest,zk,commandeOptions) => {
 
-    if (response.status === 200 && response.data) {
-      const hadithText = response.data.hadith || response.data; // Adjust based on API response format
+ const {ms , arg, repondre,superUser} = commandeOptions;
 
-      await zk.sendMessage(dest, {
-        text: `📜 *Hadith of the Day:*\n\n"${hadithText}"`,
-        contextInfo: {
-          externalAdReply: {
-            title: conf.BOT,
-            body: "Islamic Teachings",
-            thumbnailUrl: conf.URL,
-            sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
-            mediaType: 1,
-            showAdAttribution: true,
-          },
-        },
-      });
-    } else {
-      throw new Error("Invalid response from Hadith API");
+ const data = await getDataFromAlive();
+
+ if (!arg || !arg[0] || arg.join('') === '') {
+
+    if(data) {
+
+        const {message , lien} = data;
+
+
+        var mode = "public";
+        if ((s.MODE).toLocaleLowerCase() != "yes") {
+            mode = "private";
+        }
+
+
+
+    moment.tz.setDefault('Etc/GMT');
+
+// Créer une date et une heure en GMT
+const temps = moment().format('HH:mm:ss');
+const date = moment().format('DD/MM/YYYY');
+
+    const alivemsg = `
+*Owner* : ${s.OWNER_NAME}
+*Mode* : ${mode}
+*Date* : ${date}
+*Hours(GMT)* : ${temp}
+*Bot* : ${s.bot} 
+*Forks* : ${forks} 
+
+ ${message}
+ 
+ 
+ *🛡️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃🛡️*`
+
+ if (lien.match(/\.(mp4|gif)$/i)) {
+    try {
+        zk.sendMessage(dest, { video: { url: lien }, caption: alivemsg }, { quoted: ms });
     }
-  } catch (error) {
-    console.error("Error fetching Hadith:", error.message);
-    await repondre("Sorry, I couldn't fetch a Hadith at the moment.");
-  }
-});
+    catch (e) {
+        console.log("🥵🥵 Menu erreur " + e);
+        repondre("🥵🥵 Menu erreur " + e);
+    }
+} 
+// Checking for .jpeg or .png
+else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
+    try {
+        zk.sendMessage(dest, { image: { url: lien }, caption: alivemsg }, { quoted: ms });
+    }
+    catch (e) {
+        console.log("🥵🥵 Menu erreur " + e);
+        repondre("🥵🥵 Menu erreur " + e);
+    }
+} 
+else {
+
+    repondre(alivemsg);
+
+}
+
+    } else {
+        if(!superUser) { repondre("𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Is A Live 24/7🗿") ; return};
+
+      await   repondre("You have not yet saved your alive, to do this;  enter after alive your message and your image or video link in this context: .alive message;lien");
+         repondre("don't fake you wont make it🗿 :)")
+     }
+ } else {
+
+    if(!superUser) { repondre ("command reserved for owner 🗿🗿") ; return};
+
+
+    const texte = arg.join(' ').split(';')[0];
+    const tlien = arg.join(' ').split(';')[1]; 
+
+
+
+await addOrUpdateDataInAlive(texte , tlien)
+
+repondre('𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Is A Live 24/7. ')
+
+}
+    });
