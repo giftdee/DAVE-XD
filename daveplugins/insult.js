@@ -4,7 +4,7 @@ const axios = require("axios");
 zokou({
   nomCom: "insult",
   aliases: ["abuse", "tusi"],
-  categorie: "search",
+  categorie: "Fun",
   reaction: "🤷"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, ms } = commandeOptions;
