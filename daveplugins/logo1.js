@@ -219,7 +219,7 @@ zokou(
         if(!arg||arg=="")
         {
 
-          repondre(`  Exemple :* ${prefixe}boom fredie`)
+          repondre(`  Exemple :* ${prefixe}boom dave`)
           return ;
         }
        try{
@@ -271,7 +271,7 @@ var {ms,repondre,arg,prefixe}=commandeOptions;
 
 });
 
-zokou({ nomCom: "snow", categorie: "Fredi-Logo", reaction: "❄️" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "snow", categorie: "Dave-Logo", reaction: "❄️" }, async (dest, zk, commandeOptions) => {
   const { arg, ms, prefixe,repondre } = commandeOptions;
   if (!arg[0]) {
     repondre(`Exemple of using commande:\n ${prefixe}Snow My text`);
