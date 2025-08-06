@@ -12,7 +12,7 @@ zokou(
   {
     nomCom: "menu",
     categorie: "General",
-    reaction: "⚡",
+    reaction: "💱",
   },
   async (dest, zk, commandeOptions) => {
     let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
@@ -62,7 +62,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
     // Menu section
     let menuMsg = `
 ◈━━━━━━━━━━━━━━━━◈
-  ⚡ 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 ⚡
+  💱 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 💱
   
   𝐔𝐬𝐞 ${prefixe}help <command>
   𝐟𝐨𝐫 𝐝𝐞𝐭𝐚𝐢𝐥𝐬
