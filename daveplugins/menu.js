@@ -92,25 +92,25 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
       Reaction: { icon: "🔥", decor: "┃" },
       Tts: { icon: "🛡️", decor: "┃" },
       Weeb: { icon: "🛡️",decor: "┃" },
-      Bug: {icon: "🗿", decor: "┃" },
-      Coding: {icon: "🗿", decor "┃" },
-      Imageedit: {icon: "🛡️", decor "┃" },
-      Conversation: {icon: "💦", decor "┃" },
-      New: {icon: "💦", decor "┃" },
-      Audioedit: {icon: "🎵", decor "┃" },
-      God: {icon: "🧘", decor "┃" }
-    };
+      Bug: { icon: "🗿", decor: "┃" },
+      Coding: { icon: "🗿", decor "┃" },
+      Imageedit: { icon: "🛡️", decor "┃" },
+      Conversation: { icon: "💦", decor "┃" },
+      New: { icon: "💦", decor "┃" },
+      Audioedit: { icon: "🎵", decor "┃" },
+      God: { icon: "🧘", decor "┃" },
+  };
 
-    // Build menu with all categories and vertical command listing
-    for (const cat in coms) {
-      const style = categoryStyles[cat] || { icon: "🌍", decor: "⋯" };
-      menuMsg += `\n  ${style.decor} ${style.icon} *${cat.toUpperCase()}* ${style.icon} ${style.decor}\n`;
+        // Build menu with all categories and vertical command listing
+  for (const cat in coms) {
+    const style = categoryStyles[cat] || { icon: "🛡️", decor: "⋯" };
+     menuMsg += `\n  ${style.decor} ${style.icon} *${cat.toUpperCase()}* ${style.icon} ${style.decor}\n`;
 
-      // List commands vertically with a bullet point
-      coms[cat].forEach((cmd) => {
-        menuMsg += `  • ${cmd}\n`;
-      });
-    }
+     // List commands vertically with a bullet point
+     coms[cat].forEach((cmd) => {
+       menuMsg += `  • ${cmd}\n`;
+     });
+  }
 
     menuMsg += `
 ◈━━━━━━━━━━━━━━━━◈
@@ -119,7 +119,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
   @254111687009 (𝐌𝐚𝐢𝐧)
   @254104260236 (Dave)
   
-> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 
+ ⃝⃪⃕🥀-〭⃛〬𓆩〭⃛〬❥
 ◈━━━━━━━━━━━━━━━━◈
 `;
 
@@ -230,4 +230,6 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
     }
   }
 );
+      
 
+      
