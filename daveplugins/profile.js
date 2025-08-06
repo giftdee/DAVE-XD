@@ -1,12 +1,11 @@
 const { zokou } = require("../framework/zokou");
 const conf = require(__dirname + "/../set");
 
-// request for Profile fun
 zokou({
   nomCom: "profile",
   aliases: ["pp", "who"],
   desc: "to generate profile picture",
-  categorie: "Fun"
+  categorie: "New"
 }, async (dest, zk, commandeOptions) => {
   const { ms, arg, repondre, auteurMessage, nomAuteurMessage, msgRepondu, auteurMsgRepondu } = commandeOptions;
 
@@ -53,12 +52,11 @@ zokou({
     console.error('Unexpected error in profile command:', error); 
   }
 });
-
 zokou({
   nomCom: "profile2",
   aliases: ["pp2", "whois2"],
   desc: "to generate business profile picture",
-  categorie: "Fun"
+  categorie: "New"
 }, async (dest, zk, commandeOptions) => {
   const { ms, arg, repondre, auteurMessage, nomAuteurMessage, msgRepondu, auteurMsgRepondu } = commandeOptions;
 
