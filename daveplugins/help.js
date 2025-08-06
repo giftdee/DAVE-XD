@@ -21,7 +21,7 @@ const toFancyLowercaseFont = (text) => {
 // Command to list all bot commands along with descriptions and aliases
 zokou({
     nomCom: "help",
-    reaction: "🤦",
+    reaction: "🛠️",
     aliases: ["panelist", "commandlist", "cmdlist", "list"],
     desc: "Get bot command list.",
     categorie: "utilities"
