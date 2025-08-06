@@ -1,6 +1,6 @@
 const { zokou } = require("../framework/zokou");
 const fs = require("fs");
-const { webp2mp4File } = require("../../lib/uploader");
+const { webp2mp4File } = require("../lib/uploader");
 
 //━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━//
 //                   𝐔𝐓𝐈𝐋𝐈𝐓𝐈𝐄𝐒 𝐌𝐎𝐃𝐔𝐋𝐄             //
