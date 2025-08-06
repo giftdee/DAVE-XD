@@ -1,12 +1,11 @@
 const { zokou } = require('../framework/zokou');
-const axios = require('axios');
+const axios = require("axios");
 
-// request for Insult
 zokou({
   nomCom: "insult",
   aliases: ["abuse", "tusi"],
-  categorie: "Fun",
-  reaction: "🫣"
+  categorie: "search",
+  reaction: "🤷"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, ms } = commandeOptions;
 
