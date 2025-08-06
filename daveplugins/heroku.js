@@ -1,528 +1,635 @@
 const { zokou } = require('../framework/zokou');
 const Heroku = require('heroku-client');
+const fs = require('fs');
 const s = require("../set");
 const axios = require("axios");
 const speed = require("performance-now");
 const { exec } = require("child_process");
 const conf = require(__dirname + "/../set");
-// Function for delay simulation
-function delay(ms) {
-  console.log(`⏱️ delay for ${ms}ms`);
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-// Format the uptime into a human-readable string
-function runtime(seconds) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secondsLeft = Math.floor(seconds % 60);
 
-  return `${hours}h ${minutes}m ${secondsLeft}s`;
+// Function to get a description of an environment variable
+function getDescriptionFromEnv(varName) {
+  const filePath = "./app.json";
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const config = JSON.parse(fileContent);
+  return config.env[varName]?.description || "The environment variable description was not found.";
 }
 
-// New loading animation with different symbols and larger progress bar
-async function loading(dest, zk) {
-  const lod = [
-    "⏳ ⎯⎯⎯⎯⎯ 20%  🟦🟦⬜⬜⬜⬜⬜⬜",
-    "⏳ ⎯⎯⎯⎯⎯ 40%  🟦🟦🟦🟦⬜⬜⬜⬜",
-    "⏳ ⎯⎯⎯⎯⎯ 60%  🟩🟩🟦🟦🟦🟦⬜⬜",
-    "⏳ ⎯⎯⎯⎯⎯ 80%  🟩🟩🟩🟩🟦🟦🟦🟦",
-    "✅ ⎯⎯⎯⎯⎯ 100% 🟩🟩🟩🟩🟩🟩🟩🟩",
-    "*🔁 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is LOADING.. 😊*"
-  ];
-
-  let { key } = await zk.sendMessage(dest, { text: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is loading Wait' });
-
-  for (let i = 0; i < lod.length; i++) {
-    await zk.sendMessage(dest, { text: lod[i], edit: key });
-    await delay(500); // Adjust the speed of the animation here
-  }
-}
-
+// Anti-call function setup
 zokou({
-  nomCom: "test",
-  aliases: ["testing"],
-  categorie: "system",
-  reaction: "🍂"
-}, async (dest, zk, commandeOptions) => {
-  const { ms } = commandeOptions;
-
-  // Array of sound file URLs
-  const audioFiles = [
-    'https://files.catbox.moe/hpwsi2.mp3',
-    'https://files.catbox.moe/xci982.mp3',
-    'https://files.catbox.moe/utbujd.mp3',
-    'https://files.catbox.moe/w2j17k.m4a',
-    'https://files.catbox.moe/851skv.m4a',
-    'https://files.catbox.moe/qnhtbu.m4a',
-    'https://files.catbox.moe/lb0x7w.mp3',
-    'https://files.catbox.moe/efmcxm.mp3',
-    'https://files.catbox.moe/wdap4t.mp3',
-    'https://files.catbox.moe/26oeeh.mp3',
-    'https://files.catbox.moe/a1sh4u.mp3',
-    'https://files.catbox.moe/vuuvwn.m4a',
-    'https://files.catbox.moe/wx8q6h.mp3',
-    'https://files.catbox.moe/uj8fps.m4a',
-    'https://files.catbox.moe/dc88bx.m4a',
-    'https://files.catbox.moe/tn32z0.m4a'
-  ];
-
-  // Randomly pick an audio file from the list
-  const selectedAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
-
-  // Audio message object
-  const audioMessage = {
-    audio: {
-      url: selectedAudio,
-    },
-    mimetype: 'audio/mpeg',
-    ptt: true,  // Marking this as a "Push-to-Talk" message
-    waveform: [100, 0, 100, 0, 100, 0, 100],
-    fileName: 'shizo',
-    contextInfo: {
-      externalAdReply: {
-        title: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is alive!',
-        body: conf.OWNER_NAME,
-        thumbnailUrl: conf.URL,
-        sourceUrl: conf.GURL, // Corrected variable name
-        mediaType: 1,
-        renderLargerThumbnail: true,
-      },
-    },
-  };
-
-  // Send the audio message with the context of the original message
-  await zk.sendMessage(dest, audioMessage, { quoted: ms });
-});
-
-
-zokou({
-  nomCom: "alive",
-  categorie: "system",
-  reaction: "🍂"
-}, async (dest, zk, commandeOptions) => {
-  const { ms } = commandeOptions;
-
-  // Array of sound file URLs
-  const audioFiles = [
-    'https://files.catbox.moe/hpwsi2.mp3',
-    'https://files.catbox.moe/xci982.mp3',
-    'https://files.catbox.moe/utbujd.mp3',
-    'https://files.catbox.moe/w2j17k.m4a',
-    'https://files.catbox.moe/851skv.m4a',
-    'https://files.catbox.moe/qnhtbu.m4a',
-    'https://files.catbox.moe/lb0x7w.mp3',
-    'https://files.catbox.moe/efmcxm.mp3',
-    'https://files.catbox.moe/wdap4t.mp3',
-    'https://files.catbox.moe/26oeeh.mp3',
-    'https://files.catbox.moe/a1sh4u.mp3',
-    'https://files.catbox.moe/vuuvwn.m4a',
-    'https://files.catbox.moe/wx8q6h.mp3',
-    'https://files.catbox.moe/uj8fps.m4a',
-    'https://files.catbox.moe/dc88bx.m4a',
-    'https://files.catbox.moe/tn32z0.m4a'
-  ];
-
-  // Randomly pick an audio file from the list
-  const selectedAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
-
-  // Audio message object
-  const audioMessage = {
-    audio: {
-      url: selectedAudio,
-    },
-    mimetype: 'audio/mpeg',
-    ptt: true,  // Marking this as a "Push-to-Talk" message
-    waveform: [100, 0, 100, 0, 100, 0, 100],
-    fileName: 'shizo',
-    contextInfo: {
-      externalAdReply: {
-        title: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is up and alive!',
-        body: conf.OWNER_NAME,
-        thumbnailUrl: conf.URL,
-        sourceUrl: conf.GURL, // Corrected variable name
-        mediaType: 1,
-        renderLargerThumbnail: true,
-      },
-    },
-  };
-
-  // Send the audio message with the context of the original message
-  await zk.sendMessage(dest, audioMessage, { quoted: ms });
-});
-
-
-zokou({
-  nomCom: 'restart',
-  aliases: ['reboot'],
-  categorie: "system"
+  nomCom: 'anticall',
+  categorie: "Mods"
 }, async (chatId, zk, context) => {
-  const { repondre, superUser } = context;
-
-  // Check if the user is a super user
-  if (!superUser) {
-    return repondre("You need owner privileges to execute this command!");
-  }
-
-  try {
-    // Inform the user that the bot is restarting
-    await repondre("*Restarting...*");
-
-    // Function to create a delay
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-    // Wait for 3 seconds before restarting
-    await sleep(3000);
-
-    // Exit the process to restart the bot
-    process.exit();
-  } catch (error) {
-    console.error("Error during restart:", error);
-  }
-});
-// thanks  chatgpt
-
-
-// Command to retrieve Heroku config vars
-zokou({
-  nomCom: 'allvar',
-  categorie: "system"
-}, async (chatId, zk, context) => {
-  const { repondre, superUser } = context;
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
 
   // Check if the command is issued by the owner
   if (!superUser) {
-    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 *");
+    return repondre("*This command is restricted to the bot owner. or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner* 🗿,,bois");
   }
 
-  const appname = s.HEROKU_APP_NAME;
-  const herokuapi = s.HEROKU_API_KEY;
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "anticall yes" to enable or "anticall no" to disable.');
+  }
 
-  const heroku = new Heroku({
-    token: herokuapi,
-  });
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.ANTI_CALL = 'yes';  // Enable Anti-Call
+      responseMessage = 'Anti-call has been enabled.';
+      break;
 
-  const baseURI = `/apps/${appname}/config-vars`;
+    case "no":
+      s.ANTI_CALL = 'no';  // Disable Anti-Call
+      responseMessage = 'Anti-call has been disabled.';
+      break;
 
+    default:
+      return repondre("Please don't invent an option. Type 'anticall yes' or 'anticall no'.");
+  }
+
+  // Send the response message to the user
   try {
-    // Fetch config vars from Heroku API
-    const configVars = await heroku.get(baseURI);
-
-    let str = '*╭───𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 vars────╮*\n\n';
-
-    // Loop through the returned config vars and format them
-    for (let key in configVars) {
-      if (configVars.hasOwnProperty(key)) {
-        str += `★ *${key}* = ${configVars[key]}\n`;
-      }
-    }
-
-    // Send the formatted response back to the user
-    repondre(str);
-
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
   } catch (error) {
-    console.error('Error fetching Heroku config vars:', error);
-    repondre('Sorry, there was an error fetching the config vars.');
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
   }
 });
 
-// Command to set a Heroku config var
+
 zokou({
-  nomCom: 'setvar',
-  categorie: "system"
+  nomCom: 'autoreact',
+  categorie: "Mods"
 }, async (chatId, zk, context) => {
-  const { repondre, superUser, arg } = context;
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
 
   // Check if the command is issued by the owner
   if (!superUser) {
-    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner *");
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
   }
 
-  const appname = s.HEROKU_APP_NAME;
-  const herokuapi = s.HEROKU_API_KEY;
-
-  if (!arg || arg.length !== 1 || !arg[0].includes('=')) {
-    return repondre('Incorrect Usage:\nProvide the key and value correctly.\nExample: setvar PUBLIC=yes');
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autoreact yes" to enable or "autoreact no" to disable.');
   }
 
-  const [key, value] = arg[0].split('=');
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_REACT = 'yes';  // Enable Areact
+      responseMessage = 'Areact has been enabled.';
+      break;
 
-  const heroku = new Heroku({
-    token: herokuapi,
-  });
+    case "no":
+      s.AUTO_REACT = 'no';  // Disable Areact
+      responseMessage = 'Autoreaction has been disabled.';
+      break;
 
-  const baseURI = `/apps/${appname}/config-vars`;
+    default:
+      return repondre("Please don't invent an option. Type 'autoreact yes' or 'autoreact no'.");
+  }
 
+  // Send the response message to the user
   try {
-    // Set the new config var
-    await heroku.patch(baseURI, {
-      body: {
-        [key]: value,
-      },
-    });
-
-    // Notify success
-    await repondre(`*✅ The variable ${key} = ${value} has been set successfully. The bot is restarting...*`);
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
   } catch (error) {
-    console.error('Error setting config variable:', error);
-    await repondre(`❌ There was an error setting the variable. Please try again later.\n${error.message}`);
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
   }
 });
 
 zokou({
-  nomCom: "shell",
-  aliases: ["getcmd", "cmd"],
-  reaction: '🍂',
-  categorie: "system"
-}, async (context, message, params) => {
-  const { repondre: sendResponse, arg: commandArgs, superUser: Owner, auteurMessage } = params;
-
-  // Ensure that the sender is the superuser (Owner)
-  if (!Owner) {
-    return sendResponse("You are not authorized to execute shell commands.");
-  }
-
-  const command = commandArgs.join(" ").trim();
-
-  // Ensure the command is not empty
-  if (!command) {
-    return sendResponse("Please provide a valid shell command.");
-  }
-
-  // Execute the shell command
-  exec(command, (err, stdout, stderr) => {
-    if (err) {
-      return sendResponse(`Error: ${err.message}`);
-    }
-
-    if (stderr) {
-      return sendResponse(`stderr: ${stderr}`);
-    }
-
-    if (stdout) {
-      return sendResponse(stdout);
-    }
-
-    // If there's no output, let the user know
-    return sendResponse("Command executed successfully, but no output was returned.");
-  });
-});
-
-zokou(
-  {
-    nomCom: 'ping',
-    aliases: ['speed', 'latency'],
-    desc: 'To check bot response time',
-    categorie: 'system', // Fixed the typo here (Categorie -> categorie)
-    reaction: '🍼',
-    fromMe: true, // Removed quotes to make it a boolean
-  },
-  async (dest, zk) => {
-    // Call the new loading animation without delaying the rest of the bot
-    const loadingPromise = loading(dest, zk);
-
-    // Generate 3 ping results with large random numbers for a more noticeable effect
-    const pingResults = Array.from({ length: 3 }, () => Math.floor(Math.random() * 10000 + 1000));
-
-    // Create larger font for ping results (using special characters for a bigger look)
-    const formattedResults = pingResults.map(ping => `${conf.OWNER_NAME} 𝙨𝙥𝙚𝙚𝙙 ${ping} 𝐌/𝐒  `);
-
-    // Send the ping results with the updated text and format
-    await zk.sendMessage(dest, {
-      text: `${formattedResults.join(', ')}`,
-      contextInfo: {
-        externalAdReply: {
-          title: conf.BOT,
-          body: `${formattedResults.join(" | ")}`,
-          thumbnailUrl: conf.URL, // Replace with your bot profile photo URL
-          sourceUrl: conf.GURL, // Your channel URL
-          mediaType: 1,
-          showAdAttribution: true, // Verified badge
-        },
-      },
-    });
-
-    console.log("Ping results sent successfully with new loading animation and formatted results!");
-
-    // Ensure loading animation completes after the ping results
-    await loadingPromise;
-  }
-);
-
-// React function if needed for further interaction
-function react(dest, zk, msg, reaction) {
-  zk.sendMessage(dest, { react: { text: reaction, key: msg.key } });
-}
-
-zokou ({
-  nomCom: 'uptime',
-  aliases: ['runtime', 'running'],
-  desc: 'To check runtime',
-  categorie: 'system', // Fixed the typo here (Categorie -> categorie)
-  reaction: '🍂',
-  fromMe: true, // Removed quotes to make it a boolean
-}, async (dest, zk, commandeOptions) => {
-  const { ms, arg, repondre } = commandeOptions;
-
-  // Get bot's runtime
-  const botUptime = process.uptime(); // Get the bot uptime in seconds
-
-  // Send uptime information to the user
-  await zk.sendMessage(dest, {
-    text: `*${conf.OWNER_NAME} UPTIME IS ${runtime(botUptime)}*`,
-    contextInfo: {
-      externalAdReply: {
-        title: `${conf.BOT} UPTIME`,
-        body: `Bot Uptime: ${runtime(botUptime)}`, // Format the uptime before sending
-        thumbnailUrl: conf.URL, // Replace with your bot profile photo URL
-        sourceUrl: conf.GURL, // Your channel URL
-        mediaType: 1,
-        showAdAttribution: true, // Verified badge
-      },
-    },
-  });
-
-  console.log("Runtime results sent successfully!");
-
-  // Ensure loading animation completes after sending the uptime message
-  await delay(ms); // Await the delay to simulate the loading animation
-});
-
-// React function to allow interaction after sending message
-function react(dest, zk, msg, reaction) {
-  zk.sendMessage(dest, { react: { text: reaction, key: msg.key } });
-}
-
-
-zokou({
-  nomCom: 'update',
-  aliases: ['redeploy', 'sync'],
-  categorie: "system"
+  nomCom: 'autoreadstatus',
+  categorie: "Mods"
 }, async (chatId, zk, context) => {
-  const { repondre, superUser } = context;
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
 
   // Check if the command is issued by the owner
   if (!superUser) {
-    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner *");
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
   }
 
-  // Ensure Heroku app name and API key are set
-  const herokuAppName = s.HEROKU_APP_NAME;
-  const herokuApiKey = s.HEROKU_API_KEY;
-
-  // Check if Heroku app name and API key are set in environment variables
-  if (!herokuAppName || !herokuApiKey) {
-    await repondre("It looks like the Heroku app name or API key is not set. Please make sure you have set the `HEROKU_APP_NAME` and `HEROKU_API_KEY` environment variables.");
-    return;
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autoreadstatus yes" to enable or "autoreadstatus no" to disable.');
   }
 
-  // Function to redeploy the app
-  async function redeployApp() {
-    try {
-      const response = await axios.post(
-        `https://api.heroku.com/apps/${herokuAppName}/builds`,
-        {
-          source_blob: {
-            url: "https://github.com/giftdee/DAVE_XMD/tarball/main",
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${herokuApiKey}`,
-            Accept: "application/vnd.heroku+json; version=3",
-          },
-        }
-      );
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_READ_STATUS = 'yes';  // Enable auroread status
+      responseMessage = ' has been enabled successfully.';
+      break;
 
-      // Notify the user about the update and redeployment
-      await repondre("*Your bot is getting updated, wait 2 minutes for the redeploy to finish! This will install the latest version of DAVE-XMD.*");
-      console.log("Build details:", response.data);
-    } catch (error) {
-      // Handle any errors during the redeployment process
-      const errorMessage = error.response?.data || error.message;
-      await repondre(`*Failed to update and redeploy. ${errorMessage} Please check if you have set the Heroku API key and Heroku app name correctly.*`);
-      console.error("Error triggering redeploy:", errorMessage);
-    }
+    case "no":
+      s.AUTO_READ_STATUS = 'no';  // Disable autoread status
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autoreadstatus yes' or 'autoreadstatus no'.");
   }
 
-  // Trigger the redeployment function
-  redeployApp();
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+zokou({
+  nomCom: 'antidelete',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "antidelete yes" to enable or "antidelete no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.ANTI_DELETE_MESSAGE = 'yes';  // Enable Antidelete
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.ANTI_DELETE_MESSAGE = 'no';  // Disable antidelete
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'antidelete yes' or 'antidelete no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
 });
 
 zokou({
-  nomCom: "fetch",
-  aliases: ["get", "find"],
-  categorie: "system",
-  reaction: '🛄',
-}, async (sender, zk, context) => {
-  const { repondre: sendResponse, arg: args } = context;
-  const urlInput = args.join(" ");
+  nomCom: 'autodownloadstatus',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
 
-  // Check if URL starts with http:// or https://
-  if (!/^https?:\/\//.test(urlInput)) {
-    return sendResponse("Start the *URL* with http:// or https://");
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
   }
 
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "downloadstatus yes" to enable or "downloadstatus no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_DOWNLOAD_STATUS = 'yes';  // Enable Autodownloadstatus
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.AUTO_DOWNLOAD_STATUS = 'no';  // Disable autodownload status
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autodownloadstatus yes' or 'autodownloadstatus no'.");
+  }
+
+  // Send the response message to the user
   try {
-    const url = new URL(urlInput);
-    const fetchUrl = `${url.origin}${url.pathname}?${url.searchParams.toString()}`;
-
-    // Fetch the URL content
-    const response = await axios.get(fetchUrl, { responseType: 'arraybuffer' });
-
-    // Check if the response is okay
-    if (response.status !== 200) {
-      return sendResponse(`Failed to fetch the URL. Status: ${response.status} ${response.statusText}`);
-    }
-
-    const contentLength = response.headers['content-length'];
-    if (contentLength && parseInt(contentLength) > 104857600) {
-      return sendResponse(`Content-Length exceeds the limit: ${contentLength}`);
-    }
-
-    const contentType = response.headers['content-type'];
-    console.log('Content-Type:', contentType);
-
-    // Fetch the response as a buffer
-    const buffer = Buffer.from(response.data);
-
-    // Handle different content types
-    if (/image\/.*/.test(contentType)) {
-      // Send image message
-      await zk.sendMessage(sender, {
-        image: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
-    } else if (/video\/.*/.test(contentType)) {
-      // Send video message
-      await zk.sendMessage(sender, {
-        video: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
-    } else if (/audio\/.*/.test(contentType)) {
-      // Send audio message
-      await zk.sendMessage(sender, {
-        audio: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
-    } else if (/text|json/.test(contentType)) {
-      try {
-        // Try parsing the content as JSON
-        const json = JSON.parse(buffer);
-        console.log("Parsed JSON:", json);
-        sendResponse(JSON.stringify(json, null, 10000)); // Limit response size to 10000 characters
-      } catch {
-        // If parsing fails, send the raw text response
-        sendResponse(buffer.toString().slice(0, 10000)); // Limit response size to 10000 characters
-      }
-    } else {
-      // Send other types of documents
-      await zk.sendMessage(sender, {
-        document: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
-    }
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
   } catch (error) {
-    console.error("Error fetching data:", error.message);
-    sendResponse(`Error fetching data: ${error.message}`);
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
   }
 });
+
+zokou({
+  nomCom: 'startingmessage',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or Davincs owner.* 🤦,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "startingmessage yes" to enable or "startingmessage no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.STARTING_BOT_MESSAGE = 'yes';  // Enable startingmessage
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.STARTING_BOT_MESSAGE = 'no';  // Disable startmessage
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'startingmessage yes' or 'startingmessage no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'autoreadmessage',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autoreadmessage yes" to enable or "autoreadmessage no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_READ = 'yes';  // Enable Autoread
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.AUTO_READ = 'no';  // Disable read message
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'auyoreadmessage yes' or auto'readmessage no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'pm-permit',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "pm-permit yes" to enable or "pm-permit no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.PM_PERMIT = 'yes';  // Enable pm
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.PM_PERMIT = 'no';  // Disable pm
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'pm-permit yes' or 'pm-permit no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+zokou({
+  nomCom: 'autosavecontact',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autosavecontact yes" to enable or "autosavecontact no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_SAVE_CONTACTS = 'yes';  // Enable autosavecontact
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.AUTO_SAVE_CONTACTS = 'no';  // Disable autosavecontact
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autosavecontact yes' or 'autosavecontact no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+zokou({
+  nomCom: 'autoreply',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autoreply yes" to enable or "autoreply no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_REPLY = 'yes';  // Enable autoreply
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.AUTO_REPLY = 'no';  // Disable autoreply
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autoreply yes' or 'autoreply no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'autobio',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🤦,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autobio yes" to enable or "autobio no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.AUTO_BIO = 'yes';  // Enable autobio
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.AUTO_BIO = 'no';  // Disable autobio
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autobio yes' or 'autobio no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'publicmode',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 owner.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "publicmode yes" to enable or "publicmode no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.PUBLIC_MODE = 'yes';  // Enable Publicmode
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.PUBLIC_MODE = 'no';  // Disable Publicmode
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'publicmode yes' or 'publicmode no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'autorecord',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autorecord yes" to enable or "autorecord no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.ETAT = '3';  // Enable Autorecord
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.ETAT = 'no';  // Disable Autorecord
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autorecord yes' or 'autorecord no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'autotyping',
+  categorie: "Mods"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃.* 🗿,,bois");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "autotyping yes" to enable or "autotyping no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.ETAT = '2';  // Enable Autotyping
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.ETAT = 'no';  // Disable Autotyping
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'autotyping yes' or 'autotyping no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+ezra({
+  nomCom: 'alwaysonline',
+  categorie: "JEEPERS CREEPER-XMD-SETTING"
+}, async (chatId, zk, context) => {
+  const { ms, repondre, superUser, auteurMessage, arg } = context;
+
+  // Check if the command is issued by the owner
+  if (!superUser) {
+    return repondre("*This command is restricted to the bot owner or Davincs owner.* 🤦,,idiot");
+  }
+
+  // Validate user input and respond accordingly
+  if (!arg[0]) {
+    return repondre('Instructions:\n\nType "alwaysonline yes" to enable or "alwaysonline no" to disable.');
+  }
+
+  const option = arg.join(' ').toLowerCase();
+  switch (option) {
+    case "yes":
+      s.ETAT = '1';  // Enable Alwaysonline
+      responseMessage = ' has been enabled successfully.';
+      break;
+
+    case "no":
+      s.ETAT = 'no';  // Disable Alwaysonline
+      responseMessage = ' has been disabled successfully.';
+      break;
+
+    default:
+      return repondre("Please don't invent an option. Type 'alwaysonline yes' or 'alwaysonline no'.");
+  }
+
+  // Send the response message to the user
+  try {
+    await zk.sendMessage(chatId, { text: responseMessage }, { quoted: ms });
+  } catch (error) {
+    console.error("Error processing your request:", error);
+    await zk.sendMessage(chatId, { text: 'Error processing your request.' }, { quoted: ms });
+  }
+});
+
+zokou({
+  nomCom: 'privatemode',
+  categorie: "Mods"
+}, async (chatId, zk, contexX
