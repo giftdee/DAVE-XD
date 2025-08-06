@@ -2,7 +2,7 @@ const { zokou } = require('../framework/zokou');
 const fs = require('fs');
 
 
-let antiDeleteActive = false; // Variable pour stocker l'état de la commande anti-delete
+let antiDeleteActive = true; // Variable pour stocker l'état de la commande anti-delete
 
 zokou({
   nomCom: "anti-delete",
