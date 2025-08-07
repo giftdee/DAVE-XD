@@ -1,61 +1,116 @@
-const { zokou } = require('../framework/zokou');
+const { ezra } = require("../framework/zokou");
+const fs = require('fs');
 
-let antiTagActive = false; // State of the anti-tag feature
+
+let antiDeleteActive = false; // Variable pour stocker l'état de la commande anti-delete
 
 zokou({
-  nomCom: "antitag",
-  categorie: "General",
-  reaction: "💱"
+  nomCom: "anti-delete",
+  categorie: "Dave-Mods",
+  reaction: "😏"
 }, async (origineMessage, zk, commandeOptions) => {
   const { ms, arg } = commandeOptions;
 
-  try {
-    // Handle command arguments for toggling anti-tag
-    if (arg.length > 0) {
-      const action = arg[0].toLowerCase();
-      if (action === "on") {
-        antiTagActive = true;
-        await zk.sendMessage(origineMessage.key.remoteJid, {
-          text: "✅ Anti-tag is now *active*!",
-        });
-        return;
-      } else if (action === "off") {
-        antiTagActive = false;
-        await zk.sendMessage(origineMessage.key.remoteJid, {
-          text: "❌ Anti-tag is now *deactivated*!",
-        });
-        return;
-      }
+  // Vérifier si un argument est fourni pour activer ou désactiver la commande
+  if (arg[0]) {
+    const action = arg[0].toLowerCase();
+    if (action === "on") {
+      antiDeleteActive = true;
+      await zk.sendMessage(origineMessage, "La commande anti-delete est activée.");
+      return;
+    } else if (action === "off") {
+      antiDeleteActive = false;
+      await zk.sendMessage(origineMessage, "La commande anti-delete est désactivée.");
+      return;
+    }
+  }
+
+  // Vérifier si la commande anti-delete est activée
+  if (!antiDeleteActive) {
+    await zk.sendMessage(origineMessage, "La commande anti-delete est actuellement désactivée.");
+    return;
+  }
+
+  if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ANTI_DELETE_MESSAGE).toLowerCase() === 'yes') {
+    if (ms.key.fromMe || ms.message.protocolMessage.key.fromMe) {
+      console.log('Message supprimé me concernant');
+      return;
     }
 
-    // Check if anti-tag is active
-    if (!antiTagActive) return;
+    console.log('Message supprimé');
+    const key = ms.message.protocolMessage.key;
 
-    // Detect mentions in incoming messages
-    if (
-      ms.message &&
-      ms.message.extendedTextMessage &&
-      ms.message.extendedTextMessage.contextInfo &&
-      ms.message.extendedTextMessage.contextInfo.mentionedJid
-    ) {
-      const mentionedJids = ms.message.extendedTextMessage.contextInfo.mentionedJid;
-      const ownerJid = "1234567890@s.whatsapp.net"; // Replace 1234567890 with the actual owner's number
+    try {
+      const st = './store.json';
+      const data = fs.readFileSync(st, 'utf8');
+      const jsonData = JSON.parse(data);
+      const message = jsonData.messages[key.remoteJid];
 
-      console.log("Mentioned JIDs:", mentionedJids); // Debug log to check mentioned JIDs
+      let msg;
 
-      if (mentionedJids.includes(ownerJid)) {
-        console.log("Owner mentioned:", ownerJid); // Debug log if owner is detected
-        // Send a warning message to the group or chat
-        await zk.sendMessage(origineMessage.key.remoteJid, {
-          text: "⚠️ *DON'T TAG MY OWNER!*",
-          mentions: [origineMessage.key.participant],
-        });
+      for (let i = 0; i < message.length; i++) {
+        if (message[i].key.id === key.id) {
+          msg = message[i];
+          break;
+        }
       }
+
+      if (!msg) {
+        console.log('Message introuvable');
+        return;
+      }
+
+      const senderId = msg.key.participant.split('@')[0];
+      const caption = ` Anti-delete-message by ☢️LUCKY-MD XFORCE☢️\nMessage de @${senderId}`;
+      const imageCaption = { image: { url: './media/deleted-message.jpg' }, caption, mentions: [msg.key.participant] };
+
+      await zk.sendMessage(idBot, imageCaption);
+      await zk.sendMessage(idBot, { forward: msg }, { quoted: msg });
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error("Error in anti-tag script:", error);
-    await zk.sendMessage(origineMessage.key.remoteJid, {
-      text: "❌ An error occurred while processing the anti-tag command.",
-    });
   }
 });
+
+// Work for Blocklist contacts 
+zokou({
+  nomCom: "blocklist",
+  aliases: ["listblock", "blacklist"],
+  reaction: '🍂',
+  categorie: "Dave-Search"
+}, async (dest, zk, commandeOptions) => {
+  const { repondre } = commandeOptions;
+
+  try {
+    // Fetch the blocklist of contacts
+    let blocklist = await zk.fetchBlocklist();
+
+    // If the blocklist has users, proceed
+    if (blocklist.length > 0) {
+      // Start the message for blocked contacts
+      let jackhuh = `*Blocked Contacts*\n`;
+
+      await repondre(`You have blocked ${blocklist.length} contact(s), fetching and sending their details!`);
+
+      // Map through the blocklist to fetch each blocked user's details
+      const promises = blocklist.map(async (blockedUser) => {
+        // Extract the phone number from the JID (remove '@s.whatsapp.net')
+        const phoneNumber = blockedUser.split('@')[0];
+
+        // Add the blocked user's phone number to the message
+        jackhuh += `🤷  +${phoneNumber}\n`;  // List the phone number
+      });
+
+      // Wait for all the promises to complete
+      await Promise.all(promises);
+
+      // Send the final formatted message with the blocked contacts
+      await repondre(jackhuh);
+    } else {
+      // If no blocked users, reply with a message
+      await repondre("There are no blocked contacts.");
+    }
+  } catch (e) {
+    // Catch any error and inform the user
+    await repondre("An error occurred while accessing blocked users.\n\n" + e);
+        }
