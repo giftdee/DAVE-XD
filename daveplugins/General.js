@@ -2,7 +2,7 @@ const { zokou } = require("../framework/zokou");
 const {getAllSudoNumbers,isSudoTableNotEmpty} = require("../bdd/sudo")
 const conf = require("../set");
 
-zokou({ nomCom: "owner", categorie: "General", reaction: "❣️" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "owner", categorie: "Dave-General", reaction: "❣️" }, async (dest, zk, commandeOptions) => {
     const { ms , mybotpic, repondre } = commandeOptions;
     
     const thsudo = await isSudoTableNotEmpty()
@@ -70,7 +70,7 @@ zokou({ nomCom: "owner", categorie: "General", reaction: "❣️" }, async (dest
     }
 });
 
-zokou({ nomCom: "dev", categorie: "General", reaction: "💘" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "dev", categorie: "Dave-General", reaction: "💘" }, async (dest, zk, commandeOptions) => {
     const { ms, mybotpic } = commandeOptions;
 
     const devs = [
@@ -116,7 +116,7 @@ zokou({ nomCom: "dev", categorie: "General", reaction: "💘" }, async (dest, zk
     }
 });
 
-zokou({ nomCom: "support", categorie: "General", reaction: "🔗" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "support", categorie: "Dave-General", reaction: "🔗" }, async (dest, zk, commandeOptions) => {
     const { ms, repondre, auteurMessage } = commandeOptions; 
 
     const supportMessage = `
@@ -134,7 +134,7 @@ zokou({ nomCom: "support", categorie: "General", reaction: "🔗" }, async (dest
 ┃                                     ┃
 ┃ 👥 Support Group                    ┃
 ┃ https://chat.whatsapp.com/         ┃
-┃ LNkkXQ1rDv3GQNFFbqLoMe?mode=ac_t    ┃
+┃LNkkXQ1rDv3GQNFFbqLoMe?mode=ac_t    ┃
 ┃                                     ┃
 ┃ 🎬 YouTube                          ┃
 ┃ https://youtube.com/@davlodavlo19  ┃
