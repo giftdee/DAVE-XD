@@ -5,7 +5,7 @@ const set = require(__dirname + '/../set');
 moment.tz.setDefault('' + set.TIMEZONE);
 
 zokou({
-  nomCom: "ping2",
+  nomCom: "ping",
   categorie: "Dave-New"
 }, async (chatId, zk, { ms, userJid }) => {
   const time = moment().format("HH:mm:ss");
@@ -71,10 +71,10 @@ zokou({
         forwardingScore: 999,
         externalAdReply: {
           title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
-          body: "💦 repo link request 💦",
+          body: "💦 DAVE-XMF repo link request 💦",
           thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg",
           mediaType: 1,
-          sourceUrl: data.html_url || "https://github.com/giftdee/DAVE-XMD/fork"
+          sourceUrl: data.html_url || "https://github.com/giftdee/DAVE-XMD"
         }
       }
     });
