@@ -5,7 +5,7 @@ const axios = require('axios');
 zokou(
   {
     nomCom: 'fancy',
-    categorie: 'Tools',
+    categorie: 'Dave-Fun',
     reaction: '✨',
   },
   async (dest, zk, commandeOptions) => {
@@ -35,8 +35,8 @@ zokou(
       await zk.sendMessage(
         dest,
         {
-          text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BOOM, ${nomAuteurMessage}! Your text’s now a masterpiece! 🔥\n│❒ Fancy Text: ${fancyText}\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`,
-          footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by gifted_dave 😎`,
+          text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BOOM, ${nomAuteurMessage}! Your text’s now a masterpiece! 🔥\n│❒ Fancy Text: ${fancyText}\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`,
+          footer: `Hey ${nomAuteurMessage}! I'm 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃, created by gifted_dave 😎`,
         },
         { quoted: ms }
       );
