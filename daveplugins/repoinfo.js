@@ -5,7 +5,7 @@ const axios = require('axios');
 zokou(
   {
     nomCom: 'repoinfo',
-    categorie: 'Search',
+    categorie: 'Dave-Search',
     reaction: '📦',
   },
   async (dest, zk, commandeOptions) => {
