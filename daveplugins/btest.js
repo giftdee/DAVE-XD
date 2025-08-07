@@ -1,6 +1,6 @@
 const { zokou } = require('../framework/zokou');
 
-zokou({ nomCom: "btest", categorie: "General", reaction: "🛠️" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "btest", categorie: "Dave-General", reaction: "🛠️" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, verifGroupe } = commandeOptions;
 
   console.log(`[DEBUG] btest triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
@@ -16,7 +16,7 @@ zokou({ nomCom: "btest", categorie: "General", reaction: "🛠️" }, async (des
 
   // Prepare button message
   const buttonMessage = {
-    contentText: `�zach𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ WELCOME, ${userName}! 😎 Time to test the POWER of TOXIC-MD!\n│❒ Pick a button and unleash the chaos! 💥\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`,
+    contentText: `�zach𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ WELCOME, ${userName}! 😎 Time to test the POWER of 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃!\n│❒ Pick a button and unleash the chaos! 💥\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`,
     footerText: "DAVE-XMD Testing Suite",
     buttons: [
       {
