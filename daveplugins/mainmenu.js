@@ -60,7 +60,7 @@ zokou(
     let infoMsg = `   
 ⬣════════════════════⬣
   
-     𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐕𝟐
+    💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠
   
 > ✦ 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫: 
 @254111687009
@@ -111,7 +111,7 @@ let menuMsg = `
   "Dave-User": { icon: "🔹", decor: "┃" },
   "Dave-Menu": { icon: "🔹", decor: "┃" },
   "Dave-Logo": { icon: "🔹", decor: "┃" },
-  "Dave-Script": { icon: "🔹", decor: "┃" },
+  "Dave-script": { icon: "🔹", decor: "┃" },
   "Dave-Bug": { icon: "🔹", decor: "┃" },
   "Dave-Hentai": { icon: "🔹", decor: "┃" },
   "Dave-Tools": { icon: "🔹", decor: "┃" },
