@@ -4,8 +4,8 @@ const axios = require("axios");
 // tiktok
 zokou ({
   nomCom: "tiktoksearch",
-  aliases: ["tiksearch", "tiktoklist"],
-  categorie: "Search",
+  aliases: ["tiksearch", "t"],
+  categorie: "Dave-Search",
   reaction: "🔍"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
