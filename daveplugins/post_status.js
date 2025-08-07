@@ -1,71 +1,61 @@
 const { zokou } = require('../framework/zokou');
 
 zokou({
-  pattern: "post",
+  nomCom: "tostatus",
   alias: ["poststatus", "status", "story", "repost", "reshare"],
   react: '📝',
   desc: "Posts replied media to bot's status",
-  category: "utilities",
+  category: "Dave-Mods",
   filename: __filename
-}, async (client, message, match, { from, isCreator }) => {
+}, async (dest, zk, { ms, msgRepondu, arg, isCreator }) => {
   try {
     if (!isCreator) {
-      return await client.sendMessage(from, {
-        text: "*📛 This is an owner-only command.*"
-      }, { quoted: message });
+      return await zk.sendMessage(dest, { text: "*📛 This is an owner-only command.*" }, { quoted: ms });
     }
 
-    const quotedMsg = message.quoted ? message.quoted : message;
-    const mimeType = (quotedMsg.msg || quotedMsg).mimetype || '';
+    const quoted = msgRepondu ? msgRepondu : ms;
+    const mimeType = (quoted.msg || quoted).mimetype || '';
 
     if (!mimeType) {
-      return await client.sendMessage(message.chat, {
-        text: "*Please reply to an image, video, or audio file.*"
-      }, { quoted: message });
+      return await zk.sendMessage(dest, { text: "*❗Please reply to an image, video, or audio.*" }, { quoted: ms });
     }
 
-    const buffer = await quotedMsg.download();
-    const mtype = quotedMsg.mtype;
-    const caption = quotedMsg.text || '';
+    const buffer = await zk.downloadMediaMessage(quoted);
+    const mtype = quoted.mtype;
+    const caption = quoted.text || '';
 
     let statusContent = {};
 
     switch (mtype) {
       case "imageMessage":
-        statusContent = {
-          image: buffer,
-          caption: caption
-        };
+        statusContent = { image: buffer, caption };
         break;
       case "videoMessage":
-        statusContent = {
-          video: buffer,
-          caption: caption
-        };
+        statusContent = { video: buffer, caption };
         break;
       case "audioMessage":
         statusContent = {
           audio: buffer,
           mimetype: "audio/mp4",
-          ptt: quotedMsg.ptt || false
+          ptt: quoted.ptt || false
         };
         break;
       default:
-        return await client.sendMessage(message.chat, {
-          text: "Only image, video, and audio files can be posted to status."
-        }, { quoted: message });
+        return await zk.sendMessage(dest, {
+          text: "Only *image*, *video*, or *audio* files can be posted to status."
+        }, { quoted: ms });
     }
 
-    await client.sendMessage("status@broadcast", statusContent);
+    await zk.sendMessage("status@broadcast", statusContent);
 
-    await client.sendMessage(message.chat, {
-      text: "✅ Status Uploaded Successfully."
-    }, { quoted: message });
+    await zk.sendMessage(dest, {
+      text: "✅ Status uploaded successfully!"
+    }, { quoted: ms });
 
   } catch (error) {
     console.error("Status Error:", error);
-    await client.sendMessage(message.chat, {
+    await zk.sendMessage(dest, {
       text: "❌ Failed to post status:\n" + error.message
-    }, { quoted: message });
+    }, { quoted: ms });
   }
 });
