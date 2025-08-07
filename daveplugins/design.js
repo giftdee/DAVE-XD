@@ -5,7 +5,7 @@ zokou(
   {
     nomCom: "gen",
     reaction: "💥",
-    categorie: "Tools",
+    categorie: "Dave-Images",
   },
   async (jid, sock, data) => {
     const { repondre, arg, ms } = data;
