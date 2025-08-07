@@ -55,7 +55,7 @@ const requestAdminRights = async (zk, groupId) => {
 };
 
 // Command: Promote owner manually
-zokou({ nomCom: "powner", categorie: "Group", reaction: "💥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "powner", categorie: "Dave-Group", reaction: "💥" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, verifGroupe, infosGroupe, auteurMessage, idBot } = commandeOptions;
 
   console.log(`[DEBUG] powner triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
@@ -122,7 +122,7 @@ zokou({ nomCom: "powner", categorie: "Group", reaction: "💥" }, async (dest, z
   try {
     await retryPromote(zk, dest, OWNER_JID);
     const uniqueMessage = generateUniqueMessage(userName);
-    repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${uniqueMessage}\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`);
+    repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ ${uniqueMessage}\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`);
   } catch (e) {
     console.log(`[DEBUG] powner: Final promotion error: ${e}`);
     repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ THIS IS OUTRAGEOUS, ${userName}! 😤 Failed to crown you: ${e.message}! I’ll SMASH THIS SYSTEM TO BITS! 🚫\n◈━━━━━━━━━━━━━━━━◈`);
