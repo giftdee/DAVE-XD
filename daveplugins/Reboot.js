@@ -1,6 +1,6 @@
 
 const {zokou}=require("../framework/zokou")
-zokou({nomCom:"restart",categorie:"Mods",reaction:"📴"},async(dest,z,com)=>{
+zokou({nomCom:"restart",categorie:"Dave-Mods",reaction:"📴"},async(dest,z,com)=>{
 const{repondre,ms,dev,superUser}=com;
   if(!superUser)
   {
@@ -8,6 +8,6 @@ const{repondre,ms,dev,superUser}=com;
   }
   const {exec}=require("child_process")
 
-    repondre("DAVE-XMD bot Restarting....");
+    repondre("💦𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💦  Restarting....");
   exec("pm2 restart all");
 })
