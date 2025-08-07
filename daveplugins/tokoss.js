@@ -3,7 +3,7 @@ const { zokou } = require('../framework/zokou');
 zokou(
   {
     nomCom: 'info',
-    categorie: 'General',
+    categorie: 'Dave-General',
     reaction: '🗿'
   },
   async (dest, zk, commandeOptions) => {
