@@ -1,4 +1,4 @@
-const { ezra } = require("../framework/zokou");
+const { zokou } = require("../framework/zokou");
 const fs = require('fs');
 
 
@@ -61,7 +61,7 @@ zokou({
       }
 
       const senderId = msg.key.participant.split('@')[0];
-      const caption = ` Anti-delete-message by ☢️LUCKY-MD XFORCE☢️\nMessage de @${senderId}`;
+      const caption = ` Anti-delete-message by 💦𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💦\nMessage de @${senderId}`;
       const imageCaption = { image: { url: './media/deleted-message.jpg' }, caption, mentions: [msg.key.participant] };
 
       await zk.sendMessage(idBot, imageCaption);
