@@ -2,7 +2,7 @@ const { zokou } = require("../framework/zokou");
 
 const DAVE_XMD = "DAVE-XMD";
 
-zokou({ nomCom: "join", categorie: 'Group', reaction: "⭐" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "join", categorie: 'Dave-User', reaction: "⭐" }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
 
   // Extract invite link
