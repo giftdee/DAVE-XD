@@ -113,4 +113,5 @@ zokou({
   } catch (e) {
     // Catch any error and inform the user
     await repondre("An error occurred while accessing blocked users.\n\n" + e);
-        }
+  }
+});
