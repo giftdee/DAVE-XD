@@ -11,7 +11,7 @@ zokou({
   nomCom: "shell",
   aliases: ["getcmd", "cmd"],
   reaction: ' 🛠️',
-  categorie: "Utilities"
+  categorie: "Dave-System"
 }, async (context, message, params) => {
   const { repondre: sendResponse, arg: commandArgs, superUser: Owner, auteurMessage } = params;
   if (!Owner) {
@@ -39,7 +39,7 @@ zokou({
 zokou({
   nomCom: "fetch",
   aliases: ["get", "find"],
-  categorie: "Utilities",
+  categorie: "Dave-System",
   reaction: '🛠️',
 }, async (sender, zk, context) => {
   const { repondre: sendResponse, arg: args } = context;
