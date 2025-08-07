@@ -5,7 +5,7 @@ const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 
 zokou({
   nomCom: "anime",
-  categorie: "Fun",
+  categorie: "Dave-Fun",
   reaction: "📺"
 },
 async (origineMessage, zk, commandeOptions) => {
@@ -34,7 +34,7 @@ async (origineMessage, zk, commandeOptions) => {
 
 zokou({
   nomCom: "google",
-  categorie: "Search"
+  categorie: "Dave-Search"
 }, async (dest, zk, commandeOptions) => {
   const { arg, repondre } = commandeOptions;
   
@@ -62,7 +62,7 @@ zokou({
 
 zokou({
   nomCom: "imdb",
-  categorie: "Search"
+  categorie: "Dave-Search"
 }, async (dest, zk, commandeOptions) => {
   const { arg, repondre, ms } = commandeOptions;
 
@@ -111,7 +111,7 @@ zokou({
 
 zokou({
   nomCom: "movie",
-  categorie: "Search"
+  categorie: "Dave-Search"
 }, async (dest, zk, commandeOptions) => {
   const { arg, repondre, ms } = commandeOptions;
 
@@ -125,8 +125,8 @@ zokou({
     const imdbData = response.data;
 
     let imdbInfo = "Tap the link to join our movie channel on Telegram and download movies: https://t.me/moviebox_free_movie_download\n";
-    imdbInfo += " ``` 𝗧𝗼𝘅𝗶𝗰 𝗠𝗗 𝗙𝗶𝗹𝗺𝘀 ```\n";
-    imdbInfo += "𝗠𝗮𝗱𝗲 𝗯𝘆 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧\n";
+    imdbInfo += " ``` 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝗙𝗶𝗹𝗺𝘀 ```\n";
+    imdbInfo += "𝗠𝗮𝗱𝗲 𝗯𝘆 𝐃𝐀𝐕𝐄\n";
     imdbInfo += "🎬 𝗧𝗶𝘁𝗹𝗲: " + imdbData.Title + "\n";
     imdbInfo += "📅 𝗬𝗲𝗮𝗿: " + imdbData.Year + "\n";
     imdbInfo += "⭐ 𝗥𝗮𝘁𝗶𝗻𝗴: " + imdbData.Rated + "\n";
@@ -160,7 +160,7 @@ zokou({
 
 zokou({
   nomCom: "emojimix",
-  categorie: "Conversion"
+  categorie: "Dave-Conversion"
 }, async (dest, zk, commandeOptions) => {
   const { arg, repondre, ms, nomAuteurMessage } = commandeOptions;
 
