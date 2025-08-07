@@ -4,7 +4,7 @@ const axios = require("axios");
 const config = {
   nomCom: "book",
   reaction: '📙',
-  categorie: 'AI'
+  categorie: 'Dave-Tools'
 };
 
 zokou(config, async (responseHandler, args, context) => {
