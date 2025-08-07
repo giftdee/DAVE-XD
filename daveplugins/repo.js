@@ -9,7 +9,7 @@ const more = String.fromCharCode(8206);
 const readmore = more.repeat(4001);
 
 zokou(
-  { nomCom: "repo", categorie: "General", reaction: "📚" },
+  { nomCom: "repo", categorie: "Dave-General", reaction: "📚" },
   async (dest, zk, commandeOptions) => {
     const { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
     const { cm } = require(__dirname + "/../framework/zokou");
