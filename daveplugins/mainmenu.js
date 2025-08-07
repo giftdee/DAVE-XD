@@ -1,22 +1,13 @@
-const util = require("util"); 
-const fs = require("fs-extra"); 
-const { zokou } = require(__dirname + "/../framework/zokou"); 
-const { format } = require(__dirname + "/../framework/mesfonctions"); 
-const os = require("os"); const moment = require("moment-timezone"); 
-const s = require(__dirname + "/../set"); const more = String.fromCharCode(8206); 
-const readmore = more.repeat(4001);
+const util = require("util"); const fs = require("fs-extra"); const { zokou } = require(__dirname + "/../framework/zokou"); const { format } = require(__dirname + "/../framework/mesfonctions"); const os = require("os"); const moment = require("moment-timezone"); const s = require(__dirname + "/../set"); const more = String.fromCharCode(8206); const readmore = more.repeat(4001);
 
-// Fallback fancy font functions function toFancyUppercaseFont(text) { const normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; const fancy = "𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉"; return text .toUpperCase() .split("") .map((c) => { const i = normal.indexOf(c); return i !== -1 ? fancy[i] : c; }) .join(""); }
+// Fallback fancy font functions function toFancyUppercaseFont(text) { const normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; const fancy = "𝟨𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿"; return text .toUpperCase() .split("") .map((c) => { const i = normal.indexOf(c); return i !== -1 ? fancy[i] : c; }) .join(""); }
 
-function toFancyLowercaseFont(text) { const normal = "abcdefghijklmnopqrstuvwxyz"; const fancy = "𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃"; return text .toLowerCase() .split("") .map((c) => { const i = normal.indexOf(c); return i !== -1 ? fancy[i] : c; }) .join(""); }
+function toFancyLowercaseFont(text) { const normal = "abcdefghijklmnopqrstuvwxyz"; const fancy = "𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩"; return text .toLowerCase() .split("") .map((c) => { const i = normal.indexOf(c); return i !== -1 ? fancy[i] : c; }) .join(""); }
 
 function greeting() { const hour = moment().hour(); if (hour < 12) return "Good Morning 🌄"; if (hour < 17) return "Good Afternoon ☀️"; if (hour < 20) return "Good Evening 🌇"; return "Good Night 🌙"; }
 
-zokou( { nomCom: "menu", categorie: "Dave-Menu", reaction: "💱", }, async (dest, zk, commandeOptions) => { let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions; let { cm } = require(__dirname + "/../framework/zokou");
+zokou( { nomCom: "menu2", categorie: "Dave-Menu", reaction: "💱", }, async (dest, zk, commandeOptions) => { let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions; let { cm } = require(__dirname + "/../framework/zokou");
 
-console.log(`[DEBUG] menu command triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
-
-// Command categorization
 var coms = {};
 var mode = "public";
 if (s.MODE.toLowerCase() !== "yes") {
@@ -116,3 +107,4 @@ try {
 
 } );
 
+    
