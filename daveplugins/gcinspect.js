@@ -8,7 +8,7 @@ const linkRegex = /chat\.whatsapp\.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/i;
 zokou(
   {
     nomCom: "inspect",
-    categorie: "Utilities",
+    categorie: "Dave-Search",
     reaction: "🔍",
   },
   async (dest, zk, commandeOptions) => {
