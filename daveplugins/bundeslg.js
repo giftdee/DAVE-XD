@@ -23,8 +23,8 @@ const fetchFootballData = async (url) => {
 
 /** ✅ bundesliga standings */
 zokou({
-  nomCom: "bundesliga_table",
-  categorie: "Sports live",
+  nomCom: "Bundesliga_table",
+  categorie: "Dave-Sports",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -48,8 +48,8 @@ zokou({
 
 /** ✅ bundesliga matchday */
 zokou({
-  nomCom: "bundesliga_matchday",
-  categorie: "Sports live",
+  nomCom: "Bundesliga_matchday",
+  categorie: "Dave-Sports",
   reaction: "📅"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -73,8 +73,8 @@ zokou({
 
 /** ✅ bundesliga top scorers */
 zokou({
-  nomCom: "bundesliga_top_scorer",
-  categorie: "Sports live",
+  nomCom: "Bundesliga_top_scorer",
+  categorie: "Dave-Sports",
   reaction: "⚽"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -98,8 +98,8 @@ zokou({
 
 /** ✅ bundesliga top assists */
 zokou({
-  nomCom: "bundesliga_top_assist",
-  categorie: "Sports live",
+  nomCom: "Bundesliga_top_assist",
+  categorie: "Dave-Sports",
   reaction: "🎯"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -123,8 +123,8 @@ zokou({
 
 /** ✅ bundesliga news */
 zokou({
-  nomCom: "bundesliga_news",
-  categorie: "Sports live",
+  nomCom: "Bundesliga_news",
+  categorie: "Dave-Sports",
   reaction: "📰"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
@@ -150,8 +150,8 @@ zokou({
 
 /** ✅ bundesliga highlights (You can integrate video highlight API) */
 zokou({
-  nomCom: "bundesliga_highlights",
-  categorie: "Sports live",
+  nomCom: "Bundesliga_highlights",
+  categorie: "Dave-Sports",
   reaction: "📺"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
