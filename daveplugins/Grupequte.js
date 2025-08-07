@@ -1,6 +1,6 @@
 const { zokou } = require('../framework/zokou');
 
-zokou({ nomCom: 'quote', categorie: 'Group' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: 'quote', categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, verifGroupe, arg } = commandeOptions;
   if (!verifGroupe) {
     repondre('This Command works in groups only🤣');
