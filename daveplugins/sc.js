@@ -6,7 +6,7 @@ const s = require("../set");
 
 zokou({ 
     nomCom: "sc", 
-    categorie: "General",
+    categorie: "Dave-New",
     reaction: "📂" 
 }, async (dest, zk, commandeOptions) => {
     const { ms, repondre, mybotpic, nomAuteurMessage } = commandeOptions;
@@ -28,8 +28,8 @@ zokou({
 │❒ *🌐 𝐌𝐨𝐝�{e*: ${mode}
 │❒ *📅 𝐃𝐚𝐭�{e*: ${date}
 │❒ *⏰ 𝐓𝐢�{m𝐞 (GMT)*: ${time}
-│❒ *👑 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫𝐬*: @254111687009 (kn_dave), @254104260236 (DAVE-XMD)
-│❒ Powered by kn_dave
+│❒ *👑 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫𝐬*: @254111687009 (Gifted_dave), @254104260236 (DAVE-XMD)
+│❒ Powered by Gifted_dave
 ◈━━━━━━━━━━━━━━━━◈
         `;
 
