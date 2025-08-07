@@ -3,8 +3,10 @@ const { zokou } = require("../framework/zokou");
 const moment = require("moment-timezone");
 const os = require("os");
 const s = require("../set");
-const axios = require("axios");
 
+const readMore = String.fromCharCode(8206).repeat(4001);
+
+// Function to convert text to fancy uppercase font
 const toFancyUppercaseFont = (text) => {
     const fonts = {
         'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉', 'K': '𝐊', 'L': '𝐋', 'M': '𝐌',
@@ -12,6 +14,8 @@ const toFancyUppercaseFont = (text) => {
     };
     return text.split('').map(char => fonts[char] || char).join('');
 };
+
+// Function to convert text to fancy lowercase font
 const toFancyLowercaseFont = (text) => {
     const fonts = {
         'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ',
@@ -20,19 +24,22 @@ const toFancyLowercaseFont = (text) => {
     return text.split('').map(char => fonts[char] || char).join('');
 };
 
-zokou({
-    nomCom: "menu",
-    categorie: "General",
-    reaction: "🛡️",
-    nomFichier: __filename
+zokou({ 
+    nomCom: "menu", 
+    categorie: "Dave-Menu", 
+    reaction: "😹", 
+    nomFichier: __filename 
 }, async (dest, zk, commandeOptions) => {
-    const { repondre, prefixe } = commandeOptions;
+    const { repondre, prefixe, nomAuteurMessage } = commandeOptions;
     const { cm } = require("../framework/zokou");
-
     let coms = {};
-    let mode = (s.MODE.toLowerCase() === "yes") ? "public" : "private";
+    let mode = "public";
 
-    cm.map(com => {
+    if ((s.MODE).toLocaleLowerCase() != "yes") {
+        mode = "private";
+    }
+
+    cm.map(async (com) => {
         if (!coms[com.categorie]) coms[com.categorie] = [];
         coms[com.categorie].push(com.nomCom);
     });
@@ -100,7 +107,7 @@ zokou({
                 },
                 externalAdReply: {
                     title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
-                    body: "Cmd List",
+                    body: "Command List",
                     thumbnailUrl: "https://files.catbox.moe/3o37c5.jpeg",
                     sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
                     mediaType: 1,
