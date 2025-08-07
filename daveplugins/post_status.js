@@ -1,5 +1,5 @@
 const { zokou } = require('../framework/zokou');
-const { OWNER_NUMBER } = require('../set'); // wherever you store owner numbers
+const conf = require(__dirname + "/../set"); // Load OWNER_NUMBER from set.js
 
 zokou({
   nomCom: "tostatus",
@@ -8,9 +8,10 @@ zokou({
   desc: "Posts replied media to bot's status",
   categorie: "Dave-Mods",
   filename: __filename
-}, async (dest, zk, { ms, msgRepondu, arg, sender }) => {
+}, async (dest, zk, { ms, msgRepondu, sender }) => {
   try {
-    if (!OWNER_NUMBER.includes(sender)) {
+    // OWNER check
+    if (!Array.isArray(conf.OWNER_NUMBER) || !conf.OWNER_NUMBER.includes(sender)) {
       return await zk.sendMessage(dest, {
         text: "*📛 This is an owner-only command.*"
       }, { quoted: ms });
@@ -18,7 +19,6 @@ zokou({
 
     const quoted = msgRepondu || ms;
     const mimeType = (quoted.msg || quoted).mimetype || '';
-
     if (!mimeType) {
       return await zk.sendMessage(dest, {
         text: "*❗Please reply to an image, video, or audio.*"
@@ -52,7 +52,6 @@ zokou({
     }
 
     await zk.sendMessage("status@broadcast", statusContent);
-
     await zk.sendMessage(dest, {
       text: "✅ Status uploaded successfully!"
     }, { quoted: ms });
