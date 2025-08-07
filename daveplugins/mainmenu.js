@@ -11,7 +11,7 @@ const readmore = more.repeat(4001);
 zokou(
   {
     nomCom: "menu",
-    categorie: "General",
+    categorie: "Dave-Menu",
     reaction: "⚡",
   },
   async (dest, zk, commandeOptions) => {
@@ -40,7 +40,7 @@ zokou(
 
     // Info section
     let infoMsg = `
-◈━━━━━━━━━━━━━━━━◈
+⬣════════════════════⬣
   
      𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐕𝟐
   
@@ -56,33 +56,51 @@ ${temps} (EAT)
 > ✦ 𝐑𝐀𝐌: 
 ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 
-◈━━━━━━━━━━━━━━━━◈
+⬣════════════════════⬣
 `;
 
     // Menu section
     let menuMsg = `
-◈━━━━━━━━━━━━━━━━◈
-  ⚡ 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 ⚡
-  
+⬣════════════════════⬣
+    💠 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 💠
+
   𝐔𝐬𝐞 ${prefixe}help <command>
-  𝐟𝐨𝐫 𝐝𝐞𝐭𝐚𝐢𝐥𝐬
-  
-  ✦✦✦✦✦✦✦✦✦✦✦✦✦✦
+     𝐭𝐨 𝐠𝐞𝐭 𝐝𝐞𝐭𝐚𝐢𝐥𝐬
+
+✦⭑✦⭑✦⭑✦⭑✦⭑✦⭑✦⭑
 `;
 
     // Category styles with mature, realistic decor
     const categoryStyles = {
-      General: { icon: "🌟", decor: "┃" },
-      Group: { icon: "👥", decor: "┃" },
-      Mods: { icon: "🛡️", decor: "┃" },
-      Fun: { icon: "🎭", decor: "┃" },
-      Search: { icon: "🔍", decor: "┃" },
-      Logo: { icon: "🎨", decor: "┃" },
-      Utilities: { icon: "🛠", decor: "┃" },
-      Adult: { icon: "🔞", decor: "┃" },      // Added for .xxxvideo
-      Download: { icon: "📥", decor: "┃" },   // Added for .apk, .twitterdl
-    };
-
+  "Dave-New": { icon: "🔹", decor: "┃" },
+  "Dave-Sports": { icon: "🔹", decor: "┃" },
+  "Dave-General": { icon: "🔹", decor: "┃" },
+  "God": { icon: "🔹", decor: "┃" },
+  "Dave-Mods": { icon: "🔹", decor: "┃" },
+  "Dave-Fun": { icon: "🔹", decor: "┃" },
+  "Dave-search": { icon: "🔹", decor: "┃" },
+  "DAVE- conversation": { icon: "🔹", decor: "┃" },
+  "DAVE- group": { icon: "🔹", decor: "┃" },
+  "Audio edit": { icon: "🔹", decor: "┃" },
+  "DAVE- coding": { icon: "🔹", decor: "┃" },
+  "Dave-heroku": { icon: "🔹", decor: "┃" },
+  "Image-edit": { icon: "🔹", decor: "┃" },
+  "Dave-Ai": { icon: "🔹", decor: "┃" },
+  "Dave-Images": { icon: "🔹", decor: "┃" },
+  "Dave- Games": { icon: "🔹", decor: "┃" },
+  "Dave-Tradeplace": { icon: "🔹", decor: "┃" },
+  "Dave- Download": { icon: "🔹", decor: "┃" },
+  "Dave-User": { icon: "🔹", decor: "┃" },
+  "Dave-Menu": { icon: "🔹", decor: "┃" },
+  "Dave-logo": { icon: "🔹", decor: "┃" },
+  "Dave- script": { icon: "🔹", decor: "┃" },
+  "Dave- bug": { icon: "🔹", decor: "┃" },
+  "Dave-Hentai": { icon: "🔹", decor: "┃" },
+  "Dave- tools": { icon: "🔹", decor: "┃" },
+  "Dave- system": { icon: "🔹", decor: "┃" },
+  "Dave- soccer": { icon: "🔹", decor: "┃" },
+  "Adult": { icon: "🔹", decor: "┃" }
+};
     // Build menu with all categories and vertical command listing
     for (const cat in coms) {
       const style = categoryStyles[cat] || { icon: "✨", decor: "⋯" };
@@ -95,14 +113,14 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
     }
 
     menuMsg += `
-◈━━━━━━━━━━━━━━━━◈
-> 𝑨𝒍𝒍 𝑫𝒆𝒗𝒆𝒍𝒐𝒑𝒆𝒓 𝑵𝒖𝒎𝒃𝒆𝒓𝒔 
-  
-  @254111687009 (𝐌𝐚𝐢𝐧)
-  @254104260236 (Dave)
-  
- ⃝⃪⃕🥀-〭⃛〬𓆩〭⃛〬❥
-◈━━━━━━━━━━━━━━━━◈
+⬣━━━━━━━━━━━━━━━━━━━━⬣
+> 𝐁𝐨𝐭 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫𝐬
+
+  👑 @254111687009 (𝗗𝗮𝘃𝗲)
+  🎯 @254104260236 (𝐆𝐢𝐟𝐭𝐞𝐝 𝐃𝐚𝐯𝐞)
+
+    — powered by Gifted Dave —
+⬣━━━━━━━━━━━━━━━━━━━━⬣
 `;
 
     try {
@@ -120,7 +138,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
           {
             video: { url: lien },
             caption: infoMsg + menuMsg,
-            footer: "◄⏤͟͞ꭙͯ͢³➤⃝ ⃝⃪⃕𝚣⃪ꙴ-〭⃛〬𓆩〭⃛〬❥",
+            footer: "◖⧽💠 𝘿𝘼𝙑𝙀-𝕏𝙈𝘿 💠⧼◗",
             mentions: mentionedJids,
             gifPlayback: true,
           },
