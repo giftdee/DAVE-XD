@@ -6,7 +6,7 @@ const axios = require('axios');
 zokou(
   {
     nomCom: 'imagine',
-    categorie: 'Dave-Image',
+    categorie: 'Dave-Images',
     reaction: '🖌️',
   },
   async (dest, zk, commandeOptions) => {
