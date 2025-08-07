@@ -69,9 +69,9 @@ zokou ({
 
 // Twitter 
 zokou({
-  nomCom: "twittersearch",
+  nomCom: "twitter",
   aliases: ["xsearch", "twitterlist", "tweetsearch", "xsearch"],
-  categorie: "Search",
+  categorie: "Dave-Download",
   reaction: "🔍"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
