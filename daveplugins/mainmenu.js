@@ -142,7 +142,7 @@ let menuMsg = `
   🔹 @254111687009 (Dave)
   🔹 @254104260236 (Gifted Dave)
 
-    — Powered by *Gifted Dave* —
+> Powered by *Gifted Dave* 
 ⬣━━━━━━━━━━━━━━━━━━━━⬣
 `;
 
