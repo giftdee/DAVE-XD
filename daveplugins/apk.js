@@ -1,14 +1,14 @@
 const { zokou } = require("../framework/zokou");
 const { default: axios } = require('axios');
 
-const TOXIC_MD = "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃"; // Fancy font
+const DAVE-XMD = "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃"; // Fancy font
 
-zokou({ nomCom: "apk", categorie: 'Download', reaction: "📱" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "apk", categorie: 'Dave-Download', reaction: "📱" }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
 
   if (!arg || arg.length === 0) {
     const message = `
-${TOXIC_MD}
+${DAVE_XMD}
 
 ◈━━━━━━━━━━━━━━━━◈
 │❒ 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐚𝐧 𝐚𝐩𝐩 𝐧𝐚𝐦𝐞 🚫
@@ -27,7 +27,7 @@ ${TOXIC_MD}
 
     if (!response.data.success || response.data.status !== 200) {
       const errorMessage = `
-${TOXIC_MD}
+${DAVE_XMD}
 
 ◈━━━━━━━━━━━━━━━━◈
 │❒ 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐟𝐞𝐭𝐜𝐡 𝐚𝐩𝐩 😓
@@ -40,7 +40,7 @@ ${TOXIC_MD}
 
     const app = response.data.result;
     const message = `
-${TOXIC_MD}
+${DAVE_XMD}
 
 ◈━━━━━━━━━━━━━━━━◈
 │❒ 𝐀𝐩𝐩 𝐈𝐧𝐟𝐨 📱
@@ -52,7 +52,7 @@ ${TOXIC_MD}
     await zk.sendMessage(dest, { text: message }, { quoted: ms });
   } catch (error) {
     const errorMessage = `
-${TOXIC_MD}
+${DAVE-XMD}
 
 ◈━━━━━━━━━━━━━━━━◈
 │❒ 𝐄𝐫𝐫𝐨𝐫 𝐟𝐞𝐭𝐜𝐡𝐢𝐧𝐠 𝐚𝐩𝐩: ${error.message} 😓
