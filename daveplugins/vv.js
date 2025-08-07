@@ -1,7 +1,7 @@
 const { zokou } = require("../framework/zokou");
 const {getContentType}=require("@whiskeysockets/baileys")
 
-zokou({ nomCom: "vv", aliases: ["send", "keep"], categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "vv", aliases: ["send", "keep"], categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
   const { repondre, msgRepondu, superUser } = commandeOptions;
 
   if (msgRepondu) {
