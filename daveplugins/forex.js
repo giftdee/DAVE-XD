@@ -5,7 +5,7 @@ zokou({
   nomCom: "currencylist",
   aliases: ["currencies", "conversionrates"],
   reaction: '💲',
-  categorie: "tradeplace"
+  categorie: "Dave-Tradeplace"
 }, async (dest, zk, commandeOptions) => {
   const { repondre } = commandeOptions;
 
@@ -47,7 +47,7 @@ zokou({
 
 zokou({
   nomCom: "forex",
-  categorie: "tradeplace",
+  categorie: "Dave-Tradeplace",
   desc: "Fetches the latest forex news",
   reaction: "💲",
 }, async (dest, zk, commandeOptions) => {
@@ -84,7 +84,7 @@ zokou({
 });
 zokou({
   nomCom: "fxstatus",
-  categorie: "tradeplace",
+  categorie: "Dave-Tradeplace",
   desc: "Fetches the current status of the forex market",
   reaction: "💲",
 }, async (dest, zk, commandeOptions) => {
@@ -139,7 +139,7 @@ zokou({
 zokou({
   nomCom: "fxpairs",
 aliases: ["forexpairs", "pairforex"],
-  categorie: "tradeplace",
+  categorie: "Dave-Tradeplace",
   desc: "Fetches a list of active forex currency pairs",
   reaction: "💲",
 }, async (dest, zk, commandeOptions) => {
@@ -169,7 +169,7 @@ aliases: ["forexpairs", "pairforex"],
 zokou({
   nomCom: "stocktickers",
   aliases: ["stockticks", "tickets"],
-  categorie: "tradeplace",
+  categorie: "Dave-Tradeplace",
   desc: "Fetches a list of active stock tickers",
   reaction: "💲",
 }, async (dest, zk, commandeOptions) => {
@@ -200,7 +200,7 @@ zokou({
 zokou({
   nomCom: "fxexchange",
   aliases: ["forexexchange", "exchangerate"],
-  categorie: "tradeplace",
+  categorie: "Dave-Tradeplace",
   desc: "Fetches the latest foreign exchange rates against the US Dollar",
   reaction: "💲",
 }, async (dest, zk, commandeOptions) => {
