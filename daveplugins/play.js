@@ -29,7 +29,7 @@ async function uploadToCatbox(filePath) {
 zokou({
   nomCom: "play",
   aliases: ["song", "playdoc", "audio", "mp3"],
-  categorie: "download",
+  categorie: "Dave-Download",
   reaction: "🎧"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, repondre } = commandOptions;
@@ -109,7 +109,7 @@ zokou({
 zokou ({
   nomCom: "video",
   aliases: ["videodoc", "film", "mp4"],
-  categorie: "download",
+  categorie: "Dave-Download",
   reaction: "🎞️"
 }, async (dest, zk, commandOptions) => {
   const { arg, ms, repondre } = commandOptions;
@@ -238,7 +238,7 @@ zokou ({
 // Command to upload image, video, or audio file
 zokou ({
   'nomCom': 'tourl',       // Command to trigger the function
-  'categorie': "download", // Command category
+  'categorie': "Dave-Download", // Command category
   'reaction': '👨🏿‍💻'    // Reaction to use on command
 }, async (groupId, client, context) => {
   const { msgRepondu, repondre } = context;
