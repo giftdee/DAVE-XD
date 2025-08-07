@@ -12,7 +12,7 @@ const JavaScriptObfuscator = require("javascript-obfuscator");
 zokou({
   'nomCom': "run-c++",
   'aliases': ["c++", "runc++"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (message, args, context) => {
   const {
     ms: messageSentTime,
@@ -55,7 +55,7 @@ zokou({
 zokou({
   'nomCom': "run-c",
   'aliases': ["runcc", "runc"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (message, args, context) => {
   const {
     ms: messageSentTime,
@@ -98,7 +98,7 @@ zokou({
 zokou({
   'nomCom': "run-java",
   'aliases': ["java", "runjava"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (message, args, context) => {
   const {
     ms: messageSentTime,
@@ -141,7 +141,7 @@ zokou({
 zokou({
   'nomCom': "run-js",
   'aliases': ["node", "javascript"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (message, args, context) => {
   const {
     ms: messageSentTime,
@@ -184,7 +184,7 @@ zokou({
 zokou({
   'nomCom': "run-py",
   'aliases': ["python", "runpy"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (message, args, context) => {
   const {
     ms: messageSentTime,
@@ -229,7 +229,7 @@ zokou({
   // Command name
   'aliases': ["decode", "decodebinary"],
   // Aliases for the command
-  'categorie': "script" // Category of the command
+  'categorie': "Dave-script" // Category of the command
 }, async (zk, args, context) => {
   const {
     ms,
@@ -275,7 +275,7 @@ zokou({
   // Command name
   'aliases': ["encode", "encodebinary"],
   // Aliases for the command
-  'categorie': "script" // Category of the command
+  'categorie': "Dave-script" // Category of the command
 }, async (zk, args, context) => {
   const {
     ms,
@@ -306,7 +306,7 @@ zokou({
 zokou({
   'nomCom': "obfuscate",
   'aliases': ["obfuscate", "obfu"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (message, args, context) => {
   const {
     ms: messageSentTime,
@@ -351,7 +351,7 @@ zokou({
 zokou({
   'nomCom': "carbon",
   'aliases': ["C", "run-carbon"],
-  'categorie': "script"
+  'categorie': "Dave-script"
 }, async (zk, args, context) => {
   const { ms, repondre } = context;
 
@@ -399,7 +399,7 @@ zokou({
 zokou({
   nomCom: "scrap",
   aliases: ["get", "find"],
-  categorie: "script",
+  categorie: "Dave-script",
   reaction: '🛄',
 }, async (sender, zk, context) => {
   const { repondre: sendResponse, arg: args } = context;
@@ -473,7 +473,7 @@ zokou({
 zokou({
   nomCom: "web",
   aliases: ["inspectweb", "webinspect", "webscrap"],
-  categorie: "script",
+  categorie: "Dave-script",
   reaction: "🌐"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
