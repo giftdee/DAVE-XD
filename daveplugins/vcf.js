@@ -3,7 +3,7 @@ const fs = require("fs");
 
 zokou({
   nomCom: "vcf",
-  categorie: "Group",
+  categorie: "Dave-Group",
   reaction: "📄"
 }, async (jid, sock, commandOptions) => {
   const {
