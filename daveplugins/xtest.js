@@ -2,7 +2,7 @@ const { zokou } = require("../framework/zokou");
 
 zokou({
   nomCom: "xtest",
-  categorie: "Fun",
+  categorie: "Dave-Fun",
   reaction: "🤓"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, ms } = commandeOptions;
@@ -11,7 +11,7 @@ zokou({
   const replies = [
     "𝗛𝗲𝘆, 𝗜’𝗺 𝗷𝘂𝘀𝘁 𝘁𝗲𝘀𝘁𝗶𝗻𝗴 𝘁𝗵𝗶𝗻𝗴𝘀 𝗼𝘂𝘁! How’s your day going? 😊",
     "𝗢𝗼𝗵, 𝘆𝗼𝘂 𝘄𝗮𝗻𝘁 𝘁𝗼 𝘁𝗲𝘀𝘁 𝗺𝗲? I’m ready! What’s up? 🤔",
-    "𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧 here! Just messing around with some test replies. You good? 😎",
+    "𝐃𝐀𝐕𝐄 here! Just messing around with some test replies. You good? 😎",
     "𝗟𝗲𝘁’𝘀 𝘀𝗲𝗲… Yup, I’m working fine! How about you, what’s cooking? 🍳",
     "𝗧𝗲𝘀𝘁, 𝘁𝗲𝘀𝘁, 𝟭-𝟮-𝟯! Haha, just kidding—how’s my favorite user doing? 😉",
     "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝗰𝗵𝗲𝗰𝗸𝗶𝗻𝗴 𝗶𝗻! Everything’s running smoothly. What’s on your mind? 🧠",
