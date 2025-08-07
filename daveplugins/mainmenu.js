@@ -57,7 +57,7 @@ zokou(
     const temps = moment().format("HH:mm:ss");
 
     // Info section
-    let infoMsg = `
+    let infoMsg = `   
 ⬣════════════════════⬣
   
      𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐕𝟐
@@ -79,6 +79,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 
     // Menu section
     let menuMsg = `
+    *「 ${toFancyUppercaseFont(cat)} 」*   
 ⬣════════════════════⬣
     💠 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 💠
 
@@ -105,14 +106,14 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
   "Image-Edit": { icon: "🔹", decor: "┃" },
   "Dave-Ai": { icon: "🔹", decor: "┃" },
   "Dave-Images": { icon: "🔹", decor: "┃" },
-  "Dave- Games": { icon: "🔹", decor: "┃" },
+  "Dave-Games": { icon: "🔹", decor: "┃" },
   "Dave-Tradeplace": { icon: "🔹", decor: "┃" },
   "Dave-Download": { icon: "🔹", decor: "┃" },
   "Dave-User": { icon: "🔹", decor: "┃" },
   "Dave-Menu": { icon: "🔹", decor: "┃" },
   "Dave-Logo": { icon: "🔹", decor: "┃" },
-  "Dave- Script": { icon: "🔹", decor: "┃" },
-  "Dave- Bug": { icon: "🔹", decor: "┃" },
+  "Dave-Script": { icon: "🔹", decor: "┃" },
+  "Dave-Bug": { icon: "🔹", decor: "┃" },
   "Dave-Hentai": { icon: "🔹", decor: "┃" },
   "Dave-Tools": { icon: "🔹", decor: "┃" },
   "Dave-System": { icon: "🔹", decor: "┃" },
