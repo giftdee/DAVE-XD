@@ -10,7 +10,7 @@ const readmore = more.repeat(4001);
 
 zokou(
   {
-    nomCom: "menu",
+    nomCom: "menu2",
     categorie: "General",
     reaction: "💱",
   },
