@@ -40,7 +40,7 @@ ${data.text}
 zokou({
   nomCom: "poll",
   reaction: "📊",
-  categorie: "General"
+  categorie: "Dave-Group"
 }, async (message, sender, args) => {
   const { repondre, arg, ms } = args;
   
@@ -65,7 +65,7 @@ zokou({
 zokou({
   nomCom: "fact",
   reaction: "🔍",
-  categorie: "Fun"
+  categorie: "Dave-Fun"
 }, async (message, sender, args) => {
   try {
     const response = await fetch("https://nekos.life/api/v2/fact");
@@ -85,7 +85,7 @@ ${fact}
 zokou({
   nomCom: "quotes",
   reaction: "💬",
-  categorie: "Fun"
+  categorie: "Dave-Fun"
 }, async (message, sender, args) => {
   try {
     const response = await fetch("https://favqs.com/api/qotd");
