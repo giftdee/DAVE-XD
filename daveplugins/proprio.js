@@ -1,6 +1,6 @@
 const {zokou}=require("../framework/zokou")
 
-zokou({nomCom:"reboot",categorie:"Mods",reaction:"👨🏿‍💼"},async(dest,z,com)=>{
+zokou({nomCom:"reboot",categorie:"Dave-Mods",reaction:"👨🏿‍💼"},async(dest,z,com)=>{
 
 const{repondre,ms,dev,superUser}=com;
   if(!superUser)
