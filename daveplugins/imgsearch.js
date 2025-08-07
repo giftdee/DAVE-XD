@@ -6,7 +6,7 @@ const axios = require('axios');
 zokou(
   {
     nomCom: 'img',
-    categorie: 'Search',
+    categorie: 'Dave-Images',
     reaction: '📸',
   },
   async (dest, zk, commandeOptions) => {
@@ -38,7 +38,7 @@ zokou(
         dest,
         {
           image: { url: imageUrl },
-          caption: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BAM, ${nomAuteurMessage}! Your ${query} image is STRAIGHT FIRE! 🔥\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`,
+          caption: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BAM, ${nomAuteurMessage}! Your ${query} image is STRAIGHT FIRE! 🔥\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`,
           footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by gifted_dave 😎`,
         },
         { quoted: ms }
