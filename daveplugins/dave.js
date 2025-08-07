@@ -5,7 +5,7 @@ zokou({
   nomCom: "pair",
   aliases: ["session", "pair", "paircode", "qrcode"],
   reaction: '♂️',
-  categorie: "General"
+  categorie: "Dave-General"
 }, async (messageOrigin, zk, options) => {
   const {
     repondre: reply,
