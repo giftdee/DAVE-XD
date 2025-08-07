@@ -1,5 +1,3 @@
-'use strict';
-
 const { zokou } = require("../framework/zokou");
 const axios = require('axios');
 const moment = require("moment-timezone");
