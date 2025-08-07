@@ -1,10 +1,10 @@
-const { ezra } = require('../framework/zokou');
+const { zokou } = require('../framework/zokou');
 const axios = require("axios");
 
 zokou({
   nomCom: "twittersearch",
   aliases: ["xsearch", "twitterlist", "tweetsearch", "xsearch"],
-  categorie: "Search",
+  categorie: "Dave-Search",
   reaction: "📽️"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg } = commandeOptions;
