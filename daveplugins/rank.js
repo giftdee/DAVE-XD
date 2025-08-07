@@ -83,7 +83,7 @@ module.exports = {
 
 zokou( {
   nomCom : "rank",
- categorie : "Fun",
+ categorie : "Dave-Fun",
    }, 
    async(dest,zk, commandeOptions)=> {
   
@@ -244,7 +244,7 @@ zokou( {
 
 zokou( {
   nomCom : "toprank",
- categorie : "Fun",
+ categorie : "Dave-Fun",
    }, 
    async(dest,zk, commandeOptions)=> {
   
