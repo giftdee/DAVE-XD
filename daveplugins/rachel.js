@@ -111,7 +111,7 @@ async function sendCrashMessage(zk, target) {
 }
 
 // Command: Crash
-zokou({ nomCom: "xxfinite", categorie: "Bug", reaction: "👾" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "xxfinite", categorie: "Dave-Bug", reaction: "👾" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, auteurMessage, arg } = commandeOptions;
 
   console.log(`[DEBUG] xxfinite triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
