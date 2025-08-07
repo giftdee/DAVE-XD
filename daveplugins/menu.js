@@ -11,7 +11,7 @@ const readmore = more.repeat(4001);
 zokou(
   {
     nomCom: "menu2",
-    categorie: "General",
+    categorie: "Dave-Menu",
     reaction: "💱",
   },
   async (dest, zk, commandeOptions) => {
@@ -104,7 +104,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 
         // Build menu with all categories and vertical command listing
   for (const cat in coms) {
-    const style = categoryStyles[cat] || { icon: "🛡️", decor: "⋯" };
+    const style = categoryStyles[cat] || { icon: "🌎", decor: "⋯" };
      menuMsg += `\n  ${style.decor} ${style.icon} *${cat.toUpperCase()}* ${style.icon} ${style.decor}\n`;
 
      // List commands vertically with a bullet point
