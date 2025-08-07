@@ -43,7 +43,7 @@ async function loading(dest, zk) {
 zokou({
   nomCom: "test",
   aliases: ["testing"],
-  categorie: "Utilities",
+  categorie: "Dave-General",
   reaction: "🍂"
 }, async (dest, zk, commandeOptions) => {
   const { ms } = commandeOptions;
@@ -99,7 +99,7 @@ zokou({
 
 zokou({
   nomCom: "alive",
-  categorie: "Utilities",
+  categorie: "Dave-General",
   reaction: "🍂"
 }, async (dest, zk, commandeOptions) => {
   const { ms } = commandeOptions;
@@ -156,7 +156,7 @@ zokou({
 // Command to retrieve Heroku config vars
 zokou({
   nomCom: 'allvar',
-  categorie: "Utilities"
+  categorie: "Dave-Heroku"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
 
@@ -199,7 +199,7 @@ zokou({
 // Command to set a Heroku config var
 zokou({
   nomCom: 'setvar',
-  categorie: "Utilities"
+  categorie: "Dave-Heroku"
 }, async (chatId, zk, context) => {
   const { repondre, superUser, arg } = context;
 
@@ -244,7 +244,7 @@ zokou(
     nomCom: 'ping',
     aliases: ['speed', 'latency'],
     desc: 'To check bot response time',
-    categorie: 'Utilities', // Fixed the typo here (Categorie -> categorie)
+    categorie: 'Dave-General', // Fixed the typo here (Categorie -> categorie)
     reaction: '⚡',
     fromMe: true, // Removed quotes to make it a boolean
   },
@@ -288,7 +288,7 @@ function react(dest, zk, msg, reaction) {
 zokou({
   nomCom: 'update',
   aliases: ['redeploy', 'sync'],
-  categorie: "Utilities"
+  categorie: "Dave-Heroku"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
 
@@ -343,7 +343,7 @@ zokou({
 zokou({
   nomCom: "fetch",
   aliases: ["get", "find"],
-  categorie: "Utilities",
+  categorie: "Dave-General",
   reaction: '🛄',
 }, async (sender, zk, context) => {
   const { repondre: sendResponse, arg: args } = context;
