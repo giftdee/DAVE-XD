@@ -8,7 +8,7 @@ zokou({
     alias: ["pdf", "topdf"],
     react: "📄",
     desc: "Convert provided text or image to a PDF file.",
-    category: "Dave-Tools",
+    categorie: "Dave-Tools",
     filename: __filename
 },
 async (dest, zk, { q, repondre, msgRepondu }) => {
