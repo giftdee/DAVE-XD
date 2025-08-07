@@ -1,13 +1,10 @@
 "use strict";
-const { zokou } = require("../framework/zokou"); // ← changed from ezra to zokou
+const { zokou } = require("../framework/zokou");
 const moment = require("moment-timezone");
 const os = require("os");
 const s = require("../set");
 const axios = require("axios");
 
-const readMore = String.fromCharCode(8206).repeat(4001);
-
-// Fancy font converters
 const toFancyUppercaseFont = (text) => {
     const fonts = {
         'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉', 'K': '𝐊', 'L': '𝐋', 'M': '𝐌',
@@ -23,21 +20,19 @@ const toFancyLowercaseFont = (text) => {
     return text.split('').map(char => fonts[char] || char).join('');
 };
 
-// Main plugin
-zokou({ 
-    nomCom: "menu", 
-    categorie: "General", 
-    reaction: "🛡️", 
-    nomFichier: __filename 
+zokou({
+    nomCom: "menu",
+    categorie: "General",
+    reaction: "🛡️",
+    nomFichier: __filename
 }, async (dest, zk, commandeOptions) => {
-    const { repondre, prefixe, nomAuteurMessage } = commandeOptions;
+    const { repondre, prefixe } = commandeOptions;
     const { cm } = require("../framework/zokou");
+
     let coms = {};
-    let mode = "public";
+    let mode = (s.MODE.toLowerCase() === "yes") ? "public" : "private";
 
-    if ((s.MODE).toLocaleLowerCase() != "yes") mode = "private";
-
-    cm.map(async (com) => {
+    cm.map(com => {
         if (!coms[com.categorie]) coms[com.categorie] = [];
         coms[com.categorie].push(com.nomCom);
     });
@@ -52,9 +47,7 @@ zokou({
     const temps = moment().format('HH:mm:ss');
     const date = moment().format('DD/MM/YYYY');
 
-    const infoMsg = `
-
-╭───────────⊷
+    const infoMsg = `╭───────────⊷
 *┋* *ʙᴏᴛ ɴᴀᴍᴇ :  𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ⚡*
 *┋* *ʙᴏᴛ ɴᴀᴍᴇ :  𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ⚡*
 *┋* *ᴘʀᴇғɪx :* [ ${s.PREFIXE} ]
@@ -65,19 +58,18 @@ zokou({
 *┋* *ᴄᴍᴅꜱ ʟᴏᴀᴅᴇᴅ :* ${cm.length}
 ╰───────────⊷\n`;
 
-    let menuMsg = ` *${greeting}*`;
+    let menuMsg = `*${greeting}*\n`;
 
     for (const cat in coms) {
-        menuMsg += `\n*「 ${toFancyUppercaseFont(cat)} 」*\n╭───┈┈┈┈────⊷ `;
+        menuMsg += `\n*「 ${toFancyUppercaseFont(cat)} 」*\n╭───┈┈┈┈────⊷`;
         for (const cmd of coms[cat]) {
-            menuMsg += `\n*┋* ${toFancyLowercaseFont(cmd)}`;   
+            menuMsg += `\n*┋* ${toFancyLowercaseFont(cmd)}`;
         }
         menuMsg += `\n╰───┈┈┈┈────⊷`;
     }
 
-    menuMsg += `\n> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n`;
+    menuMsg += `\n\n> 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n`;
 
-    // 🔊 RANDOM AUDIO PLAYBACK
     const audioList = [
         "https://files.catbox.moe/zki2qy.mp3",
         "https://files.catbox.moe/l5lya0.m4a",
@@ -85,28 +77,29 @@ zokou({
         "https://files.catbox.moe/mnnv60.mp3"
     ];
     const randomAudio = audioList[Math.floor(Math.random() * audioList.length)];
-    
+
     try {
         const audioBuffer = (await axios.get(randomAudio, { responseType: 'arraybuffer' })).data;
+
         await zk.sendMessage(dest, {
             audio: audioBuffer,
             mimetype: 'audio/mp4',
             ptt: true
         }, { quoted: commandeOptions });
 
-        await zk.sendMessage(dest, { 
+        await zk.sendMessage(dest, {
             image: { url: "https://files.catbox.moe/lidsgj.jpg" },
             caption: infoMsg + menuMsg,
             contextInfo: {
                 isForwarded: true,
+                forwardingScore: 999,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: "120363400480173280@newsletter",
                     newsletterName: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 updates",
                     serverMessageId: -1
                 },
-                forwardingScore: 999,
                 externalAdReply: {
-                    title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ",
+                    title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
                     body: "Cmd List",
                     thumbnailUrl: "https://files.catbox.moe/3o37c5.jpeg",
                     sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
@@ -118,6 +111,6 @@ zokou({
 
     } catch (error) {
         console.error("Menu error: ", error);
-        repondre("🥵🥵 Menu error: " + error);
+        repondre("🥵 Menu error: " + error.message);
     }
 });
