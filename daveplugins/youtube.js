@@ -1,7 +1,7 @@
 const { zokou } = require('../framework/zokou');
 const axios = require('axios');
 
-zokou({ nomCom: "youtube", categorie: "Download", reaction: "🎥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "youtube", categorie: "Dave-Download", reaction: "🎥" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, arg } = commandeOptions;
 
   console.log(`[DEBUG] youtube command triggered by ${ms.key.participant || ms.key.remoteJid} in ${dest}`);
