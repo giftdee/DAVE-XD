@@ -10,7 +10,7 @@ const more = String.fromCharCode(8206);
 const readmore = more.repeat(4001);
 
 zokou(
-  { nomCom: "bot", categorie: "General" },
+  { nomCom: "bot", categorie: "Dave-General" },
   async (dest, zk, commandeOptions) => {
     let { ms, repondre, mybotpic } = commandeOptions;
     var mode = "public";
