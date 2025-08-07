@@ -78,13 +78,12 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 `;
 
     // Menu section
-    let menuMsg = `
-    *「 ${toFancyLowercaseFont(cat)} 」*   
+let menuMsg = `
 ⬣════════════════════⬣
     💠 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 💠
 
-  𝐔𝐬𝐞 ${prefixe}help <command>
-     𝐭𝐨 𝐠𝐞𝐭 𝐝𝐞𝐭𝐚𝐢𝐥𝐬
+  Use ${prefixe}help <command>
+     to get command details
 
 ✦⭑✦⭑✦⭑✦⭑✦⭑✦⭑✦⭑
 `;
@@ -138,12 +137,12 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 
     menuMsg += `
 ⬣━━━━━━━━━━━━━━━━━━━━⬣
-> 𝐁𝐨𝐭 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫𝐬
+> *Bot Developers*
 
-  🔹@254111687009 (𝗗𝗮𝘃𝗲)
-  🔹@254104260236 (𝐆𝐢𝐟𝐭𝐞𝐝 𝐃𝐚𝐯𝐞)
+  🔹 @254111687009 (Dave)
+  🔹 @254104260236 (Gifted Dave)
 
-    𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝙶𝙸𝙵𝚃𝙴𝙳 𝙳𝙰𝚅𝙴 
+    — Powered by *Gifted Dave* —
 ⬣━━━━━━━━━━━━━━━━━━━━⬣
 `;
 
