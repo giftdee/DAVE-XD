@@ -7,7 +7,7 @@ const axios = require("axios");
 zokou(
   {
     nomCom: "gemini",
-    categorie: "AI",
+    categorie: "Dave-Ai",
     reaction: "🧠",
   },
   async (dest, zk, commandeOptions) => {
@@ -47,7 +47,7 @@ zokou(
       if (data && data.success && data.result) {
         const res = data.result;
         await repondre(
-          `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Query: ${query}\n│❒ Response: ${res}\n│❒ BOOM! 😈 Answered like a boss! 💪\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`
+          `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ Query: ${query}\n│❒ Response: ${res}\n│❒ BOOM! 😈 Answered like a boss! 💪\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`
         );
       } else {
         console.log("Invalid API response structure");
