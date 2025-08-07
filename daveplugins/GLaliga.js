@@ -49,7 +49,7 @@ zokou({
 /** ✅ laliga matchday */
 zokou({
   nomCom: "Laliga_matchday",
-  categorie: "Dave-sports",
+  categorie: "Dave-Sports",
   reaction: "📅"
 }, async (dest, zk, commandOptions) => {
   const { repondre } = commandOptions;
