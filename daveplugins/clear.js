@@ -9,7 +9,8 @@ let botMessages = {};
 zokou(
   {
     nomCom: "clear",
-    categorie: "Utilities",
+    aliases: ["delete", "del"],
+    categorie: "Dave-Mods",
     reaction: "⚡",
   },
   async (dest, zk, commandeOptions) => {
