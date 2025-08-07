@@ -4,7 +4,7 @@ let antiTagActive = false; // State of the anti-tag feature
 
 zokou({
   nomCom: "antitag",
-  categorie: "Group",
+  categorie: "Dave-Group",
   reaction: "👥"
 }, async (origineMessage, zk, commandeOptions) => {
   const { ms, arg } = commandeOptions;
