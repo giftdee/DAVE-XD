@@ -13,7 +13,7 @@ const sleep =  (ms) =>{
   } ;
 
 
-  zokou({ nomCom: "tgs", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+  zokou({ nomCom: "tgs", categorie: "Dave-New" }, async (dest, zk, commandeOptions) => {
     const { ms, repondre, arg, nomAuteurMessage, superUser } = commandeOptions;
   
     if (!superUser) {
@@ -94,7 +94,7 @@ const sleep =  (ms) =>{
     }
   });
 
-zokou({ nomCom: "crew", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "crew", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, arg, auteurMessage, superUser, auteurMsgRepondu, msgRepondu } = commandeOptions;
 
   if (!superUser) { repondre("only modds can use this command"); return };
@@ -111,7 +111,7 @@ zokou({ nomCom: "crew", categorie: "Mods" }, async (dest, zk, commandeOptions) =
 });
 
 
-zokou({ nomCom: "jid", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "jid", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage,auteurMsgRepondu } = commandeOptions;
 
@@ -130,7 +130,7 @@ zokou({ nomCom: "jid", categorie: "Mods" }, async (dest, zk, commandeOptions) =>
 
   
 
-zokou({ nomCom: "block", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "block", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage,auteurMsgRepondu } = commandeOptions;
 
@@ -154,7 +154,7 @@ zokou({ nomCom: "block", categorie: "Mods" }, async (dest, zk, commandeOptions) 
 
   });
 
-zokou({ nomCom: "unblock", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "unblock", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
 
   const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage,auteurMsgRepondu } = commandeOptions;
 
@@ -177,7 +177,7 @@ zokou({ nomCom: "unblock", categorie: "Mods" }, async (dest, zk, commandeOptions
   
     });
 
-zokou({ nomCom: "kickall", categorie: 'Group', reaction: "📣" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "kickall", categorie: 'Dave-Group', reaction: "📣" }, async (dest, zk, commandeOptions) => {
 
   const { auteurMessage ,ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser,prefixe } = commandeOptions
 
@@ -214,7 +214,7 @@ await zk.groupParticipantsUpdate(
 
 zokou({
     nomCom: 'ban',
-    categorie: 'Mods',
+    categorie: 'Dave-Mods',
 }, async (dest, zk, commandeOptions) => {
 
     const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser } = commandeOptions;
@@ -263,7 +263,7 @@ zokou({
 
 zokou({
     nomCom: 'bangroup',
-    categorie: 'Mods',
+    categorie: 'Dave-Mods',
 }, async (dest, zk, commandeOptions) => {
 
     const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser,verifGroupe } = commandeOptions;
@@ -311,7 +311,7 @@ zokou({
 
 zokou({
   nomCom: 'onlyadmin',
-  categorie: 'Group',
+  categorie: 'Dave-Group',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser,verifGroupe , verifAdmin } = commandeOptions;
@@ -358,7 +358,7 @@ if(!verifGroupe) {repondre('order reservation for groups' ) ; return };
 
 zokou({
   nomCom: 'sudo',
-  categorie: 'Mods',
+  categorie: 'Dave-Mods',
 }, async (dest, zk, commandeOptions) => {
 
   const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser } = commandeOptions;
@@ -405,7 +405,7 @@ if (!superUser) {repondre('This command is only allowed to the bot owner') ; ret
 });
 
 
-zokou({ nomCom: "save", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "save", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
 
   const { repondre , msgRepondu , superUser, auteurMessage } = commandeOptions;
   
@@ -491,7 +491,7 @@ zokou({ nomCom: "save", categorie: "Mods" }, async (dest, zk, commandeOptions) =
 
 zokou({
   nomCom : 'mention',
-  categorie : 'Mods',
+  categorie : 'Dave-Mods',
 } , async (dest,zk,commandeOptions) => {
 
  const {ms , repondre ,superUser , arg} = commandeOptions ;
@@ -531,7 +531,7 @@ Link: ${url}
 
 To activate or modify the mention, follow this syntax: mention link type message
 The different types are audio, video, image, and sticker.
-Example: mention https://telegra.ph/file/52e3bb0ba3868d64df3f0.jpg image Hi, my name is Beltah
+Example: mention https://telegra.ph/file/52e3bb0ba3868d64df3f0.jpg image Hi, my name is Dave
 
 To stop the mention, use mention stop`;
 
