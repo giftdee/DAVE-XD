@@ -122,23 +122,28 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 };
     // Build menu with all categories and vertical command listing
     for (const cat in coms) {
-      const style = categoryStyles[cat] || { icon: "✨", decor: "⋯" };
-      menuMsg += `\n  ${style.decor} ${style.icon} *${cat.toUpperCase()}* ${style.icon} ${style.decor}\n`;
+  const style = categoryStyles[cat] || { icon: "🔹", decor: "⋯" };
 
-      // List commands vertically with a bullet point
-      coms[cat].forEach((cmd) => {
-        menuMsg += `  • ${cmd}\n`;
-      });
+  // Fancy uppercase category name
+  const fancyCat = toFancyUppercaseFont(cat.toUpperCase());
+
+  menuMsg += `\n  ${style.decor} ${style.icon} *${fancyCat}* ${style.icon} ${style.decor}\n`;
+
+  // Fancy lowercase each command
+  coms[cat].forEach((cmd) => {
+    const fancyCmd = toFancyLowercaseFont(cmd);
+    menuMsg += `  • ${fancyCmd}\n`;
+  });
     }
 
     menuMsg += `
 ⬣━━━━━━━━━━━━━━━━━━━━⬣
 > 𝐁𝐨𝐭 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫𝐬
 
-  👑 @254111687009 (𝗗𝗮𝘃𝗲)
-  🎯 @254104260236 (𝐆𝐢𝐟𝐭𝐞𝐝 𝐃𝐚𝐯𝐞)
+  🔹 @254111687009 (𝗗𝗮𝘃𝗲)
+  🔹 @254104260236 (𝐆𝐢𝐟𝐭𝐞𝐝 𝐃𝐚𝐯𝐞)
 
-    — powered by Gifted Dave —
+    — ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɢɪғᴛᴇᴅ ᴅᴀᴠᴇ —
 ⬣━━━━━━━━━━━━━━━━━━━━⬣
 `;
 
