@@ -17,7 +17,7 @@ const s = require("../set")
 zokou(
     {
         nomCom : 'warn',
-        categorie : 'Group'
+        categorie : 'Dave-Group'
 
     },async (dest,zk,commandeOptions) => {
 
@@ -51,7 +51,7 @@ if(verifAdmin || superUser) {
 
 
  // COMMAND TO GETALLMEMBERS 
-zokou({ nomCom: "getallmembers", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "getallmembers", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions;
 
   if (!verifGroupe) return repondre(" This command is reserved for groups ");
@@ -89,7 +89,7 @@ zokou({ nomCom: "getallmembers", categorie: 'Group', reaction: "👥" }, async (
 
 
 // COMMAND TO TAGALL
-zokou({ nomCom: "tagall", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "tagall", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, arg, verifGroupe, nomGroupe, infosGroupe, nomAuteurMessage, verifAdmin, superUser } = commandeOptions
 
@@ -137,7 +137,7 @@ zokou({ nomCom: "tagall", categorie: 'Group', reaction: "👥" }, async (dest, z
 
 
 // COMMAND TO LINK GROUP 
-zokou({ nomCom: "link", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "link", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
   const { repondre, nomGroupe, nomAuteurMessage, verifGroupe } = commandeOptions;
   if (!verifGroupe) { repondre("wait bro , you want the link to my dm?"); return; };
 
@@ -156,7 +156,7 @@ Grp link :${lien} \n\n★𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢  𝐃𝐀𝐕𝐄
 
 // COMMAND TO PROMOTE ADM
 /** *nommer un membre comme admin */
-zokou({ nomCom: "promote", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "promote", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("For groups only"); }
@@ -216,7 +216,7 @@ zokou({ nomCom: "promote", categorie: 'Group', reaction: "👥" }, async (dest, 
 })
 
 // COMMAND TO DEMOTE ADM
-zokou({ nomCom: "demote", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "demote", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("For groups only"); }
@@ -280,7 +280,7 @@ zokou({ nomCom: "demote", categorie: 'Group', reaction: "👥" }, async (dest, z
 
 
 // COMMAND TO REMOVE MEMBERS 
-zokou({ nomCom: "remove", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "remove", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
   let { repondre, msgRepondu, infosGroupe, auteurMsgRepondu, verifGroupe, nomAuteurMessage, auteurMessage, superUser, idBot } = commandeOptions;
   let membresGroupe = verifGroupe ? await infosGroupe.participants : ""
   if (!verifGroupe) { return repondre("for groups only"); }
@@ -351,7 +351,7 @@ zokou({ nomCom: "remove", categorie: 'Group', reaction: "👥" }, async (dest, z
 })
 
 // COMMAND TO DELETE 
-zokou({ nomCom: "del", categorie: 'Group',reaction:"👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "del", categorie: 'Dave-Group',reaction:"👥" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, verifGroupe,auteurMsgRepondu,idBot, msgRepondu, verifAdmin, superUser} = commandeOptions;
 
@@ -400,7 +400,7 @@ zokou({ nomCom: "del", categorie: 'Group',reaction:"👥" }, async (dest, zk, co
 });
 
 // COMMAND TO GRUP INFO
-zokou({ nomCom: "info", categorie: 'Group' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "info", categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, verifGroupe } = commandeOptions;
   if (!verifGroupe) { repondre("order reserved for the group only"); return };
 
@@ -423,7 +423,7 @@ zokou({ nomCom: "info", categorie: 'Group' }, async (dest, zk, commandeOptions) 
 
 
  // COMMAND TO ACTVATE ANTILINK GROUP
- zokou({ nomCom: "antilink", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+ zokou({ nomCom: "antilink", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
 
 
   var { repondre, arg, verifGroupe, superUser, verifAdmin } = commandeOptions;
@@ -491,7 +491,7 @@ zokou({ nomCom: "info", categorie: 'Group' }, async (dest, zk, commandeOptions) 
 
  // COMMAND TO ACTIVATE ANTIBOT
 
- zokou({ nomCom: "antibot", categorie: 'Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
+ zokou({ nomCom: "antibot", categorie: 'Dave-Group', reaction: "👥" }, async (dest, zk, commandeOptions) => {
 
 
   var { repondre, arg, verifGroupe, superUser, verifAdmin } = commandeOptions;
@@ -557,7 +557,7 @@ zokou({ nomCom: "info", categorie: 'Group' }, async (dest, zk, commandeOptions) 
 
 // COMMAND TO GROUP ACTION OPN/CLS
 
-zokou({ nomCom: "group", categorie: 'Group' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "group", categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
 
   const { repondre, verifGroupe, verifAdmin, superUser, arg } = commandeOptions;
 
@@ -588,7 +588,7 @@ zokou({ nomCom: "group", categorie: 'Group' }, async (dest, zk, commandeOptions)
 });
 
 // COMMAND ACTION TO LEFT GROUP
-zokou({ nomCom: "left", categorie: "Mods" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "left", categorie: "Dave-User" }, async (dest, zk, commandeOptions) => {
 
   const { repondre, verifGroupe, superUser } = commandeOptions;
   if (!verifGroupe) { repondre("order reserved for group only"); return };
@@ -602,7 +602,7 @@ zokou({ nomCom: "left", categorie: "Mods" }, async (dest, zk, commandeOptions) =
 });
 
 // COMMAND TO EDIT GROUP NAME
-zokou({ nomCom: "gname", categorie: 'Group' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "gname", categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
 
   const { arg, repondre, verifAdmin } = commandeOptions;
 
@@ -622,7 +622,7 @@ zokou({ nomCom: "gname", categorie: 'Group' }, async (dest, zk, commandeOptions)
 }) ;
 
 // COMMAND TO EDIT GROUP DESK
-zokou({ nomCom: "gdesc", categorie: 'Group' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "gdesc", categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
 
   const { arg, repondre, verifAdmin } = commandeOptions;
 
@@ -642,7 +642,7 @@ zokou({ nomCom: "gdesc", categorie: 'Group' }, async (dest, zk, commandeOptions)
 }) ;
 
 // COMMAND TO GET GROUP PROFILE PHOTO
-zokou({ nomCom: "gpp", categorie: 'Group' }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "gpp", categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
 
   const { repondre, msgRepondu, verifAdmin } = commandeOptions;
 
@@ -667,7 +667,7 @@ zokou({ nomCom: "gpp", categorie: 'Group' }, async (dest, zk, commandeOptions) =
 });
 
 // COMMAND TO TAG ALL MEMBERS
-zokou({nomCom:"tag",categorie:'Group',reaction:"👥"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"tag",categorie:'Dave-Group',reaction:"👥"},async(dest,zk,commandeOptions)=>{
 
   const {repondre,msgRepondu,verifGroupe,arg ,verifAdmin , superUser}=commandeOptions;
 
@@ -775,7 +775,7 @@ zokou({nomCom:"tag",categorie:'Group',reaction:"👥"},async(dest,zk,commandeOpt
 
 
 // COMMAND TO TAG ALL MEMBERS
-zokou({nomCom:"hidetag",categorie:'Group',reaction:"👥"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"hidetag",categorie:'Dave-Group',reaction:"👥"},async(dest,zk,commandeOptions)=>{
 
   const {repondre,msgRepondu,verifGroupe,arg ,verifAdmin , superUser}=commandeOptions;
 
@@ -883,7 +883,7 @@ zokou({nomCom:"hidetag",categorie:'Group',reaction:"👥"},async(dest,zk,command
 
 
 // COMMAND TO TAG ALL MEMBERS
-zokou({nomCom:"htag",categorie:'Group',reaction:"👥"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"htag",categorie:'Dave-Group',reaction:"👥"},async(dest,zk,commandeOptions)=>{
 
   const {repondre,msgRepondu,verifGroupe,arg ,verifAdmin , superUser}=commandeOptions;
 
@@ -997,7 +997,7 @@ const cron = require(`../bdd/cron`) ;
 
 zokou({
       nomCom : 'automute',
-      categorie : 'Group'
+      categorie : 'Dave-Group'
   } , async (dest,zk,commandeOptions) => {
 
       const {arg , repondre , verifAdmin } = commandeOptions ;
@@ -1069,7 +1069,7 @@ zokou({
 
   zokou({
     nomCom : 'autounmute',
-    categorie : 'Group'
+    categorie : 'Dave-Group'
 } , async (dest,zk,commandeOptions) => {
 
     const {arg , repondre , verifAdmin } = commandeOptions ;
@@ -1146,7 +1146,7 @@ zokou({
 // COMMAND TO KICK
 zokou({
   nomCom : 'fkick',
-  categorie : 'Group'
+  categorie : 'Dave-Group'
 } , async (dest,zk,commandeOptions) => {
 
   const {arg , repondre , verifAdmin , superUser , verifezraAdmin } = commandeOptions ;
@@ -1180,7 +1180,7 @@ zokou({
 // COMMAND TO NSFW
 zokou({
       nomCom : 'nsfw',
-      categorie : 'Group'
+      categorie : 'Dave-Group'
 }, async (dest,zk,commandeOptions) => {
 
     const {arg , repondre , verifAdmin } = commandeOptions ;
