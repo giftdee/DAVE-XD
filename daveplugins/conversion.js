@@ -1,42 +1,117 @@
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
-const { zokou } = require("../framework/zokou");
+const { ezra } = require("../framework/zokou");
 const traduire = require("../framework/traduction");
-const { downloadMediaMessage,downloadContentFromMessage } =  require('@whiskeysockets/baileys');
-const fs =require("fs-extra") ;
+const { downloadMediaMessage } = require('@whiskeysockets/baileys');
+const fs = require("fs-extra");
+const ffmpeg = require("fluent-ffmpeg");
+const { Catbox } = require('node-catbox');
 const axios = require('axios');  
 const FormData = require('form-data');
 const { exec } = require("child_process");
 
+const catbox = new Catbox();
 
+async function uploadToCatbox(Path) {
+    if (!fs.existsSync(Path)) {
+        throw new Error("File does not exist");
+    }
 
-async function uploadToTelegraph(Path) {
-  if (!fs.existsSync(Path)) {
-      throw new Error("File does not exist");
-  }
+    try {
+        const response = await catbox.uploadFile({
+            path: Path // Provide the path to the file
+        });
 
-  try {
-      const form = new FormData();
-      form.append("file", fs.createReadStream(Path));
-
-      const { data } = await axios.post("https://telegra.ph/upload", form, {
-          headers: {
-              ...form.getHeaders(),
-          },
-      });
-
-      if (data && data[0] && data[0].src) {
-          return "https://telegra.ph" + data[0].src;
-      } else {
-          throw new Error("Error retrieving video link");
-      }
-  } catch (err) {
-      throw new Error(String(err));
-  }
+        if (response) {
+            return response; // returns the uploaded file URL
+        } else {
+            throw new Error("Error retrieving the file link");
+        }
+    } catch (err) {
+        throw new Error(String(err));
+    }
 }
 
+async function convertToMp3(inputPath, outputPath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg(inputPath)
+            .toFormat("mp3")
+            .on("error", (err) => reject(err))
+            .on("end", () => resolve(outputPath))
+            .save(outputPath);
+    });
+}
+
+zokou({ nomCom: "url", categorie: "Dave-Tools", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
+    const { msgRepondu, repondre } = commandeOptions;
+
+    if (!msgRepondu) {
+        repondre('Please reply to an image, video, or audio file.');
+        return;
+    }
+
+    let mediaPath, mediaType;
+
+    if (msgRepondu.videoMessage) {
+        const videoSize = msgRepondu.videoMessage.fileLength;
+
+        if (videoSize > 50 * 1024 * 1024) {
+            repondre('The video is too long. Please send a smaller video.');
+            return;
+        }
+
+        mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
+        mediaType = 'video';
+    } else if (msgRepondu.imageMessage) {
+        mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
+        mediaType = 'image';
+    } else if (msgRepondu.audioMessage) {
+        mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.audioMessage);
+        mediaType = 'audio';
+
+        const outputPath = `${mediaPath}.mp3`;
+
+        try {
+            // Convert audio to MP3 format
+            await convertToMp3(mediaPath, outputPath);
+            fs.unlinkSync(mediaPath); // Remove the original audio file
+            mediaPath = outputPath; // Update the path to the converted MP3 file
+        } catch (error) {
+            console.error("Error converting audio to MP3:", error);
+            repondre('Failed to process the audio file.');
+            return;
+        }
+    } else {
+        repondre('Unsupported media type. Reply with an image, video, or audio file.');
+        return;
+    }
+
+    try {
+        const catboxUrl = await uploadToCatbox(mediaPath);
+        fs.unlinkSync(mediaPath); // Remove the local file after uploading
+
+        // Respond with the URL based on media type
+        switch (mediaType) {
+            case 'image':
+                repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 url: ${catboxUrl}`);
+                break;
+            case 'video':
+                repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 url: ${catboxUrl}`);
+                break;
+            case 'audio':
+                repondre(`𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 url: ${catboxUrl}`);
+                break;
+            default:
+                repondre('An unknown error occurred.');
+                break;
+        }
+    } catch (error) {
+        console.error('Error while creating your URL:', error);
+        repondre('Oops, an error occurred.');
+    }
+});
 
 
-zokou({nomCom:"sticker",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"sticker",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
 
 let {ms,mtype,arg,repondre,nomAuteurMessage}=commandeOptions
   var txt=JSON.stringify(ms.message)
@@ -70,7 +145,7 @@ const alea = (ext) => {
     }
 
     sticker = new Sticker(buffer, {
-      pack:"Gifted_dave" ,
+      pack:"𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
       author: nomAuteurMessage,
       type:
         arg.includes("crop") || arg.includes("c")
@@ -94,7 +169,7 @@ const alea = (ext) => {
     }
 
     sticker = new Sticker(buffer, {
-      pack:"DAVE-XMD", // pack stick
+      pack:"𝐃𝐀𝐕𝐄-𝐗𝐌𝐃", // pack stick
       author:  nomAuteurMessage, // name of the author of the stick
       type:
         arg.includes("-r") || arg.includes("-c")
@@ -124,10 +199,10 @@ try{
 
 
 
-  
+
 });
 
-zokou({nomCom:"scrop",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"scrop",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
@@ -150,8 +225,8 @@ mediamsg = msgRepondu.videoMessage
   var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
 
      let stickerMess = new Sticker(stick, {
-            pack: pack,
-            
+            pack: Lucky-md-xforce,
+
             type: StickerTypes.CROPPED,
             categories: ["🤩", "🎉"],
             id: "12345",
@@ -163,7 +238,7 @@ mediamsg = msgRepondu.videoMessage
 
 });
 
-zokou({nomCom:"take",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"take",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
@@ -186,8 +261,8 @@ mediamsg = msgRepondu.videoMessage
   var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
 
      let stickerMess = new Sticker(stick, {
-            pack: pack,
-            
+            pack: 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃,
+
             type: StickerTypes.FULL,
             categories: ["🤩", "🎉"],
             id: "12345",
@@ -201,7 +276,7 @@ mediamsg = msgRepondu.videoMessage
 
 
 
-zokou({ nomCom: "write", categorie: "Dave-Sticker", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
+zokou({ nomCom: "write", categorie: "Dave-Conversion", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
   const { ms, msgRepondu, arg, repondre, nomAuteurMessage } = commandeOptions;
 
   if (!msgRepondu) {
@@ -214,10 +289,10 @@ zokou({ nomCom: "write", categorie: "Dave-Sticker", reaction: "👨🏿‍💻" 
     return;
   } ;
   text = arg.join(' ') ;
-  
+
   if(!text || text === null) {repondre('Make sure to insert text') ; return } ;
- 
-  
+
+
   const mediamsg = msgRepondu.imageMessage;
   const image = await zk.downloadAndSaveMediaMessage(mediamsg);
 
@@ -252,7 +327,7 @@ zokou({ nomCom: "write", categorie: "Dave-Sticker", reaction: "👨🏿‍💻" 
     // Create the sticker
     const stickerMess = new Sticker(meme, {
       pack: nomAuteurMessage,
-      author: 'Gifted_dave',
+      author: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃',
       type: StickerTypes.FULL,
       categories: ["🤩", "🎉"],
       id: "12345",
@@ -275,11 +350,11 @@ zokou({ nomCom: "write", categorie: "Dave-Sticker", reaction: "👨🏿‍💻" 
 
 
 
-zokou({nomCom:"photo",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"photo",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(dest,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
- 
+
    if (!msgRepondu.stickerMessage) {
       repondre('Um mention a non-animated sticker'); return
   } ;
@@ -288,10 +363,10 @@ zokou({nomCom:"photo",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},as
 
   const alea = (ext) => {
   return `${Math.floor(Math.random() * 10000)}${ext}`;};
-  
+
   let ran = await alea(".png");
 
-  
+
         exec(`ffmpeg -i ${mediaMess} ${ran}`, (err) => {
           fs.unlinkSync(mediaMess);
           if (err) {
@@ -312,67 +387,4 @@ zokou({nomCom:"photo",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},as
           );
           fs.unlinkSync(ran);
         });
-});
-
-zokou({ nomCom: "trt", categorie: "Dave-Conversion", reaction: "👨🏿‍💻" }, async (dest, zk, commandeOptions) => {
-
-  const { msgRepondu, repondre , arg } = commandeOptions;
-
-  
-   if(msgRepondu) {
-     try {
-      
-     
-
-       if(!arg || !arg[0]) { repondre('(eg : trt en)') ; return }
-   
-
-         let texttraduit = await traduire(msgRepondu.conversation , {to : arg[0]}) ;
-
-         repondre(texttraduit)
-
-        } catch (error) {
-          
-          repondre('Mention a texte Message') ;
-      
-        }
-
-   } else {
-     
-     repondre('Mention a text Message')
-   }
-
-
-
-}) ;
-
-
-zokou({ nomCom: "urlz", categorie: "Dave-General", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
-  const { msgRepondu, repondre } = commandeOptions;
-
-  if (!msgRepondu) {
-      repondre('mention a image or video');
-      return;
-  }
-
-  let mediaPath;
-
-  if (msgRepondu.videoMessage) {
-      mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.videoMessage);
-  } else if (msgRepondu.imageMessage) {
-      mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage);
-  } else {
-      repondre('mention a image or video');
-      return;
-  }
-
-  try {
-      const telegraphUrl = await uploadToTelegraph(mediaPath);
-      fs.unlinkSync(mediaPath);  // Supprime le fichier après utilisation
-
-      repondre(telegraphUrl);
-  } catch (error) {
-      console.error('Erreur lors de la création du lien Telegraph :', error);
-      repondre('Opps error');
-  }
 });
