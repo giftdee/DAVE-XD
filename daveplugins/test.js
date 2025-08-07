@@ -4,8 +4,9 @@ const { zokou } = require("../framework/zokou");
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 zokou({ 
-    nomCom: "test", 
+    nomCom: "test2", 
     reaction: "⚡", 
+    categorie: "Dave-New",
     nomFichier: __filename 
 }, async (dest, zk, commandeOptions) => {
     const { repondre, ms } = commandeOptions;
@@ -49,7 +50,7 @@ zokou({
 🔋 𝐏𝐨𝐰𝐞𝐫: 𝟏𝟎𝟎%
 📶 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐢𝐨𝐧: 𝐒𝐭𝐚𝐛𝐥𝐞
 
-👑 𝐎𝐰𝐧𝐞𝐫: 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧
+👑 𝐎𝐰𝐧𝐞𝐫: Gifted_dave
     `;
 
     const mp4 = 'https://telegra.ph/file/ce58cf8c538b1496fda33.mp4';
