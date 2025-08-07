@@ -5,7 +5,7 @@ const s = require("../set");
 zokou(
   {
     nomCom: 'warn',
-    categorie: 'Group'
+    categorie: 'Dave-Group'
   },
   async (dest, zk, commandeOptions) => {
     const { ms, arg, repondre, superUser, verifGroupe, verifAdmin, msgRepondu, auteurMsgRepondu } = commandeOptions;
