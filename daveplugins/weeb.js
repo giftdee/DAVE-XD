@@ -6,7 +6,7 @@ const { writeFile } = require('fs/promises')
 // Commande waifu
 zokou({
   nomCom: "waifu",
-  categorie: "Weeb",
+  categorie: "Dave-Hentai",
   reaction: "😏"
 },
 async (origineMessage, zk, commandeOptions) => {
@@ -30,7 +30,7 @@ async (origineMessage, zk, commandeOptions) => {
 // Commande neko
 zokou({
   nomCom: "neko",
-  categorie: "Weeb",
+  categorie: "Dave-Hentai",
   reaction: "😺"
 },
 async (origineMessage, zk, commandeOptions) => {
@@ -53,7 +53,7 @@ async (origineMessage, zk, commandeOptions) => {
 // Commande shinobu
 zokou({
   nomCom: "shinobu",
-  categorie: "Weeb",
+  categorie: "Dave-Hentai",
   reaction: "🦋"
 },
 async (origineMessage, zk, commandeOptions) => {
@@ -76,7 +76,7 @@ async (origineMessage, zk, commandeOptions) => {
 // Commande megumin
 zokou({
   nomCom: "megumin",
-  categorie: "Weeb",
+  categorie: "Dave-Hentai",
   reaction: "💥"
 },
 async (origineMessage, zk, commandeOptions) => {
@@ -100,7 +100,7 @@ async (origineMessage, zk, commandeOptions) => {
 
 zokou({
   nomCom: "cosplay",
-  categorie: "Weeb",
+  categorie: "Dave-Hentai",
   reaction: "😏"
 },
 async (origineMessage, zk, commandeOptions) => {
@@ -127,7 +127,7 @@ async (origineMessage, zk, commandeOptions) => {
 });
 
 
-zokou({nomCom:"couplepp",categorie: "Weeb",reaction : "💞"},async(dest,zk,commandeOptions)=>{ const {repondre , ms} = commandeOptions;
+zokou({nomCom:"couplepp",categorie: "Dave-New",reaction : "💞"},async(dest,zk,commandeOptions)=>{ const {repondre , ms} = commandeOptions;
     let api = 'https://smiling-hosiery-bear.cyclic.app/weeb/couplepp'
   try {
      repondre('she/he dont love you :)')
