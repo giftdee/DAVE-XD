@@ -6,7 +6,7 @@ const { zokou } = require("../framework/zokou");
 zokou(
   {
     nomCom: "leave",
-    categorie: "Group",
+    categorie: "Dave-Group",
     reaction: "👋",
   },
   async (dest, zk, commandeOptions) => {
