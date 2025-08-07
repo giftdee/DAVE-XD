@@ -5,7 +5,7 @@ const axios = require('axios');
 zokou(
   {
     nomCom: 'gemini',
-    categorie: 'AI',
+    categorie: 'Dave-Ai',
     reaction: '🤖',
   },
   async (dest, zk, commandeOptions) => {
@@ -32,8 +32,8 @@ zokou(
       await zk.sendMessage(
         dest,
         {
-          text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BOOM, ${nomAuteurMessage}! Gemini AI says: "${data.result.trim()}" 🔥\n│❒ Powered by kn_dave\n◈━━━━━━━━━━━━━━━━◈`,
-          footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧 😎`,
+          text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BOOM, ${nomAuteurMessage}! Gemini AI says: "${data.result.trim()}" 🔥\n│❒ Powered by Gifted_dave\n◈━━━━━━━━━━━━━━━━◈`,
+          footer: `Hey ${nomAuteurMessage}! I'm DAVE-XMD, created by GIFTED-DAVE😎`,
         },
         { quoted: ms }
       );
