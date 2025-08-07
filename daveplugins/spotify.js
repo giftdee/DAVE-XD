@@ -3,7 +3,7 @@ const { default: axios } = require('axios');
 
 const DAVE_XMD = "\u{1D413}\u{1D40E}\u{1D417}\u{1D408}\u{1D402}-\u{1D40C}\u{1D403}"; // 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
 
-zokou({ nomCom: "spotify", categorie: 'General', reaction: "🎵" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "spotify", categorie: 'Dave-General', reaction: "🎵" }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
 
   if (!arg || arg.length === 0) {
