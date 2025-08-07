@@ -79,7 +79,7 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
 
     // Menu section
     let menuMsg = `
-    *「 ${toFancyUppercaseFont(cat)} 」*   
+    *「 ${toFancyLowercaseFont(cat)} 」*   
 ⬣════════════════════⬣
     💠 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐌𝐄𝐍𝐔 💠
 
