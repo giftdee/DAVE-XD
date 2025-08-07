@@ -6,6 +6,41 @@ const moment = require("moment-timezone");
 const set = require(__dirname + '/../set');
 moment.tz.setDefault('' + set.TIMEZONE);
 
+zokou({
+  nomCom: "ping2",
+  categorie: "Dave-New"
+}, async (chatId, zk, { ms, userJid }) => {
+  const time = moment().format("HH:mm:ss");
+  const date = moment().format("DD/MM/YYYY");
+  const ping = Math.floor(Math.random() * 100) + 1;
+
+  try {
+    await zk.sendMessage(chatId, {
+      audio: { url: "https://files.catbox.moe/26oeeh.mp3" },
+      mimetype: "audio/mp4",
+      ptt: true,
+      contextInfo: {
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: "120363400480173280@newsletter",
+          newsletterName: "DAVE-XMD updates",
+          serverMessageId: 143
+        },
+        forwardingScore: 999,
+        externalAdReply: {
+          title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
+          body: `💦 Pong: ${ping}ms\n📅 *Date:* ${date}\n⏰ *Time:* ${time}`,
+          thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg",
+          mediaType: 1,
+          renderSmallThumbnail: true
+        }
+      }
+    }, { quoted: ms });
+  } catch (err) {
+    console.log("❌ Ping Command Error:", err);
+    repondre("❌ Error: " + err);
+  }
+});
 
 zokou({
   nomCom: "repo",
