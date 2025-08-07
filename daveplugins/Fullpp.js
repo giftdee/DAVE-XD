@@ -1,55 +1,28 @@
 const { zokou } = require("../framework/zokou");
-const { generateProfilePicture } = require("../framework/dl/Function");
-const { S_WHATSAPP_NET } = require('@whiskeysockets/baileys');
+const { generateProfilePicture } = require("@whiskeysockets/baileys");
 const fs = require("fs");
 
 zokou({
   nomCom: "fullpp",
   aliases: ["updatepp", "ppfull"],
   reaction: '🍂',
-  categorie: "New"
+  categorie: "Dave-New"
 }, async (dest, zk, commandeOptions) => {
-  const { repondre, msgRepondu, auteurMessage } = commandeOptions;
+  const { repondre, msgRepondu } = commandeOptions;
 
-  if (msgRepondu) {
-    repondre('quote an image');
+  if (!msgRepondu || !msgRepondu.imageMessage) {
+    return repondre("❌ Please reply to an *image* to set as bot profile picture.");
+  }
 
-    let media;
-    if (msgRepondu.imageMessage) {
-      media = msgRepondu.imageMessage;
-    } else {
-      repondre('This is not an image...');
-      return;
-    }
+  try {
+    const mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu);
+    const { img } = await generateProfilePicture(mediaPath);
 
-    try {
-      var medis = await zk.downloadAndSaveMediaMessage(media);
+    await zk.updateProfilePicture(zk.user.id, img);
 
-      var { img } = await generateProfilePicture(medis);
-
-      await zk.query({
-        tag: 'iq',
-        attrs: {
-          target: undefined,
-          to: S_WHATSAPP_NET,
-          type: 'set',
-          xmlns: 'w:profile:picture'
-        },
-        content: [
-          {
-            tag: 'picture',
-            attrs: { type: 'image' },
-            content: img
-          }
-        ]
-      });
-
-      fs.unlinkSync(medis);
-      repondre("Bot Profile Picture Updated");
-    } catch (error) {
-      repondre("An error occurred while updating bot profile photo: " + error);
-    }
-  } else {
-    repondre('No image was quoted.');
+    fs.unlinkSync(mediaPath);
+    repondre("✅ Bot profile picture updated successfully.");
+  } catch (error) {
+    repondre("❌ Failed to update profile picture:\n" + error.message);
   }
 });
