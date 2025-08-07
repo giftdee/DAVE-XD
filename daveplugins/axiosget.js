@@ -5,7 +5,7 @@ const conf = require(__dirname + "/../set");
 zokou({
   nomCom: "technews",
   reaction: '✨',
-  categorie: 'New'
+  categorie: 'Dave-New'
 }, async (dest, zk, context) => {
   const { repondre, ms } = context;
 
@@ -37,7 +37,7 @@ zokou({
   nomCom: "define",
   aliases: ["dictionaries", "dict", "def"],
   reaction: '✨',
-  categorie: "New"
+  categorie: "Dave-New"
 }, async (dest, zk, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
   const term = arg.join(" ");
@@ -82,7 +82,7 @@ zokou({
   nomCom: "timezone",
   aliases: ["timee", "datee"],
   desc: "Check the current local time and date for a specified timezone.",
-  categorie: "New",
+  categorie: "Dave-New",
   reaction: '✨',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -128,7 +128,7 @@ zokou({
   nomCom: "color",
   aliases: ["rcolor", "colorcode"],
   desc: "Generate a random color with name and code.",
-  categorie: "New",
+  categorie: "Dave-New",
   reaction: '✨',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -153,7 +153,7 @@ zokou({
   nomCom: "base64",
   aliases: ["base64encode", "encodebase64"],
   desc: "Encode text into Base64 format.",
-  categorie: "coding",
+  categorie: "Dave-coding",
   reaction: '🔒',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -179,7 +179,7 @@ zokou({
   nomCom: "unbase64",
   aliases: ["base64decode", "decodebase64"],
   desc: "Decode Base64 encoded text.",
-  categorie: "coding",
+  categorie: "Dave-coding",
   reaction: '🔓',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -205,7 +205,7 @@ zokou({
   nomCom: "urlencode",
   aliases: ["urlencode", "encodeurl"],
   desc: "Encode text into URL encoding.",
-  categorie: "coding",
+  categorie: "Dave-coding",
   reaction: '🔒',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -231,7 +231,7 @@ zokou({
   nomCom: "urldecode",
   aliases: ["decodeurl", "urldecode"],
   desc: "Decode URL encoded text.",
-  categorie: "coding",
+  categorie: "Dave-coding",
   reaction: '🔓',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -255,7 +255,7 @@ zokou({
   nomCom: "timenow",
   aliases: ["currenttime", "time"],
   desc: "Check the current local time.",
-  categorie: "New",
+  categorie: "Dave-New",
   reaction: '✨',
 }, async (dest, zk, context) => {
   const { repondre } = context;
@@ -286,7 +286,7 @@ zokou({
   nomCom: "date",
   aliases: ["currentdate", "todaydate"],
   desc: "Check the current date.",
-  categorie: "New",
+  categorie: "Dave-New",
   reaction: '✨',
 }, async (dest, zk, context) => {
   const { repondre } = context;
@@ -316,7 +316,7 @@ zokou({
   nomCom: "calculate",
   aliases: ["calcu", "maths", "mathema"],
   desc: "Evaluate a mathematical expression.",
-  categorie: "New",
+  categorie: "Dave-New",
   reaction: '✨',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -348,7 +348,7 @@ zokou({
   nomCom: "emojify",
   aliases: ["emoji", "txtemoji"],
   desc: "Convert text into emoji form.",
-  categorie: "Fun",
+  categorie: "Dave-Fun",
   reaction: '🎭',
 }, async (dest, zk, context) => {
   const { repondre, arg } = context;
@@ -420,7 +420,7 @@ zokou({
   nomCom: "news",
   aliases: ["latestnews", "newsheadlines"],
   desc: "Get the latest news headlines.",
-  categorie: "New",
+  categorie: "Dave-New",
   reaction: '✨',
 }, async (dest, zk, context) => {
   const { repondre, from } = context;
