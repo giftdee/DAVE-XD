@@ -1,23 +1,28 @@
 const { zokou } = require('../framework/zokou');
+const { OWNER_NUMBER } = require('../set'); // wherever you store owner numbers
 
 zokou({
   nomCom: "tostatus",
   alias: ["poststatus", "status", "story", "repost", "reshare"],
   react: '📝',
   desc: "Posts replied media to bot's status",
-  category: "Dave-Mods",
+  categorie: "Dave-Mods",
   filename: __filename
-}, async (dest, zk, { ms, msgRepondu, arg, isCreator }) => {
+}, async (dest, zk, { ms, msgRepondu, arg, sender }) => {
   try {
-    if (!isCreator) {
-      return await zk.sendMessage(dest, { text: "*📛 This is an owner-only command.*" }, { quoted: ms });
+    if (!OWNER_NUMBER.includes(sender)) {
+      return await zk.sendMessage(dest, {
+        text: "*📛 This is an owner-only command.*"
+      }, { quoted: ms });
     }
 
-    const quoted = msgRepondu ? msgRepondu : ms;
+    const quoted = msgRepondu || ms;
     const mimeType = (quoted.msg || quoted).mimetype || '';
 
     if (!mimeType) {
-      return await zk.sendMessage(dest, { text: "*❗Please reply to an image, video, or audio.*" }, { quoted: ms });
+      return await zk.sendMessage(dest, {
+        text: "*❗Please reply to an image, video, or audio.*"
+      }, { quoted: ms });
     }
 
     const buffer = await zk.downloadMediaMessage(quoted);
