@@ -121,7 +121,7 @@ let menuMsg = `
 };
     // Build menu with all categories and vertical command listing
     for (const cat in coms) {
-  const style = categoryStyles[cat] || { icon: "🔹", decor: "┃" };
+  const style = categoryStyles[cat] || { icon: "🔹", decor: ".." };
 
   // Fancy uppercase category name
   const fancyCat = toFancyUppercaseFont(cat.toUpperCase());
