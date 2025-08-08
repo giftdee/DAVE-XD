@@ -1,4 +1,4 @@
-const { ezra } = require("../framework/zokou");
+const { zokou } = require("../framework/zokou");
 const axios = require("axios");
 
 zokou({ nomCom: "logo", categorie: "Dave-Search", reaction: "🤭" }, async (dest, zk, commandeOptions) => {
