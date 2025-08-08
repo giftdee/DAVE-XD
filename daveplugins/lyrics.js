@@ -1,62 +1,64 @@
-const util = require('util');
-const { zokou } = require(__dirname + '/../framework/zokou');
-const axios = require('axios');
+const { zokou } = require('../framework/zokou');
+const lyricsFinder = require('lyrics-finder');
+const yts = require('yt-search');
 
-zokou(
-  {
+zokou({
     nomCom: 'lyrics',
-    categorie: 'Dave-search',
-    reaction: '🎵',
-  },
-  async (dest, zk, commandeOptions) => {
-    const { ms, repondre, arg, nomAuteurMessage } = commandeOptions;
+    aliases: ['lyric', 'mistari'],
+    categorie: "Dave-search"
+    reaction: '📑',
+}, async (zk, dest, context) => {
+    const { repondre, arg, ms } = context;
 
     try {
-      if (!arg[0]) {
-        return repondre(
-          `🔥 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 🔥\n\n❒ Yo ${nomAuteurMessage}, don’t test my patience 🥱\n❒ Dave said send legit songs like *Ochuodho*, not random trash 😏\n❒ Try: .lyrics Faded`
-        );
-      }
+        // Check if the argument (song and artist) is provided
+        if (!arg || arg.length === 0) {
+            return repondre('Please provide a song name and artist.');
+        }
 
-      const query = arg.join(' ').trim();
-      await repondre(
-        `🎧 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 🎧\n\n❒ Hold tight ${nomAuteurMessage}, fetching lyrics for *${query}* like a real boss 🔍`
-      );
+        // Create a search query from the arguments
+        const searchQuery = arg.join(' ');
 
-      const apiUrl = `https://api.giftedtech.web.id/api/search/lyrics?apikey=gifted&query=${encodeURIComponent(query)}`;
-      const response = await axios.get(apiUrl);
-      const data = response.data;
+        // Search for the song using yt-search
+        const info = await yts(searchQuery);
+        const results = info.videos;
 
-      if (!data.success || !data.result) {
-        return repondre(
-          `💀 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 💀\n\n❒ Bruh ${nomAuteurMessage}, I searched the streets — no lyrics for *${query}* 🚫\n❒ Try a real hit next time 🔁`
-        );
-      }
+        // Check if no results were found
+        if (!results || results.length === 0) {
+            return repondre('No results found for the given song or artist.');
+        }
 
-      const lyrics = data.result.trim();
-      if (!lyrics) {
-        return repondre(
-          `😤 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 😤\n\n❒ Damn ${nomAuteurMessage}, lyrics for *${query}* are missing in action 🔍\n❒ Send better heat next round 🔥`
-        );
-      }
+        // Extract title and artist from the search query
+        const songDetails = searchQuery.split(' ').reverse();
+        const title = songDetails.slice(0, songDetails.length - 1).join(' ');
+        const artist = songDetails[songDetails.length - 1];
 
-      let formattedLyrics = lyrics;
-      if (formattedLyrics.length > 4000) {
-        formattedLyrics = formattedLyrics.slice(0, 4000) + '... [Too hot for full drop]';
-      }
+        // Fetch the lyrics using lyrics-finder
+        const lyrics = await lyricsFinder(artist, title);
 
-      await zk.sendMessage(
-        dest,
-        {
-          text: `🎤 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 🎤\n\n❒ Boom 💥 ${nomAuteurMessage}, here’s the lyrics to *${query}*:\n\n${formattedLyrics}\n\n➥ Powered by your OG, Gifted Dave 😎`,
-        },
-        { quoted: ms }
-      );
-    } catch (e) {
-      console.error('Lyrics error:', e);
-      await repondre(
-        `💢 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 💢\n\n❒ Yo ${nomAuteurMessage}, something crashed while grinding the bars 😵‍💫\n❒ Error: ${e.message}`
-      );
+        // Check if lyrics are found
+        if (!lyrics) {
+            return repondre(`Sorry, I couldn't find any lyrics for "${searchQuery}". Please try another song.`);
+        }
+
+        // Format the message to send to the user
+        const formattedMessage = `
+*𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 lyrics*
+*Title:* ${title}
+*Artist:* ${artist}
+
+${lyrics}
+        `;
+
+        // Send the response with the song's thumbnail and lyrics
+        await zk.sendMessage(dest, {
+            image: { url: results[0].thumbnail },
+            caption: formattedMessage,
+        }, { quoted: ms });
+
+    } catch (error) {
+        // Handle any errors that occur
+        repondre(`Error: I was unable to fetch the lyrics. Please try again later.\n\n${error.message}`);
+        console.log(error);
     }
-  }
-);
+});
