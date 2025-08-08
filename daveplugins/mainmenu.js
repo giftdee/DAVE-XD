@@ -195,54 +195,64 @@ let menuMsg = `
       }
 
       // Send random audio as a voice note
-      const audioFolder = __dirname + "/../kn_dave/";
-console.log(`[DEBUG] menu: Audio folder path: ${audioFolder}`);
+    const audioFolder = __dirname + "/../kn_dave/";
+console.log([DEBUG] menu: Audio folder path: ${audioFolder});
 
-// Check if folder exists
-if (!fs.existsSync(audioFolder)) {
-  console.log(`[DEBUG] menu: Audio folder does not exist: ${audioFolder}`);
-  repondre(`𝐀𝐮𝐝𝐢𝐨 𝐟𝐨𝐥𝐝𝐞𝐫 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝: ${audioFolder}`);
-  return;
+// Check if folder exists  
+  if (!fs.existsSync(audioFolder)) {  
+    console.log(`[DEBUG] menu: Audio folder does not exist: ${audioFolder}`);  
+    repondre(`𝐀𝐮𝐝𝐢𝐨 𝐟𝐨𝐥𝐝𝐞𝐫 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝: ${audioFolder}`);  
+    return;  
+  }  
+
+  // Get all MP3 files in the folder  
+  const audioFiles = fs.readdirSync(audioFolder).filter(f => f.endsWith(".mp3"));  
+  console.log(`[DEBUG] menu: Available audio files: ${audioFiles}`);  
+
+  if (audioFiles.length === 0) {  
+    console.log(`[DEBUG] menu: No MP3 files found in folder`);  
+    repondre(`𝐍𝐨 𝐚𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞𝐬 𝐟𝐨𝐮𝐧𝐝 𝐢𝐧 kn_dave 𝐟𝐨𝐥𝐝𝐞𝐫`);  
+    return;  
+  }  
+
+  // Randomly select an audio file  
+  const randomAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];  
+  const audioPath = audioFolder + randomAudio;  
+
+  console.log(`[DEBUG] menu: Randomly selected audio: ${randomAudio}`);  
+  console.log(`[DEBUG] menu: Full audio path: ${audioPath}`);  
+
+  // Verify file exists  
+  if (fs.existsSync(audioPath)) {  
+    console.log(`[DEBUG] menu: Audio file exists, sending as voice note`);  
+    try {  
+      const audioMessage = await zk.sendMessage(  
+        dest,  
+        {  
+          audio: { url: audioPath },  
+          mimetype: "audio/mpeg",  
+          ptt: true,  
+          fileName: `𝐃𝐀𝐕𝐄 𝐕𝐎𝐈𝐂𝐄 ✧`,  
+          caption: "✦⋆✗𝐃𝐀𝐕𝐄",  
+        },  
+        { quoted: ms }  
+      );  
+      console.log(`[DEBUG] menu: Audio sent successfully: ${randomAudio}`);  
+      console.log(`[DEBUG] menu: Audio message details: ${JSON.stringify(audioMessage)}`);  
+    } catch (audioError) {  
+      console.error(`[DEBUG] menu: Error sending audio: ${audioError}`);  
+      repondre(`𝐄𝐫𝐫𝐨𝐫 𝐬𝐞𝐧𝐝𝐢𝐧𝐠 𝐯𝐨𝐢𝐜𝐞 𝐧𝐨𝐭𝐞: ${audioError.message}`);  
+    }  
+  } else {  
+    console.log(`[DEBUG] menu: Selected audio file not found at: ${audioPath}`);  
+    repondre(`𝐀𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝: ${randomAudio}\n𝐀𝐯𝐚𝐢𝐥𝐚𝐛𝐥𝐞 𝐟𝐢𝐥𝐞𝐬: ${audioFiles.join(", ")}`);  
+  }  
+} catch (e) {  
+  console.error(`[DEBUG] menu: Error: ${e}`);  
+  repondre(`◈ 𝐅𝐀𝐈𝐋𝐄𝐃 𝐓𝐎 𝐋𝐎𝐀𝐃 𝐌𝐄𝐍𝐔 ◈\n𝐏𝐥𝐞𝐚𝐬𝐞 𝐭𝐫𝐲 𝐚𝐠𝐚𝐢𝐧 𝐥𝐚𝐭𝐞𝐫: ${e.message}`);  
 }
 
-// Get all MP3 files in the folder
-const audioFiles = fs.readdirSync(audioFolder).filter(f => f.endsWith(".mp3"));
-console.log(`[DEBUG] menu: Available audio files: ${audioFiles}`);
-
-if (audioFiles.length === 0) {
-  console.log(`[DEBUG] menu: No MP3 files found in folder`);
-  repondre(`𝐍𝐨 𝐚𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞𝐬 𝐟𝐨𝐮𝐧𝐝 𝐢𝐧 kn_dave 𝐟𝐨𝐥𝐝𝐞𝐫`);
-  return;
 }
-
-// Randomly select an audio file
-const randomAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
-const audioPath = audioFolder + randomAudio;
-
-console.log(`[DEBUG] menu: Randomly selected audio: ${randomAudio}`);
-console.log(`[DEBUG] menu: Full audio path: ${audioPath}`);
-
-// Verify file exists
-if (fs.existsSync(audioPath)) {
-  console.log(`[DEBUG] menu: Audio file exists, sending as document`);
-  try {
-    const audioMessage = await zk.sendMessage(
-      dest,
-      {
-        document: { url: audioPath },
-        mimetype: "audio/mpeg",
-        fileName: randomAudio,
-        caption: `🎵 𝐃𝐀𝐕𝐄 𝐒𝐎𝐔𝐍𝐃 | ${randomAudio}`,
-      },
-      { quoted: ms }
-    );
-    console.log(`[DEBUG] menu: Audio sent successfully as document: ${randomAudio}`);
-    console.log(`[DEBUG] menu: Audio message details: ${JSON.stringify(audioMessage)}`);
-  } catch (audioError) {
-    console.error(`[DEBUG] menu: Error sending audio: ${audioError}`);
-    repondre(`❌ 𝐄𝐫𝐫𝐨𝐫 𝐬𝐞𝐧𝐝𝐢𝐧𝐠 𝐚𝐮𝐝𝐢𝐨: ${audioError.message}`);
-  }
-} else {
-  console.log(`[DEBUG] menu: Selected audio file not found at: ${audioPath}`);
-  repondre(`𝐀𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝: ${randomAudio}\n𝐀𝐯𝐚𝐢𝐥𝐚𝐛𝐥𝐞: ${audioFiles.join(", ")}`);
-}
+);
+      
+          
