@@ -1,64 +1,117 @@
-const { zokou } = require("../framework/zokou");
-const { default: axios } = require('axios');
+const { zokou } = require('../framework/zokou');
+const axios = require('axios');
+const fs = require('fs-extra');
+const { mediafireDl } = require("../framework/dl/Function");
+const conf = require(__dirname + "/../set");
 
-const DAVE-XMD = "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃"; // Fancy font
 
-zokou({ nomCom: "apk", categorie: 'Dave-Download', reaction: "📱" }, async (dest, zk, commandeOptions) => {
+zokou({
+  nomCom: 'apk',
+  aliases: ['app', 'playstore'],
+  reaction: '📂',
+  categorie: 'Dave-Download'
+}, async (groupId, client, commandeOptions) => {
   const { repondre, arg, ms } = commandeOptions;
 
-  if (!arg || arg.length === 0) {
-    const message = `
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐚𝐧 𝐚𝐩𝐩 𝐧𝐚𝐦𝐞 🚫
-│❒ 𝐄𝐱𝐚𝐦𝐩𝐥𝐞: .apk 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩
-◈━━━━━━━━━━━━━━━━◈
-    `;
-    repondre(message);
-    return;
+  // Check if app name is provided
+  const appName = arg.join(" ");
+  if (!appName) {
+    return repondre("Please provide an app name.");
   }
 
-  const appName = arg.join(' ').trim();
-
   try {
-    const apiUrl = `https://api.giftedtech.web.id/api/download/apkdl?apikey=gifted&appName=${encodeURIComponent(appName)}`;
-    const response = await axios.get(apiUrl);
+    // Fetch app search results from the BK9 API
+    const searchResponse = await axios.get(`https://bk9.fun/search/apk?q=${appName}`);
+    const searchData = searchResponse.data;
 
-    if (!response.data.success || response.data.status !== 200) {
-      const errorMessage = `
-${DAVE_XMD}
-
-◈━━━━━━━━━━━━━━━━◈
-│❒ 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐟𝐞𝐭𝐜𝐡 𝐚𝐩𝐩 😓
-│❒ 𝐄𝐫𝐫𝐨𝐫: ${response.data.message || '𝐔𝐧𝐤𝐧𝐨𝐰𝐧 𝐞𝐫𝐫𝐨𝐫'}
-◈━━━━━━━━━━━━━━━━◈
-      `;
-      repondre(errorMessage);
-      return;
+    // Check if any results were found
+    if (!searchData.BK9 || searchData.BK9.length === 0) {
+      return repondre("No app found with that name, please try again.");
     }
 
-    const app = response.data.result;
-    const message = `
-${DAVE_XMD}
+    // Fetch the APK details for the first result
+    const appDetailsResponse = await axios.get(`https://bk9.fun/download/apk?id=${searchData.BK9[0].id}`);
+    const appDetails = appDetailsResponse.data;
 
-◈━━━━━━━━━━━━━━━━◈
-│❒ 𝐀𝐩𝐩 𝐈𝐧𝐟𝐨 📱
-│❒ 𝐀𝐩𝐩 𝐍𝐚𝐦𝐞: ${app.appname}
-│❒ 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫: ${app.developer}
-│❒ 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤: ${app.download_url}
-◈━━━━━━━━━━━━━━━━◈
-    `;
-    await zk.sendMessage(dest, { text: message }, { quoted: ms });
+    // Check if download link is available
+    if (!appDetails.BK9 || !appDetails.BK9.dllink) {
+      return repondre("Unable to find the download link for this app.");
+    }
+
+    const thumb = appDetails.BK9.thumbnail || conf.URL; // Fallback to conf.URL if thumbnail is not provided
+
+    // Send the APK file to the group with thumbnail
+    await client.sendMessage(groupId, {
+      document: { url: appDetails.BK9.dllink },
+      fileName: `${appDetails.BK9.name}.apk`,
+      mimetype: "application/vnd.android.package-archive",
+      caption: `APPLICATION DOWLODED BY 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃`,
+      contextInfo: {
+         isForwarded: true,
+         forwardedNewsletterMessageInfo: {
+         newsletterJid: '120363400480173280@newsletter',
+         newsletterName: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 updates",
+         serverMessageId: 143,
+        }
+      }
+    }, { quoted: ms });
+
   } catch (error) {
-    const errorMessage = `
-${DAVE-XMD}
+    // Catch any errors and notify the user
+    console.error("Error during APK download process:", error);
+    repondre("APK download failed. Please try again later.");
+  }
+});
 
-◈━━━━━━━━━━━━━━━━◈
-│❒ 𝐄𝐫𝐫𝐨𝐫 𝐟𝐞𝐭𝐜𝐡𝐢𝐧𝐠 𝐚𝐩𝐩: ${error.message} 😓
-│❒ 𝐏𝐥𝐞𝐚𝐬𝐞 𝐭𝐫𝐲 𝐚𝐠𝐚𝐢𝐧 𝐥𝐚𝐭𝐞𝐫 𝐨𝐫 𝐜𝐡𝐞𝐜𝐤 𝐭𝐡𝐚𝐭 𝐚𝐩𝐩 𝐧𝐚𝐦𝐞.
-◈━━━━━━━━━━━━━━━━◈
-    `;
-    repondre(errorMessage);
+// Apps downloader
+zokou({
+  'nomCom': 'app',
+  'aliases': ['apks', 'playstore'],
+  'reaction': '🉑',
+  'categorie': 'Dave-Download'
+}, async (groupId, client, context) => {
+  const { repondre, arg, ms } = context;
+
+  try {
+    // Check if app name is provided
+    const appName = arg.join(" ");
+    if (!appName) {
+      return repondre("Please provide an app name.");
+    }
+
+    // Fetch app search results from the BK9 API
+    const searchResponse = await axios.get(`https://bk9.fun/search/apk?q=${appName}`);
+    const searchData = searchResponse.data;
+
+    // Check if any results were found
+    if (!searchData.BK9 || searchData.BK9.length === 0) {
+      return repondre("No app found with that name, please try again.");
+    }
+
+    // Fetch the APK details for the first result
+    const appDetailsResponse = await axios.get(`https://bk9.fun/download/apk?id=${searchData.BK9[0].id}`);
+    const appDetails = appDetailsResponse.data;
+
+    // Check if download link is available
+    if (!appDetails.BK9 || !appDetails.BK9.dllink) {
+      return repondre("Unable to find the download link for this app.");
+    }
+
+    // Send the APK file to the group
+    await client.sendMessage(
+      groupId,
+      {
+        document: { url: appDetails.BK9.dllink },
+        fileName: `${appDetails.BK9.name}.apk`,
+        mimetype: "application/vnd.android.package-archive",
+        caption: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 "
+      },
+      { quoted: ms }
+    );
+
+  } catch (error) {
+    // Catch any errors and notify the user
+    console.error("Error during APK download process:", error);
+    repondre("APK download failed. Please try again later.");
   }
 });
