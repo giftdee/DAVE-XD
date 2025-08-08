@@ -28,7 +28,7 @@ async function uploadToCatbox(filePath) {
 // Define the command with aliases for play
 zokou({
   nomCom: "play",
-  aliases: ["song", "playdoc", "audio", "mp3"],
+  aliases: ["playdoc", "audio", "mp3"],
   categorie: "Dave-Download",
   reaction: "🎧"
 }, async (dest, zk, commandOptions) => {
@@ -83,21 +83,21 @@ zokou({
 
     // ✅ Send only one clean audio message
     await zk.sendMessage(dest, {
-      audio: { url: downloadUrl },
-      mimetype: 'audio/mp4', // or 'audio/mpeg' if the file is .mp3
-      ptt: true, // Set to true for voice note style, false for music player style
-      contextInfo: {
-        externalAdReply: {
-          title: conf.BOT,
-          body: videoDetails.title,
-          mediaType: 1,
-          sourceUrl: conf.GURL,
-          thumbnailUrl: firstVideo.thumbnail,
-          renderLargerThumbnail: false,
-          showAdAttribution: true,
-        }
-      }
-    }, { quoted: ms });
+  document: { url: downloadUrl },
+  mimetype: 'audio/mpeg',
+  fileName: `${videoDetails.title}.mp3`,
+  contextInfo: {
+    externalAdReply: {
+      title: conf.BOT,
+      body: videoDetails.title,
+      mediaType: 1,
+      sourceUrl: conf.GURL,
+      thumbnailUrl: firstVideo.thumbnail,
+      renderLargerThumbnail: true,
+      showAdAttribution: true,
+    }
+  }
+}, { quoted: ms });
 
   } catch (error) {
     console.error('Error during download process:', error);
