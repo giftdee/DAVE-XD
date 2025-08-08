@@ -4,6 +4,28 @@ const moment = require("moment-timezone");
 const set = require(__dirname + '/../set');
 moment.tz.setDefault('' + set.TIMEZONE);
 
+// 🎵 Audio list
+const audios = [
+  'https://files.catbox.moe/hpwsi2.mp3',
+  'https://files.catbox.moe/xci982.mp3',
+  'https://files.catbox.moe/utbujd.mp3',
+  'https://files.catbox.moe/w2j17k.m4a',
+  'https://files.catbox.moe/851skv.m4a',
+  'https://files.catbox.moe/qnhtbu.m4a',
+  'https://files.catbox.moe/lb0x7w.mp3',
+  'https://files.catbox.moe/efmcxm.mp3',
+  'https://files.catbox.moe/wdap4t.mp3',
+  'https://files.catbox.moe/26oeeh.mp3',
+  'https://files.catbox.moe/a1sh4u.mp3',
+  'https://files.catbox.moe/vuuvwn.m4a',
+  'https://files.catbox.moe/wx8q6h.mp3',
+  'https://files.catbox.moe/uj8fps.m4a',
+  'https://files.catbox.moe/dc88bx.m4a'
+];
+
+// 🔁 Get random audio
+const randomAudio = () => audios[Math.floor(Math.random() * audios.length)];
+
 zokou({
   nomCom: "ping",
   categorie: "Dave-New"
@@ -14,7 +36,7 @@ zokou({
 
   try {
     await zk.sendMessage(chatId, {
-      audio: { url: "https://files.catbox.moe/26oeeh.mp3" },
+      audio: { url: randomAudio() },
       mimetype: "audio/mp4",
       ptt: true,
       contextInfo: {
@@ -71,7 +93,7 @@ zokou({
         forwardingScore: 999,
         externalAdReply: {
           title: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
-          body: "💦 DAVE-XMF repo link request 💦",
+          body: "💦 DAVE-XMD repo link request 💦",
           thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg",
           mediaType: 1,
           sourceUrl: data.html_url || "https://github.com/giftdee/DAVE-XMD"
@@ -80,10 +102,9 @@ zokou({
     });
 
     await zk.sendMessage(dest, {
-      audio: { url: "https://files.catbox.moe/26oeeh.mp3" },
+      audio: { url: randomAudio() },
       mimetype: "audio/mp4",
       ptt: true,
-      caption: "*💦 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 song 💦",
       contextInfo: {
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
