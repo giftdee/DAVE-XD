@@ -1,7 +1,8 @@
 const { zokou } = require('../framework/zokou');
 const PDFDocument = require('pdfkit');
 const { Buffer } = require('buffer');
-const { getBuffer } = require('../framework/mesfunctions'); // assumes you have a getBuffer util, or use axios
+const axios = require('axios');
+//const { getBuffer } = require('../framework/mesfunctions'); // assumes you have a getBuffer util, or use axios
 
 zokou({
     nomCom: "topdf",
