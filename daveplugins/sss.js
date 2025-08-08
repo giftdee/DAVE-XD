@@ -930,7 +930,7 @@ zokou({
 zokou({
   'nomCom': "imag-generate",
   'reaction': '📡',
-  'category': 'Dave-Images'
+  'categorie': 'Dave-Images'
 }, async (user, message, context) => {
   const { respond: sendMessage, args, messageInstance } = context;
   try {
@@ -957,7 +957,7 @@ zokou({
 zokou({
   'nomCom': "toextract",
   'reaction': '📡',
-  'category': 'Dave-Images'
+  'categorie': 'Dave-Images'
 }, async (user, message, context) => {
   const { respond: sendMessage, args, messageInstance } = context;
   try {
@@ -984,7 +984,7 @@ zokou({
 zokou({
   'nomCom': "flux-img",
   'reaction': '📡',
-  'category': 'Dave-Images'
+  'categorie': 'Dave-Images'
 }, async (user, message, context) => {
   const { respond: sendMessage, args, messageInstance } = context;
   try {
@@ -1013,7 +1013,7 @@ zokou({
 zokou({
   'nomCom': "mi",
   'reaction': '📡',
-  'category': 'Dave-Images'
+  'categorie': 'Dave-Images'
 }, async (user, message, context) => {
   const { respond: sendMessage, args, messageInstance } = context;
   try {
@@ -1040,7 +1040,7 @@ zokou({
 zokou({
   'nomCom': "dbeautify",
   'reaction': '📡',
-  'category': 'Dave-Images'
+  'categorie': 'Dave-Images'
 }, async (user, message, context) => {
   const { respond: sendMessage, args, messageInstance } = context;
   try {
