@@ -15,39 +15,25 @@ zokou(
       );
     }
 
+    let ppuser;
+    let caption;
     try {
-      await repondre(
-        `🔍 *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nFetching profile pic of @${auteurMsgRepondu.split("@")[0]}...`,
-        { mentions: [auteurMsgRepondu] }
-      );
-
-      let ppuser;
-      try {
-        ppuser = await zk.profilePictureUrl(auteurMsgRepondu, 'image');
-      } catch {
-        ppuser = mybotpic();
-        await repondre(
-          `⚠️ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nCouldn't access @${auteurMsgRepondu.split("@")[0]}'s profile picture. Sending default bot image.`,
-          { mentions: [auteurMsgRepondu] }
-        );
-      }
-
-      await zk.sendMessage(
-        dest,
-        {
-          image: { url: ppuser },
-          caption: `📷 *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nHere's the profile pic of @${auteurMsgRepondu.split("@")[0]}`,
-          footer: `🤖 Powered by Gifted Dave`,
-          mentions: [auteurMsgRepondu],
-        },
-        { quoted: ms }
-      );
-
-    } catch (error) {
-      console.error("Error in .getpp command:", error);
-      await repondre(
-        `❌ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nAn error occurred while fetching the profile picture.\n> _${error.message}_`
-      );
+      ppuser = await zk.profilePictureUrl(auteurMsgRepondu, 'image');
+      caption = `📷 *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nHere's the profile pic of @${auteurMsgRepondu.split("@")[0]}`;
+    } catch {
+      ppuser = mybotpic(); // fallback image
+      caption = `⚠️ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nCouldn't access @${auteurMsgRepondu.split("@")[0]}'s profile picture. Sending default bot image.`;
     }
+
+    await zk.sendMessage(
+      dest,
+      {
+        image: { url: ppuser },
+        caption,
+        footer: `🤖 Powered by Gifted Dave`,
+        mentions: [auteurMsgRepondu],
+      },
+      { quoted: ms }
+    );
   }
 );
