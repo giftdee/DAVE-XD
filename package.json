@@ -58,6 +58,7 @@
     "latest": "^0.2.0",
     "link-preview-js": "^3.0.4",
     "luxon": "^3.4.4",  
+    "lyrics-finder": "^21.0.1",
     "moment-timezone": "^0.5.43",
     "mongoose": "^8.0.3",
     "mumaker": "^2.0.0",
