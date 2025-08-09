@@ -49,7 +49,7 @@ zokou({
 
     const temps = moment().format('HH:mm:ss');
     const date = moment().format('DD/MM/YYYY');
-    const img = 'https://files.catbox.moe/nxzaly.jpg';
+    const img = 'https://files.catbox.moe/lidsgj.jpg';
 
     const infoMsg = `
 ╭───────────⊷
