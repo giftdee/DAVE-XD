@@ -1,42 +1,37 @@
 const { zokou } = require("../framework/zokou");
-const {getAllSudoNumbers,isSudoTableNotEmpty} = require("../bdd/sudo")
+const { getAllSudoNumbers, isSudoTableNotEmpty } = require("../bdd/sudo");
 const conf = require("../set");
 
 zokou({ nomCom: "owner", categorie: "Dave-General", reaction: "❣️" }, async (dest, zk, commandeOptions) => {
-    const { ms , mybotpic, repondre } = commandeOptions;
-    
-    const thsudo = await isSudoTableNotEmpty()
+    const { ms, mybotpic } = commandeOptions;
+
+    const thsudo = await isSudoTableNotEmpty();
 
     if (thsudo) {
-        let msg = `╔════◇ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐖𝐍𝐄𝐑𝐒* ◇════╗\n\n`
-        
-        // Primary owner (must be 254111687009)
-        msg += `*👑 𝐌𝐚𝐢𝐧 𝐎𝐰𝐧𝐞𝐫:*\n• @254111687009\n\n`
-        
-        // Secondary owner (must be 254104260236)
-        msg += `*🌟 𝐒𝐞𝐜𝐨𝐧𝐝𝐚𝐫𝐲 𝐎𝐰𝐧𝐞𝐫:*\n• @254104260236\n\n`
-        
-        // Other sudo users
-        let sudos = await getAllSudoNumbers()
+        let msg = `╔════◇ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐖𝐍𝐄𝐑𝐒* ◇════╗\n\n`;
+
+        msg += `*👑 𝐌𝐚𝐢𝐧 𝐎𝐰𝐧𝐞𝐫:*\n• @254111687009\n\n`;
+        msg += `*🌟 𝐒𝐞𝐜𝐨𝐧𝐝𝐚𝐫𝐲 𝐎𝐰𝐧𝐞𝐫:*\n• @254104260236\n\n`;
+
+        let sudos = await getAllSudoNumbers();
         if (sudos.length > 0) {
-            msg += `───── *𝐎𝐭𝐡𝐞𝐫 𝐒𝐮𝐝𝐨𝐬* ─────\n`
+            msg += `───── *𝐎𝐭𝐡𝐞𝐫 𝐒𝐮𝐝𝐨𝐬* ─────\n`;
             for (const sudo of sudos) {
                 if (sudo) {
                     const sudonumero = sudo.replace(/[^0-9]/g, '');
-                    // Skip if it's one of our required numbers
                     if (!['254111687009', '254104260236'].includes(sudonumero)) {
                         msg += `• @${sudonumero}\n`;
                     }
                 }
             }
         }
-        msg += `╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* ◇════╝`
+        msg += `╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* ◇════╝`;
 
         const mentionedJid = [
             '254111687009@s.whatsapp.net',
             '254104260236@s.whatsapp.net',
             ...sudos.map(num => num.replace(/[^0-9]/g, '') + '@s.whatsapp.net')
-        ].filter(num => !['254111687009', '254104260236'].includes(num.replace(/@s\.whatsapp\.net/, '')))
+        ].filter(num => !['254111687009', '254104260236'].includes(num.replace(/@s\.whatsapp\.net/, '')));
 
         zk.sendMessage(
             dest,
@@ -46,22 +41,20 @@ zokou({ nomCom: "owner", categorie: "Dave-General", reaction: "❣️" }, async 
                 mentions: mentionedJid
             },
             { quoted: ms }
-        )
+        );
     } else {
-        // VCARD for primary owner
         const vcard = 
-            'BEGIN:VCARD\n' +
-            'VERSION:3.0\n' +
-            'FN:' + conf.OWNER_NAME + '\n' +
-            'ORG:𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐦𝐞𝐧𝐭;\n' +
-            'TEL;type=CELL;type=VOICE;waid=254111687009:+254111687009\n' +
-            'END:VCARD';
+`BEGIN:VCARD
+VERSION:3.0
+FN:${conf.OWNER_NAME}
+TEL;type=CELL;waid=254111687009:254111687009
+END:VCARD`;
 
-        zk.sendMessage(
+        await zk.sendMessage(
             dest,
             {
                 contacts: {
-                    displayName: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐰𝐧𝐞𝐫",
+                    displayName: conf.OWNER_NAME,
                     contacts: [{ vcard }],
                 },
             },
@@ -121,34 +114,32 @@ zokou({ nomCom: "support", categorie: "Dave-General", reaction: "🔗" }, async 
 
     const supportMessage = `
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃    ⚡ 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐅𝐅𝐈𝐂𝐈𝐀𝐋 ⚡     ┃
+┃    💦 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐅𝐅𝐈𝐂𝐈𝐀𝐋 💦
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ 💫 𝙏𝙝𝙖𝙣𝙠 𝙮𝙤𝙪 𝙛𝙤𝙧 𝙘𝙝𝙤𝙤𝙨𝙞𝙣𝙜        ┃
-┃    *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 WhatsApp Bot!*       ┃
+┃ 💦 Thank you for choosing
+┃    *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 WhatsApp Bot!*
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ 🔗 *Support Links* ⤵️                ┃
-┃                                     ┃
-┃ 📢 Channel                          ┃
-┃ https://whatsapp.com/channel/      ┃
-┃ 0029VbApvFQ2Jl84lhONkc3k            ┃
-┃                                     ┃
-┃ 👥 Support Group                    ┃
-┃ https://chat.whatsapp.com/         ┃
-┃LNkkXQ1rDv3GQNFFbqLoMe?mode=ac_t    ┃
-┃                                     ┃
-┃ 🎬 YouTube                          ┃
-┃ https://youtube.com/@davlodavlo19  ┃
-┃                                     ┃
+┃ 🔗 *Support Links* ⤵️
+┃
+┃ 📢 Channel:
+┃ https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k
+┃
+┃ 👥 Support Group:
+┃ https://chat.whatsapp.com/LNkkXQ1rDv3GQNFFbqLoMe?mode=ac_t
+┃
+┃ 🎬 YouTube:
+┃ https://youtube.com/@davlodavlo19
+┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ ⏩⏩⏩⏩⏩⏩⏩⏩⏩⚠️⚠️⚠️⚠️⚠️⚠️  ┃
-╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 Gifted_dave* ◇════╝
+┃ 💦 Powered by *Gifted_dave*
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
     `;
 
     await repondre(supportMessage);
     await zk.sendMessage(
         auteurMessage,
         {
-            text: `*📩 𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐥𝐢𝐧𝐤𝐬 𝐬𝐞𝐧𝐭 𝐭𝐨 𝐲𝐨𝐮𝐫 𝐃𝐌!*\n\n𝐏𝐥𝐞𝐚𝐬𝐞 𝐣𝐨𝐢𝐧 𝐨𝐮𝐫 𝐜𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐟𝐨𝐫 𝐮𝐩𝐝𝐚𝐭𝐞𝐬 𝐚𝐧𝐝 𝐬𝐮𝐩𝐩𝐨𝐫𝐭.`
+            text: `*📩 Support links sent to your DM!*\n\nPlease join our community for updates and support.`
         },
         { quoted: ms }
     );
