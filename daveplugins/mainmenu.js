@@ -208,38 +208,44 @@ let menuMsg = `
       }
 
       // Get all MP3 files in the folder
-      const audioFiles = fs.readdirSync(audioFolder).filter(f => f.endsWith(".mp3"));
-      console.log(`[DEBUG] menu: Available audio files: ${audioFiles}`);
+      // Get all MP3 files
+const audioFiles = fs.readdirSync(audioFolder).filter(f => f.endsWith(".mp3"));
 
-      if (audioFiles.length === 0) {
-        console.log(`[DEBUG] menu: No MP3 files found in folder`);
-        repondre(`𝐍𝐨 𝐚𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞𝐬 𝐟𝐨𝐮𝐧𝐝 𝐢𝐧 kn_dave 𝐟𝐨𝐥𝐝𝐞𝐫`);
-        return;
-      }
+if (audioFiles.length === 0) {
+  repondre(`𝐍𝐨 𝐚𝐮𝐝𝐢𝐨 𝐟𝐢𝐥𝐞𝐬 𝐟𝐨𝐮𝐧𝐝 𝐢𝐧 kn_dave 𝐟𝐨𝐥𝐝𝐞𝐫`);
+  return;
+}
 
-      // Randomly select an audio file
-      const randomAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
-      const audioPath = audioFolder + randomAudio;
+// If shuffled list is empty or outdated, reshuffle
+if (shuffledAudios.length === 0 || shuffledAudios.length !== audioFiles.length) {
+  shuffledAudios = shuffleArray([...audioFiles]);
+  currentAudioIndex = 0;
+}
 
-      console.log(`[DEBUG] menu: Randomly selected audio: ${randomAudio}`);
-      console.log(`[DEBUG] menu: Full audio path: ${audioPath}`);
+// Pick next audio in the shuffled list
+const randomAudio = shuffledAudios[currentAudioIndex];
+currentAudioIndex++;
 
-      // Verify file exists
-      if (fs.existsSync(audioPath)) {
-        console.log(`[DEBUG] menu: Audio file exists, sending as voice note`);
-        try {
-          const audioMessage = await zk.sendMessage(
-            dest,
-            {
-              audio: { url: audioPath },
-              mimetype: "audio/mpeg",
-              ptt: true,
-              fileName: `𝐃𝐀𝐕𝐄 𝐕𝐎𝐈𝐂𝐄 ✧`,
-              caption: "✦⋆✗𝐃𝐀𝐕𝐄",
-            },
-            { quoted: ms }
-          );
-          console.log(`[DEBUG] menu: Audio sent successfully: ${randomAudio}`);
+// Reset index when we reach the end
+if (currentAudioIndex >= shuffledAudios.length) {
+  currentAudioIndex = 0;
+}
+
+const audioPath = `${audioFolder}${randomAudio}`;
+
+// Send as voice note
+await zk.sendMessage(
+  dest,
+  {
+    audio: { url: audioPath },
+    mimetype: "audio/mpeg",
+    ptt: true,
+    fileName: `𝐃𝐀𝐕𝐄 𝐕𝐎𝐈𝐂𝐄 ✧`,
+    caption: "✦⋆✗𝐃𝐀𝐕𝐄",
+  },
+  { quoted: ms }
+);  
+        console.log(`[DEBUG] menu: Audio sent successfully: ${randomAudio}`);
           console.log(`[DEBUG] menu: Audio message details: ${JSON.stringify(audioMessage)}`);
         } catch (audioError) {
           console.error(`[DEBUG] menu: Error sending audio: ${audioError}`);
