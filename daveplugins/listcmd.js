@@ -1,5 +1,4 @@
 const { zokou } = require('../framework/zokou');
-const s = require("../set");
 
 zokou({
   nomCom: "list",
@@ -116,7 +115,6 @@ zokou({
 🔗 *REPOSITORY*  
 https://github.com/giftdee/DAVE-XMD
 
-${config.DESCRIPTION}
 ╰━━━━━━━━━━━━━━━━━━━━━⪼
 `;
 
@@ -135,14 +133,12 @@ ${config.DESCRIPTION}
       }
     }, { quoted: m });
 
-    // Send first audio
     await zk.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/xci982.mp3' },
       mimetype: 'audio/mpeg',
       ptt: true
     }, { quoted: m });
 
-    // Send second audio
     await zk.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/utbujd.mp3' },
       mimetype: 'audio/mpeg',
