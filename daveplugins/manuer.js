@@ -24,7 +24,7 @@ const toFancyLowercaseFont = (text) => {
 };
 
 zokou({
-    nomCom: "Menu1",
+    nomCom: "dave",
     categorie: "Dave-Menu",
     reaction: "💠",
     nomFichier: __filename
