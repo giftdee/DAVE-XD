@@ -1,61 +1,43 @@
 const { zokou } = require('../framework/zokou');
 const PDFDocument = require('pdfkit');
 const { Buffer } = require('buffer');
-const axios = require('axios');
-//const { getBuffer } = require('../framework/mesfunctions'); // assumes you have a getBuffer util, or use axios
 
 zokou({
-    nomCom: "topdf",
-    alias: ["pdf", "topdf"],
-    react: "📄",
-    desc: "Convert provided text or image to a PDF file.",
-    categorie: "Dave-Tools",
-    filename: __filename
-},
-async (dest, zk, { q, repondre, msgRepondu }) => {
-    try {
-        const doc = new PDFDocument({ autoFirstPage: false });
-        let buffers = [];
+  nomCom: "topdf",
+  alias: ["pdf"],
+  desc: "Convert text to a PDF file — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Utility",
+  categorie: "utilities",
+  reaction: "📄",
+  nomFichier: __filename
+}, async (dest, zk, { m, from, repondre, q }) => {
+  try {
+    if (!q) 
+      return repondre(`⚠️ Please provide text to convert to PDF.\n*Example:* \`.topdf 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is lit!🔥\``);
 
-        doc.on('data', buffers.push.bind(buffers));
-        doc.on('end', async () => {
-            const pdfData = Buffer.concat(buffers);
-            await zk.sendMessage(dest, {
-                document: pdfData,
-                mimetype: 'application/pdf',
-                fileName: '𝐃𝐚𝐯𝐞𝐓𝐞𝐜𝐡.pdf',
-                caption: "*📄 PDF created successfully!*\n\n> © Created by 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃"
-            }, { quoted: msgRepondu });
-        });
+    // Create new PDF document
+    const doc = new PDFDocument();
+    let buffers = [];
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', async () => {
+      const pdfData = Buffer.concat(buffers);
 
-        // Case 1: Image Reply
-        if (msgRepondu && msgRepondu.mimetype && msgRepondu.mimetype.startsWith("image/")) {
-            const buffer = await zk.downloadMediaMessage(msgRepondu);
-            const image = buffer;
-            const imageDims = { width: 500, height: 600 }; // Customize based on use
+      // Send PDF file
+      await zk.sendMessage(from, {
+        document: pdfData,
+        mimetype: 'application/pdf',
+        fileName: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃.pdf',
+        caption: `📄 *PDF generated successfully!*\n\n> © 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Official`
+      }, { quoted: m });
+    });
 
-            doc.addPage({ size: [imageDims.width, imageDims.height] });
-            doc.image(image, 0, 0, imageDims);
-        }
+    // Add text content
+    doc.text(q);
 
-        // Case 2: Plain Text
-        else if (q && q.trim() !== "") {
-            doc.addPage();
-            doc.fontSize(14).text(q, {
-                align: 'left',
-                lineGap: 8
-            });
-        }
+    // Finalize PDF
+    doc.end();
 
-        // If nothing valid
-        else {
-            return repondre("❗Send some text or reply to an image to convert it to a PDF.\n\n*Example:* `.topdf Gifted Dave 🇰🇪` or reply to an image with `.topdf`");
-        }
-
-        doc.end();
-
-    } catch (e) {
-        console.error("PDF ERROR:", e);
-        repondre(`❌ Error: ${e.message}`);
-    }
+  } catch (error) {
+    console.error(error);
+    repondre(`❌ Error: ${error.message}`);
+  }
 });
