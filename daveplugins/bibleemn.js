@@ -8,7 +8,7 @@ const s = require(__dirname + "/../set");
 const more = String.fromCharCode(8206)
 const Taphere = more.repeat(4001)
 
-zokou({ nomCom: "Bible Menu", categorie: "Dave-Menu" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "Bible-Menu", categorie: "Dave-Menu" }, async (dest, zk, commandeOptions) => {
   let { ms, repondre, prefixe, nomAuteurMessage, mybotpic } = commandeOptions;
   let { cm } = require(__dirname + "/../framework/zokou");
   var coms = {};
@@ -130,7 +130,7 @@ zokou({ nomCom: "Bible Menu", categorie: "Dave-Menu" }, async (dest, zk, command
         },
         forwardingScore: 999,
         externalAdReply: {
-          title: "📖 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Holy Bible List",
+          title: "🌍 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Holy Bible List",
           body: "Get verses using .bible <book> <chapter>:<verse>",
           thumbnailUrl: "https://files.catbox.moe/lidsgj.jpg",
           sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
@@ -141,7 +141,7 @@ zokou({ nomCom: "Bible Menu", categorie: "Dave-Menu" }, async (dest, zk, command
     });
   } catch (error) {
     console.error("Menu error: ", error);
-    repondre("🥵🥵 Menu error: " + error);
+    repondre("💦💦 Menu error: " + error);
   }
 
 });
