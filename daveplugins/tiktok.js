@@ -3,8 +3,8 @@ const axios = require("axios");
 
 // tiktok
 zokou ({
-  nomCom: "tiktoksearch",
-  aliases: ["tiksearch", "t"],
+  nomCom: "tiktok",
+  aliases: ["tiksearch","TikTok", "t"],
   categorie: "Dave-Search",
   reaction: "🔍"
 }, async (dest, zk, commandeOptions) => {
@@ -78,7 +78,7 @@ zokou({
 
   // Ensure a query is provided in the arguments
   if (!arg[0]) {
-    return repondre('🤦 Please provide a thing!');
+    return repondre(' Please provide a link!');
   }
 
   try {
@@ -89,7 +89,7 @@ zokou({
 
     // Check if no results are found
     if (!searchData || searchData.length === 0) {
-      return repondre("❌No Twitter search results found.");
+      return repondre("No Twitter search results found.");
     }
 
     // Construct the search message
