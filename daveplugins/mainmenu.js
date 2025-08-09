@@ -119,7 +119,7 @@ let menuMsg = `
   "Dave-Soccer": { icon: "🔹", decor: "┃" },
   "Adult": { icon: "🔹", decor: "┃" },
   "Dave-Sticker": { icon: "🔹", decor: "┃" },
-  "Dave-Screenshots": { icon: "🔹", decor: "┃" }
+  "Dave-screenshots": { icon: "🔹", decor: "┃" }
 };
     // Build menu with all categories and vertical command listing
     for (const cat in coms) {
