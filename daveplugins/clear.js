@@ -1,21 +1,12 @@
 const { zokou } = require("../framework/zokou");
-
-// 𝐔𝐭𝐢𝐥𝐢𝐭𝐢𝐞𝐻 𝐌𝐨𝐝𝐮𝐥𝐞
-// 𝐏�(o𝐰𝐞𝐫�(e𝐝 𝐛𝐲 𝐱𝐡_𝐜𝐥𝐢𝐧𝐭𝐨𝐧
-
-// Store bot message keys for the current chat
-let botMessages = {};
-
-
 const set = require('../set');
-const { zokou } = require('../framework/zokou');
 
 zokou(
   {
     nomCom: "delete",
     aliases: ["del"],
     reaction: "❌",
-    categorie: "Group",
+    categorie: "Dave-Group",
     desc: "Delete a quoted message"
   },
   async (dest, zk, commandeOptions) => {
@@ -45,22 +36,6 @@ zokou(
     }
   }
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 zokou(
   {
