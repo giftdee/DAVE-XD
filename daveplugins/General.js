@@ -5,7 +5,7 @@ const set = require('../set');
 zokou(
   {
     nomCom: "owner",
-    aliases: ["dev", "creator"],
+    aliases: ["user", "creator"],
     reaction: "🦋",
     categorie: "Dave-General",
     desc: "Get owner contact information"
