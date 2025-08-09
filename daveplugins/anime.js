@@ -160,7 +160,7 @@ zokou({
 
 zokou({
   nomCom: "emojimix",
-  categorie: "Dave-Conversion"
+  categorie: "Dave-Conversion",
 }, async (dest, zk, commandeOptions) => {
   const { arg, repondre, ms, nomAuteurMessage } = commandeOptions;
 
