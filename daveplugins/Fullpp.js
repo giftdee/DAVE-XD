@@ -1,28 +1,50 @@
 const { zokou } = require("../framework/zokou");
-const { generateProfilePicture } = require("@whiskeysockets/baileys");
-const fs = require("fs");
+const Jimp = require("jimp");
+var { S_WHATSAPP_NET } = require('@whiskeysockets/baileys');
 
-zokou({
-  nomCom: "fullpp",
-  aliases: ["updatepp", "ppfull"],
-  reaction: '🍂',
-  categorie: "Dave-New"
-}, async (dest, zk, commandeOptions) => {
-  const { repondre, msgRepondu } = commandeOptions;
+zokou(
+  {
+    nomCom: "pp",
+    categorie: "Owner",
+    desc: "Change bot profile picture."
+  },
+  async (dest, zk, commandeOptions) => {
+    const { repondre, ms } = commandeOptions;
 
-  if (!msgRepondu || !msgRepondu.imageMessage) {
-    return repondre("❌ Please reply to an *image* to set as bot profile picture.");
+    try {
+      if (!ms.quoted) return repondre("Reply to an image to set as profile picture.");
+      let media = await ms.quoted.download();
+
+      // Read image with Jimp
+      const jimp = await Jimp.read(media);
+      const min = jimp.getWidth();
+      const max = jimp.getHeight();
+      const cropped = jimp.crop(0, 0, min, max);
+
+      // Resize image
+      const img = await cropped.scaleToFit(720, 720).getBufferAsync(Jimp.MIME_JPEG);
+
+      // Send profile picture update
+      await zk.query({
+        tag: 'iq',
+        attrs: {
+          to: S_WHATSAPP_NET,
+          type: 'set',
+          xmlns: 'w:profile:picture',
+        },
+        content: [
+          {
+            tag: 'picture',
+            attrs: { type: 'image' },
+            content: img,
+          },
+        ],
+      });
+
+      repondre("✅ Profile picture updated successfully.");
+    } catch (err) {
+      console.error(err);
+      repondre(`❌ Failed to change profile picture: ${err.message}`);
+    }
   }
-
-  try {
-    const mediaPath = await zk.downloadAndSaveMediaMessage(msgRepondu);
-    const { img } = await generateProfilePicture(mediaPath);
-
-    await zk.updateProfilePicture(zk.user.id, img);
-
-    fs.unlinkSync(mediaPath);
-    repondre("✅ Bot profile picture updated successfully.");
-  } catch (error) {
-    repondre("❌ Failed to update profile picture:\n" + error.message);
-  }
-});
+);
