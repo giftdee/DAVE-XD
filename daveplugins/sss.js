@@ -556,7 +556,7 @@ zokou({
 
 zokou({
   nomCom: 'messi',
-  categorie: 'Dave-images',
+  categorie: 'Dave-Images',
   reaction: '🐐'
 }, async (dest, zk, context) => {
   const { repondre: sendMessage, ms } = context;
