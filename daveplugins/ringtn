@@ -1,0 +1,34 @@
+const { zokou } = require('../framework/zokou');
+const axios = require('axios');
+
+zokou({
+  nomCom: "ringtone",
+  alias: ["ringtones", "ring"],
+  desc: "Get a random ringtone from the API — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
+  categorie: "Dave-Tools",
+  reaction: "🎵",
+  nomFichier: __filename
+}, async (dest, zk, { m, from, repondre, args }) => {
+  try {
+    const query = args.join(" ");
+    if (!query) return repondre("❌ Please provide a search keyword! Example: `.ringtone Suna`");
+
+    const { data } = await axios.get(`https://www.dark-yasiya-api.site/download/ringtone?text=${encodeURIComponent(query)}`);
+
+    if (!data.status || !data.result || data.result.length === 0) {
+      return repondre("❌ No ringtones found. Try a different keyword.");
+    }
+
+    const randomRingtone = data.result[Math.floor(Math.random() * data.result.length)];
+
+    await zk.sendMessage(from, {
+      audio: { url: randomRingtone.dl_link },
+      mimetype: "audio/mpeg",
+      fileName: `${randomRingtone.title}.mp3`,
+    }, { quoted: m });
+
+  } catch (error) {
+    console.error("Error in ringtone command:", error);
+    repondre("❌ Something went wrong while fetching the ringtone. Please try again later.");
+  }
+});
