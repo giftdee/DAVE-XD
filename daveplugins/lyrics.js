@@ -5,7 +5,7 @@ const yts = require('yt-search');
 zokou({
     nomCom: 'lyrics',
     aliases: ['lyric', 'mistari'],
-    categorie: "Dave-search",
+    categorie: "Dave-Search",
     reaction: '📑',
 }, async (zk, dest, context) => {
     const { repondre, arg, ms } = context;
