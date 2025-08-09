@@ -24,9 +24,9 @@ const toFancyLowercaseFont = (text) => {
 };
 
 zokou({
-    nomCom: "main-menu",
+    nomCom: "Menu1",
     categorie: "Dave-Menu",
-    reaction: "😏",
+    reaction: "💠",
     nomFichier: __filename
 }, async (dest, zk, commandeOptions) => {
     const { repondre, prefixe, nomAuteurMessage } = commandeOptions;
@@ -53,13 +53,13 @@ zokou({
 
     const infoMsg = `
 ╭───────────⊷
-*┋* *ʙᴏᴛ ɴᴀᴍᴇ :  🚨𝐃𝐀𝐕𝐄-𝐗𝐌𝐃🚨*
+*┋* *ʙᴏᴛ ɴᴀᴍᴇ : 💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠*
 *┋* *ᴘʀᴇғɪx :* [ ${s.PREFIXE} ]
 *┋* *ᴍᴏᴅᴇ :* ${mode}
 *┋* *ᴅᴀᴛᴇ  :* ${date}
 *┋* *ᴘʟᴀᴛғᴏʀᴍ :* ${os.platform()}
-*┋* *ᴏᴡɴᴇʀ ɪs : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*
-*┋* *ᴘʟᴜɢɪɴs ᴄᴍᴅ :* ${cm.length}
+*┋* *ᴏᴡɴᴇʀ : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*
+*┋* *ᴘʟᴜɢɪɴs :* ${cm.length}
 ╰───────────⊷\n`;
 
     let menuMsg = ` *${greeting}*`;
@@ -91,8 +91,8 @@ zokou({
                 },
                 forwardingScore: 999,
                 externalAdReply: {
-                    title: "🚨𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 🚨",
-                    body: "🔑🗝️ Command List",
+                    title: "💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠",
+                    body: "🔹Command List",
                     thumbnailUrl: img,
                     sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
                     mediaType: 1,
@@ -102,6 +102,6 @@ zokou({
         });
     } catch (error) {
         console.error("Menu error: ", error);
-        repondre("🥵🥵 Menu error: " + error);
+        repondre("💦💦 Menu error: " + error);
     }
 });
