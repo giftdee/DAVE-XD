@@ -63,7 +63,7 @@ function saveAntideleteConfig(config) {
 // Command
 zokou({
     nomCom: "antidelete",
-    categorie: "Dave-Anti",
+    categorie: "Dave-Mods",
     reaction: "🛡️"
 }, async (dest, zk, { repondre, arg, ms }) => {
     const config = loadAntideleteConfig();
