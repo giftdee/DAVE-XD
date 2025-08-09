@@ -16,10 +16,10 @@ zokou({nomCom : "igdl" , categorie : "Dave-Download"},async (dest , zk , command
     let igvid = await axios('https://api.vihangayt.com/downloader/ig?url='+link)
 
     if (igvid.data.data.data[0].type == 'video') {
-    zk.sendMessage(dest,{video : {url : igvid.data.data.data[0].url},caption : "ig video downloader powered by *☢️LUCKY MD X-FORCE☢️*",gifPlayback : false },{quoted : ms}) 
+    zk.sendMessage(dest,{video : {url : igvid.data.data.data[0].url},caption : "ig video downloader powered by *💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠*",gifPlayback : false },{quoted : ms}) 
     }
     else {
-        zk.sendMessage(dest,{image : {url : igvid.data.data.data[0].url},caption : "ig image downloader powered by *☢️LUCKY MD X-FORCE☢️*"})
+        zk.sendMessage(dest,{image : {url : igvid.data.data.data[0].url},caption : "ig image downloader powered by *💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠*"})
     }
 
   } catch (e) {repondre("erreur survenue lors du téléchargement \n " + e)}
@@ -50,7 +50,7 @@ async (dest, zk, commandeOptions) => {
         Lien: ${result.url}
       `;
        zk.sendMessage(dest,{image : { url : result.thumbnail}, caption : caption},{quoted : ms}) ;
-       zk.sendMessage(dest, { video: { url: result.hd  }, caption: 'facebook video downloader powered by *☢️LUCKY MD X-FORCE☢️*' }, { quoted: ms });
+       zk.sendMessage(dest, { video: { url: result.hd  }, caption: 'facebook video downloader powered by *💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠*' }, { quoted: ms });
 
     })
     .catch((error) => {console.log("Error:", error)
@@ -64,32 +64,6 @@ async (dest, zk, commandeOptions) => {
   }
 });
 
-
-
-zokou({ nomCom: "tiktok", categorie: "Dave-Download", reaction: "🎵" }, async (dest, zk, commandeOptions) => {
-  const { arg, ms, prefixe,repondre } = commandeOptions;
-  if (!arg[0]) {
-    repondre(`how to use this command:\n ${prefixe}tiktok tiktok_video_link`);
-    return;
-  }
-
-  const videoUrl = arg.join(" ");
-
- let data = await axios.get('https://api.onesytex.my.id/api/tiktok-dl='+ videoUrl) ;
-
-  let tik = data.data.data
-
-      // Envoi du message avec le thumbnail de la vidéo
-      const caption = `
-Author: ${tik.author}
-Description: ${tik.desc}
-      `;
-
-
-      zk.sendMessage(dest, { video: { url: tik.links[0].a} , caption : caption },{quoted : ms});    
-
-
-});
 
 zokou({
   nomCom: "fbdl2",
@@ -114,7 +88,7 @@ async (dest, zk, commandeOptions) => {
         Lien: ${result.url}
       `;
        zk.sendMessage(dest,{image : { url : result.thumbnail}, caption : caption},{quoted : ms}) ;
-       zk.sendMessage(dest, { video: { url: result.sd  }, caption: 'facebook video downloader powered by *☢️LUCKY MD X-FORCE☢️*' }, { quoted: ms });
+       zk.sendMessage(dest, { video: { url: result.sd  }, caption: 'facebook video downloader powered by *💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 💠*' }, { quoted: ms });
 
     })
     .catch((error) => {console.log("Error:", error)
