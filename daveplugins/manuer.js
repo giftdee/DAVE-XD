@@ -8,7 +8,7 @@ const path = require("path");
 
 const readMore = String.fromCharCode(8206).repeat(4001);
 
-// ===== audio URLs you provided =====
+// ===== audio URLs =====
 const AUDIO_URLS = [
   'https://files.catbox.moe/hpwsi2.mp3',
   'https://files.catbox.moe/xci982.mp3',
