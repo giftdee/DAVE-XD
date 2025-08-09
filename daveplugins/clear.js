@@ -6,6 +6,62 @@ const { zokou } = require("../framework/zokou");
 // Store bot message keys for the current chat
 let botMessages = {};
 
+
+const set = require('../set');
+const { zokou } = require('../framework/zokou');
+
+zokou(
+  {
+    nomCom: "delete",
+    aliases: ["del"],
+    reaction: "❌",
+    categorie: "Group",
+    desc: "Delete a quoted message"
+  },
+  async (dest, zk, commandeOptions) => {
+    const { repondre, verifAdmin, superUser, msgRepondu } = commandeOptions;
+
+    if (!superUser && !verifAdmin) {
+      return repondre("❌ Only bot owner or group admin can delete messages.");
+    }
+
+    if (!msgRepondu) {
+      return repondre("⚠️ Reply to the message you want to delete.");
+    }
+
+    try {
+      const key = {
+        remoteJid: dest,
+        fromMe: false,
+        id: msgRepondu.key.id,
+        participant: msgRepondu.key.participant
+      };
+
+      await zk.sendMessage(dest, { delete: key });
+      repondre("✅ 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃: Message deleted.");
+    } catch (e) {
+      console.error(e);
+      repondre("❌ Error deleting message.");
+    }
+  }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 zokou(
   {
     nomCom: "clear",
