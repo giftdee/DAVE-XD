@@ -25,7 +25,7 @@ zokou({
   nomCom: "fullpp",
   alias: ["mypp", "dp"],
   desc: "Set your profile picture without compression (owner only) — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
-  categorie: "Dave-WhatsApp",
+  categorie: 'Dave-Whatsapp',
   reaction: "📸",
   ownerOnly: true,
   nomFichier: __filename
@@ -71,7 +71,7 @@ zokou({
 zokou({
   nomCom: "privacy",
   desc: "Displays your current privacy settings — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
-  categorie: "Dave-WhatsApp",
+  categorie: 'Dave-Whatsapp',
   ownerOnly: true,
   reaction: "🔒",
   nomFichier: __filename
