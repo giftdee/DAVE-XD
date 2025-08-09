@@ -22,7 +22,7 @@ zokou(
       caption = `📷 *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nHere's the profile pic of @${auteurMsgRepondu.split("@")[0]}`;
     } catch {
       ppuser = mybotpic(); // fallback image
-      caption = `⚠️ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nCouldn't access @${auteurMsgRepondu.split("@")[0]}'s profile picture. Sending default bot image.`;
+      caption = `💠 *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*\n\nCouldn't access @${auteurMsgRepondu.split("@")[0]}'s profile picture. Sending default bot image.`;
     }
 
     await zk.sendMessage(
@@ -30,7 +30,7 @@ zokou(
       {
         image: { url: ppuser },
         caption,
-        footer: `🤖 Powered by Gifted Dave`,
+        footer: `💠 Powered by Gifted Dave`,
         mentions: [auteurMsgRepondu],
       },
       { quoted: ms }
