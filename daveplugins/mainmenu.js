@@ -15,6 +15,11 @@ let shuffledAudios = [];
 let currentAudioIndex = 0;
 let audioListSignature = "";
 
+// ===== newsletter config =====
+const NEWSLETTER_JID = "120363400480173280@newsletter";
+const NEWSLETTER_NAME = "💠𝐃𝐀𝐕𝐄-𝐂𝐇𝐀𝐍𝐍𝐄𝐋💠";
+const NEWSLETTER_URL = "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k"; // view channel link
+
 // ===== helpers =====
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -228,52 +233,51 @@ ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
         lien = "";
       }
 
-      // send menu (image/video/text) with externalAdReply for preview
-      const messagePayloadBase = {
-        caption: infoMsg + menuMsg + `\n${readmore}`, // include readmore to collapse long menus
-        mentions: mentionedJids
+      // contextInfo containing forwarded newsletter + externalAdReply for view channel preview
+      const menuContextInfo = {
+        isForwarded: true,
+        forwardingScore: 999,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: NEWSLETTER_JID,
+          newsletterName: NEWSLETTER_NAME,
+          serverMessageId: -1
+        },
+        externalAdReply: {
+          title: NEWSLETTER_NAME,
+          body: "View channel",
+          thumbnailUrl: img,
+          sourceUrl: NEWSLETTER_URL,
+          mediaType: 1,
+          renderLargerThumbnail: true
+        }
       };
 
+      // send menu (image/video/text) with externalAdReply + forwarded newsletter (so "View channel" appears)
       if (lien && /\.(mp4|gif)$/i.test(lien)) {
         console.log(`[DEBUG] menu: Sending video menu`);
         await zk.sendMessage(dest, {
           video: { url: lien },
-          ...messagePayloadBase,
-          gifPlayback: true,
-          contextInfo: {
-            externalAdReply: {
-              title: "💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠",
-              body: "🔹Command List",
-              thumbnailUrl: img,
-              sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
-              mediaType: 1,
-              renderLargerThumbnail: true
-            }
-          }
+          caption: infoMsg + menuMsg + `\n${readmore}`,
+          mentions: mentionedJids,
+          contextInfo: menuContextInfo,
+          gifPlayback: true
         }, { quoted: ms });
         console.log(`[DEBUG] menu: Video menu sent successfully`);
       } else if (lien && /\.(jpe?g|png)$/i.test(lien)) {
         console.log(`[DEBUG] menu: Sending image menu`);
         await zk.sendMessage(dest, {
           image: { url: lien },
-          ...messagePayloadBase,
-          contextInfo: {
-            externalAdReply: {
-              title: "💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠",
-              body: "🔹Command List",
-              thumbnailUrl: img,
-              sourceUrl: "https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k",
-              mediaType: 1,
-              renderLargerThumbnail: true
-            }
-          }
+          caption: infoMsg + menuMsg + `\n${readmore}`,
+          mentions: mentionedJids,
+          contextInfo: menuContextInfo
         }, { quoted: ms });
         console.log(`[DEBUG] menu: Image menu sent successfully`);
       } else {
         console.log(`[DEBUG] menu: Sending text menu`);
         await zk.sendMessage(dest, {
           text: infoMsg + menuMsg + `\n${readmore}`,
-          mentions: mentionedJids
+          mentions: mentionedJids,
+          contextInfo: menuContextInfo
         }, { quoted: ms });
         console.log(`[DEBUG] menu: Text menu sent successfully`);
       }
