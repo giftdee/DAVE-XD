@@ -1,67 +1,75 @@
 const { zokou } = require("../framework/zokou");
 const { getAllSudoNumbers, isSudoTableNotEmpty } = require("../bdd/sudo");
-const conf = require("../set");
+const set = require('../set');
 
-zokou({ nomCom: "owner", categorie: "Dave-General", reaction: "❣️" }, async (dest, zk, commandeOptions) => {
-    const { ms, mybotpic } = commandeOptions;
+zokou(
+  {
+    nomCom: "owner",
+    aliases: ["dev", "creator"],
+    reaction: "🦋",
+    categorie: "Dave-General",
+    desc: "Get owner contact information"
+  },
+  async (dest, zk, options) => {
+    const { repondre, ms } = options;
 
-    const thsudo = await isSudoTableNotEmpty();
+    try {
+      const ownerNumber = set.OWNER_NUMBER; // from set.js
+      const ownerName = set.OWNER_NAME;     // from set.js
 
-    if (thsudo) {
-        let msg = `╔════◇ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐖𝐍𝐄𝐑𝐒* ◇════╗\n\n`;
+      const vcard =
+        "BEGIN:VCARD\n" +
+        "VERSION:3.0\n" +
+        `FN:${ownerName}\n` +
+        `TEL;type=CELL;type=VOICE;waid=${ownerNumber.replace("+", "")}:${ownerNumber}\n` +
+        "END:VCARD";
 
-        msg += `*👑 𝐌𝐚𝐢𝐧 𝐎𝐰𝐧𝐞𝐫:*\n• @254111687009\n\n`;
-        msg += `*🌟 𝐒𝐞𝐜𝐨𝐧𝐝𝐚𝐫𝐲 𝐎𝐰𝐧𝐞𝐫:*\n• @254104260236\n\n`;
-
-        let sudos = await getAllSudoNumbers();
-        if (sudos.length > 0) {
-            msg += `───── *𝐎𝐭𝐡𝐞𝐫 𝐒𝐮𝐝𝐨𝐬* ─────\n`;
-            for (const sudo of sudos) {
-                if (sudo) {
-                    const sudonumero = sudo.replace(/[^0-9]/g, '');
-                    if (!['254111687009', '254104260236'].includes(sudonumero)) {
-                        msg += `• @${sudonumero}\n`;
-                    }
-                }
-            }
+      // Send vCard contact
+      await zk.sendMessage(dest, {
+        contacts: {
+          displayName: ownerName,
+          contacts: [{ vcard }]
         }
-        msg += `╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* ◇════╝`;
+      }, { quoted: ms });
 
-        const mentionedJid = [
-            '254111687009@s.whatsapp.net',
-            '254104260236@s.whatsapp.net',
-            ...sudos.map(num => num.replace(/[^0-9]/g, '') + '@s.whatsapp.net')
-        ].filter(num => !['254111687009', '254104260236'].includes(num.replace(/@s\.whatsapp\.net/, '')));
+      // Send image with owner details
+      await zk.sendMessage(dest, {
+        image: { url: 'https://files.catbox.moe/nxzaly.jpg' },
+        caption: `╭━━〔 *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* 〕━━┈⊷
+┃❍╭─────────────·๏
+┃❍┃• *Here is the owner details*
+┃❍┃• *ɴᴀᴍᴇ* - ${ownerName}
+┃❍┃• *ɴᴜᴍʙᴇʀ* ${ownerNumber}
+┃❍┃• *𝖵ᴇʀsɪᴏɴ*: 1.0.0
+┃❍└───────────┈⊷
+╰──────────────┈⊷
+> ©𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 BOT`,
+        contextInfo: {
+          mentionedJid: [`${ownerNumber.replace("+", "")}@s.whatsapp.net`],
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363400480173280@newsletter',
+            newsletterName: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 UPDATES',
+            serverMessageId: 143
+          }
+        }
+      }, { quoted: ms });
 
-        zk.sendMessage(
-            dest,
-            {
-                image: { url: mybotpic() },
-                caption: msg,
-                mentions: mentionedJid
-            },
-            { quoted: ms }
-        );
-    } else {
-        const vcard = 
-`BEGIN:VCARD
-VERSION:3.0
-FN:${conf.OWNER_NAME}
-TEL;type=CELL;waid=254111687009:254111687009
-END:VCARD`;
+      // Send audio
+      await zk.sendMessage(dest, {
+        audio: { url: 'https://files.catbox.moe/ddmjyy.mp3' },
+        mimetype: 'audio/mp4',
+        ptt: true
+      }, { quoted: ms });
 
-        await zk.sendMessage(
-            dest,
-            {
-                contacts: {
-                    displayName: conf.OWNER_NAME,
-                    contacts: [{ vcard }],
-                },
-            },
-            { quoted: ms }
-        );
+    } catch (error) {
+      console.error(error);
+      repondre(`❌ Error: ${error.message}`);
     }
-});
+  }
+);
+
 
 zokou({ nomCom: "dev", categorie: "Dave-General", reaction: "💘" }, async (dest, zk, commandeOptions) => {
     const { ms, mybotpic } = commandeOptions;
