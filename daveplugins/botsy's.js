@@ -4,11 +4,24 @@ const fs = require('fs');
 const s = require("../set");
 const axios = require("axios");
 const conf = require(__dirname + "/../set");
-const { sleep } = require("../lib/functions");
+const { sleep } = require("../framework/index");
 
 // Helper to save config file
 function saveConfig() {
   fs.writeFileSync("./config.json", JSON.stringify(config, null, 2));
+}
+
+// Helper to get environment variable description from app.json
+function getDescriptionFromEnv(varName) {
+  try {
+    const filePath = "./app.json";
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const configFile = JSON.parse(fileContent);
+    return configFile.env?.[varName]?.description || "The environment variable description was not found.";
+  } catch (error) {
+    console.error("Error reading app.json:", error);
+    return "Error retrieving environment variable description.";
+  }
 }
 
 // PREFIX COMMAND
