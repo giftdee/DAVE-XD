@@ -34,7 +34,7 @@ const generateReactionCommand = (name, emoji = "🎭") => {
   zokou(
     {
       nomCom: name,
-      categorie: "Dave-Hentai",
+      categorie: "Dave-Conversation",
       reaction: emoji,
     },
     async (chatId, client, info) => {
