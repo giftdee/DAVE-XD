@@ -238,42 +238,63 @@ mediamsg = msgRepondu.videoMessage
 
 });
 
-zokou({nomCom:"take",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
-   const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
-  if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
-  if(!(arg[0])) {
-       pack = nomAuteurMessage
-  } else {
-    pack = arg.join(' ')
-  } ;
-  if (msgRepondu.imageMessage) {
-     mediamsg = msgRepondu.imageMessage
-  } else if(msgRepondu.videoMessage) {
-mediamsg = msgRepondu.videoMessage
-  } 
-  else if (msgRepondu.stickerMessage) {
-    mediamsg = msgRepondu.stickerMessage ;
-  } else {
-    repondre('Uh a media please'); return
-  } ;
+zokou(
+  {
+    nomCom: "take",
+    categorie: "Dave-Conversion",
+    reaction: "👨🏿‍💻",
+  },
+  async (dest, zk, commandeOptions) => {
+    const { ms, msgRepondu, arg, repondre, nomAuteurMessage } = commandeOptions;
 
-  var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
+    if (!msgRepondu) {
+      return repondre("Make sure to reply to a sticker, image, or video.");
+    }
 
-     let stickerMess = new Sticker(stick, {
-            pack: 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃,
+    // Pack name
+    const packName = arg.length > 0 ? arg.join(" ") : nomAuteurMessage;
 
-            type: StickerTypes.FULL,
-            categories: ["🤩", "🎉"],
-            id: "12345",
-            quality: 70,
-            background: "transparent",
-          });
-          const stickerBuffer2 = await stickerMess.toBuffer();
-          zk.sendMessage(origineMessage, { sticker: stickerBuffer2 }, { quoted: ms });
+    // Detect media
+    let mediamsg;
+    if (msgRepondu.imageMessage) {
+      mediamsg = msgRepondu.imageMessage;
+    } else if (msgRepondu.videoMessage) {
+      mediamsg = msgRepondu.videoMessage;
+    } else if (msgRepondu.stickerMessage) {
+      mediamsg = msgRepondu.stickerMessage;
+    } else {
+      return repondre("Uh... reply to a media please!");
+    }
 
-});
+    try {
+      // Download media
+      const stickPath = await zk.downloadAndSaveMediaMessage(mediamsg);
 
+      // Create sticker
+      let stickerMess = new Sticker(stickPath, {
+        pack: packName || "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
+        author: "Gifted_Dave",
+        type: StickerTypes.FULL,
+        categories: ["🤩", "🎉"],
+        id: "12345",
+        quality: 70,
+        background: "transparent",
+      });
+
+      const stickerBuffer = await stickerMess.toBuffer();
+
+      // Send sticker
+      await zk.sendMessage(dest, { sticker: stickerBuffer }, { quoted: ms });
+
+      // Remove temp file
+      fs.unlinkSync(stickPath);
+    } catch (err) {
+      console.error(err);
+      repondre(`Error: ${err.message}`);
+    }
+  }
+);
 
 
 zokou({ nomCom: "write", categorie: "Dave-Conversion", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
