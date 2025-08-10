@@ -6,7 +6,7 @@ zokou({
   nomCom: "topdf",
   alias: ["pdf"],
   desc: "Convert text to a PDF file — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Utility",
-  categorie: "utilities",
+  categorie: "Dave-Tools",
   reaction: "📄",
   nomFichier: __filename
 }, async (dest, zk, { m, from, repondre, q }) => {
