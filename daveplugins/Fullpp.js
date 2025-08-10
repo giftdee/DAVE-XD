@@ -6,87 +6,362 @@ const fs = require("fs");
 const s = require("../set");
 const jimp = require('jimp');
 const {S_WHATSAPP_NET, downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const axios = require("axios")
+let { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
+const {isUserBanned , addUserToBanList , removeUserFromBanList} = require("../bdd/banUser");
+const  {addGroupToBanList,isGroupBanned,removeGroupFromBanList} = require("../bdd/banGroup");
+const {isGroupOnlyAdmin,addGroupToOnlyAdminList,removeGroupFromOnlyAdminList} = require("../bdd/onlyAdmin");
+const {removeSudoNumber,addSudoNumber,issudo} = require("../bdd/sudo");
+//const conf = require("../set");
+//const fs = require('fs');
+const sleep =  (ms) =>{
+  return new Promise((resolve) =>{ setTimeout (resolve, ms)})
+
+  } ;
+
+zokou({ nomCom: "crew", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
+  const { ms, repondre, arg, auteurMessage, superUser, auteurMsgRepondu, msgRepondu } = commandeOptions;
+
+  if (!superUser) { repondre("only modds can use this command"); return };
+
+  if (!arg[0]) { repondre('Please enter the name of the group to create'); return };
+  if (!msgRepondu) { repondre('Please mention a member added '); return; }
+
+  const name = arg.join(" ")
+
+  const group = await zk.groupCreate(name, [auteurMessage, auteurMsgRepondu])
+  console.log("created group with id: " + group.gid)
+  zk.sendMessage(group.id, { text: `Bienvenue dans ${name}` })
+
+});
 
 
-async function resizeImage(imagePath) {
-  const image = await jimp.read(imagePath);
-  const resized = image.crop(0, 0, image.getWidth(), image.getHeight()).scaleToFit(720, 720);
-  return {
-    img: await resized.getBufferAsync(jimp.MIME_JPEG),
-    preview: await resized.normalize().getBufferAsync(jimp.MIME_JPEG),
-  };
-}
+zokou({ nomCom: "join", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
 
-async function getBuffer(message, type) {
-  const stream = await downloadContentFromMessage(message, type);
-  const chunks = [];
-  for await (const chunk of stream) chunks.push(chunk);
-  return Buffer.concat(chunks);
-}
+  const { arg, ms, repondre, verifGroupe, msgRepondu, verifAdmin, superUser, auteurMessage } = commandeOptions;
 
-zokou(
-  {
-    nomCom: 'pp',
-    categorie: 'Dave-Mods',
-    reaction: '📸'
-  },
-  async (dest, zk, commandeOptions) => {
-    const { ms, repondre, msgRepondu, superUser, auteurMessage, idBot } = commandeOptions;
-
-    // Identify the user and the bot's connected JID
-    const userJid = auteurMessage; // The user sending the command
-    const botJid = idBot; // The JID of the WhatsApp account hosting the bot
-    const ownerNumber = s.OWNER_NUMBER || 'default_owner_number'; // Fallback if not set
-    const isOwner = userJid === ownerNumber + '@s.whatsapp.net';
-    const isConnectedUser = userJid === botJid; // Check if the user is the one hosting the bot
-
-    // Restrict to the connected user (bot host) or owner
-    if (!isConnectedUser && !isOwner && !superUser) {
-      return repondre("𝐎𝐧𝐥𝐲 𝐭𝐡𝐞 𝐜𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝 𝐛𝐨𝐭 𝐮𝐬𝐞𝐫 𝐨𝐫 𝐭𝐡𝐞 𝐨𝐰𝐧𝐞𝐫 𝐜𝐚𝐧 𝐜𝐡𝐚𝐧𝐠𝐞 𝐭𝐡𝐞𝐢𝐫 𝐩𝐫𝐨𝐟𝐢𝐥𝐞 𝐩𝐢𝐜𝐭𝐮𝐫𝐞 𝐰𝐢𝐭𝐡 𝐭𝐡𝐢𝐬 𝐜𝐨� m𝐦𝐚𝐧𝐝!");
-    }
-
-    // Check if replying to a message and debug the structure
-    if (!msgRepondu) {
-      console.log("No replied message detected.");
-      return repondre("𝐏𝐥𝐞𝐚𝐬𝐞 𝐫𝐞𝐩𝐥𝐲 𝐭𝐨 𝐚𝐧 𝐢𝐦𝐚𝐠𝐞 𝐰𝐢𝐭𝐡 .𝐩𝐩 𝐭𝐨 𝐬𝐞𝐭 𝐢𝐭 𝐚𝐬 𝐲𝐨𝐮𝐫 𝐩𝐫𝐨𝐟𝐢𝐥𝐞 𝐩𝐢𝐜𝐭𝐮𝐫𝐞!");
-    }
-
-    console.log("DEBUG - msgRepondu structure:", JSON.stringify(msgRepondu, null, 2));
-
-    // Broader check for image content
-    const imageMessage = 
-      msgRepondu.message?.imageMessage || 
-      msgRepondu.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage ||
-      msgRepondu.imageMessage || null;
-
-    if (!imageMessage) {
-      console.log("No image found in replied message. Available keys:", Object.keys(msgRepondu.message || {}));
-      return repondre("𝐓𝐡𝐞 𝐫𝐞𝐩𝐥𝐢𝐞𝐝 𝐦𝐞𝐬𝐬𝐚𝐠𝐞 𝐢𝐬𝐧'𝐭 𝐚𝐧 𝐢𝐦𝐚𝐠𝐞! 𝐑𝐞𝐩𝐥𝐲 𝐭𝐨 𝐚𝐧 𝐢𝐦𝐚�(g𝐞 𝐰𝐢𝐭𝐡 .𝐩𝐩.");
-    }
-
-    try {
-      // Download the image
-      const mediaPath = await zk.downloadAndSaveMediaMessage(imageMessage);
-      console.log("Image downloaded to:", mediaPath);
-
-      // Update the connected user's profile picture
-      await zk.updateProfilePicture(userJid, { url: mediaPath });
-      console.log(`Profile picture updated for ${userJid}`);
-
-      // Clean up the downloaded file
-      fs.unlink(mediaPath, (err) => {
-        if (err) console.error("Cleanup failed:", err);
-        else console.log("Temporary file cleaned up.");
-      });
-
-      repondre("𝐘𝐨𝐮𝐫 𝐩𝐫𝐨𝐟𝐢𝐥𝐞 𝐩𝐢𝐜𝐭𝐮𝐫𝐞 𝐡𝐚𝐬 𝐛�{e𝐞𝐧 𝐮𝐩𝐝𝐚𝐭𝐞𝐝 𝐬𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 𝐛𝐲 𝐓𝐨𝐱𝐢𝐜-𝐌𝐃!");
-    } catch (error) {
-      console.error("Error updating profile picture:", error);
-      repondre(`𝐅𝐚𝐢𝐥�(e𝐝 𝐭𝐨 𝐮𝐩𝐝𝐚𝐭�(e 𝐲𝐨𝐮𝐫 𝐩𝐫𝐨𝐟𝐢𝐥�(e 𝐩𝐢�(c𝐭𝐮𝐫�(e: ${error.message}`);
-    }
+  if (!superUser) {
+    repondre("command reserved for the bot owner");
+    return;
   }
-);
+  let result = arg[0].split('https://chat.whatsapp.com/')[1] ;
+ await zk.groupAcceptInvite(result) ;
 
+      repondre(`Succes`).catch((e)=>{
+  repondre('Unknown error')
+})
+
+})
+
+
+zokou({
+    nomCom: 'bangroup',
+    categorie: 'Dave-Mods',
+}, async (dest, zk, commandeOptions) => {
+
+    const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser,verifGroupe } = commandeOptions;
+
+
+  if (!superUser) {repondre('This command is only allowed to the bot owner') ; return};
+  if(!verifGroupe) {repondre('order reservation for groups' ) ; return };
+    if (!arg[0]) {
+        // Function 'reply' must be defined to send a response.
+        repondre(`type ${prefix}bangroup add/del to ban/unban the group`);
+        return;
+    };
+    const groupalreadyBan = await isGroupBanned(dest)
+
+        switch (arg.join(' ')) {
+            case 'add':
+
+
+
+            if(groupalreadyBan) {repondre('This group is already banned') ; return}
+
+            addGroupToBanList(dest)
+
+                break;
+                case 'del':
+
+    if (groupalreadyBan) {
+      removeGroupFromBanList(dest)
+      repondre('This group is now free.');
+
+    } else {
+
+      repondre('This group is not banned.');
+    }
+    break;
+
+
+            default:
+                repondre('bad option');
+                break;
+        }
+
+});
+
+
+zokou({
+  nomCom: 'onlyadmin',
+  categorie: 'Dave-Group',
+}, async (dest, zk, commandeOptions) => {
+
+  const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser,verifGroupe , verifAdmin } = commandeOptions;
+
+
+if (superUser || verifAdmin) { 
+if(!verifGroupe) {repondre('order reservation for groups' ) ; return };
+  if (!arg[0]) {
+      // Function 'reply' must be defined to send a response.
+      repondre(`type ${prefix}onlyadmin add/del to ban/unban the group`);
+      return;
+  };
+  const groupalreadyBan = await isGroupOnlyAdmin(dest)
+
+      switch (arg.join(' ')) {
+          case 'add':
+
+
+
+          if(groupalreadyBan) {repondre('This group is already in onlyadmin mode') ; return}
+
+          addGroupToOnlyAdminList(dest)
+
+              break;
+              case 'del':
+
+  if (groupalreadyBan) {
+    removeGroupFromOnlyAdminList(dest)
+    repondre('This group is now free.');
+
+  } else {
+
+    repondre('This group is not in onlyadmin mode.');
+  }
+  break;
+
+
+          default:
+              repondre('bad option');
+              break;
+      }
+} else { repondre('You are not entitled to this order')}
+});
+
+zokou({
+  nomCom: 'sudo',
+  categorie: 'Dave-Mods',
+}, async (dest, zk, commandeOptions) => {
+
+  const { ms, arg, auteurMsgRepondu, msgRepondu , repondre,prefixe,superUser } = commandeOptions;
+
+
+if (!superUser) {repondre('This command is only allowed to the bot owner') ; return}
+  if (!arg[0]) {
+      // Function 'reply' must be defined to send a response.
+      repondre(`mention the person by typing ${prefix}sudo add/del`);
+      return;
+  };
+
+  if (msgRepondu) {
+      switch (arg.join(' ')) {
+          case 'add':
+
+
+ let youaresudo = await issudo(auteurMsgRepondu)
+         if(youaresudo) {repondre('This user is already sudo') ; return}
+
+         addSudoNumber(auteurMsgRepondu)
+         repondre('succes')
+              break;
+              case 'del':
+                let estsudo = await issudo(auteurMsgRepondu)
+  if (estsudo) {
+
+      removeSudoNumber(auteurMsgRepondu);
+      repondre('This user is now non-sudo.');
+  } else {
+    repondre('This user is not sudo.');
+  }
+  break;
+
+
+          default:
+              repondre('bad option');
+              break;
+      }
+  } else {
+      repondre('mention the victim')
+      return;
+  }
+});
+         
+
+zokou({ nomCom: "vv2", categorie: "Dave-Mods" }, async (dest, zk, commandeOptions) => {
+
+  const { repondre , msgRepondu , superUser, auteurMessage } = commandeOptions;
+
+    if ( superUser) { 
+
+      if(msgRepondu) {
+
+        console.log(msgRepondu) ;
+
+        let msg ;
+
+        if (msgRepondu.imageMessage) {
+
+
+
+       let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.imageMessage) ;
+       // console.log(msgRepondu) ;
+       msg = {
+
+         image : { url : media } ,
+         caption : msgRepondu.imageMessage.caption,
+
+       }
+
+
+        } else if (msgRepondu.videoMessage) {
+
+          let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.videoMessage) ;
+
+          msg = {
+
+            video : { url : media } ,
+            caption : msgRepondu.videoMessage.caption,
+
+          }
+
+        } else if (msgRepondu.audioMessage) {
+
+          let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.audioMessage) ;
+
+          msg = {
+
+            audio : { url : media } ,
+            mimetype:'audio/mp4',
+             }     
+
+        } else if (msgRepondu.stickerMessage) {
+
+
+          let media  = await zk.downloadAndSaveMediaMessage(msgRepondu.stickerMessage)
+
+          let stickerMess = new Sticker(media, {
+            pack: 'DAVE-MD-TAG',
+            type: StickerTypes.CROPPED,
+            categories: ["🤩", "🎉"],
+            id: "12345",
+            quality: 70,
+            background: "transparent",
+          });
+          const stickerBuffer2 = await stickerMess.toBuffer();
+
+          msg = { sticker: stickerBuffer2}
+
+
+        }  else {
+            msg = {
+               text : msgRepondu.conversation,
+            }
+        }
+
+      zk.sendMessage(auteurMessage,msg)
+
+      } else { repondre('Mention the message that you want to save') }
+
+  } else {
+    repondre('only mods can use this command')
+  }
+
+
+  })
+;
+zokou({
+  nomCom : 'mention',
+  categorie : 'Dave-Mods',
+} , async (dest,zk,commandeOptions) => {
+
+ const {ms , repondre ,superUser , arg} = commandeOptions ;
+
+ if (!superUser) {repondre('you do not have the rights for this command') ; return}
+
+ const mbdd = require('../bdd/mention') ;
+
+ let alldata = await  mbdd.recupererToutesLesValeurs() ;
+  data = alldata[0] ;
+
+
+ if(!arg || arg.length < 1) { 
+
+  let etat ;
+
+  if (alldata.length === 0 ) { repondre(`To activate or modify the mention; follow this syntax: mention link type message
+  The different types are audio, video, image, and sticker.
+  Example: mention https://static.animecorner.me/2023/08/op2.jpg image Hi, my name is Beltah`) ; return}
+
+      if(data.status == 'non') {
+          etat = 'Desactived'
+      } else {
+        etat = 'Actived' ;
+      }
+
+      mtype = data.type || 'no data' ;
+
+      url = data.url || 'no data' ;
+
+
+      let msg = `Status: ${etat}
+Type: ${mtype}
+Link: ${url}
+
+*Instructions:*
+
+To activate or modify the mention, follow this syntax: mention link type message
+The different types are audio, video, image, and sticker.
+Example: mention https://telegra.ph/file/52e3bb0ba3868d64df3f0.jpg image Hi, my name is Beltah
+
+To stop the mention, use mention stop`;
+
+    repondre(msg) ;
+
+    return ;
+          }
+
+ if(arg.length >= 2) {
+
+      if(arg[0].startsWith('http') && (arg[1] == 'image' || arg[1] == 'audio' || arg[1] == 'video' || arg[1] == 'sticker')) {
+
+            let args = [] ;
+              for (i = 2 ; i < arg.length ; i++) {
+                  args.push(arg[i]) ;
+              }
+          let message = args.join(' ') || '' ;
+
+              await mbdd.addOrUpdateDataInMention(arg[0],arg[1],message);
+              await mbdd.modifierStatusId1('oui')
+              .then(() =>{
+                  repondre('mention updated') ;
+              })
+        } else {
+          repondre(`*Instructions:*
+          To activate or modify the mention, follow this syntax: mention link type message. The different types are audio, video, image, and sticker.`)
+     } 
+
+    } else if ( arg.length === 1 && arg[0] == 'stop') {
+
+        await mbdd.modifierStatusId1('non')
+        .then(() =>{
+              repondre(' mention stopped ') ;
+        })
+    }
+    else {
+        repondre(`Please make sure to follow the instructions`) ;
+    }
+});
 
 zokou({
   nomCom: "privacy",
