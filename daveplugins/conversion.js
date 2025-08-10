@@ -111,7 +111,7 @@ zokou({ nomCom: "url", categorie: "Dave-Tools", reaction: "👨🏿‍💻" }, a
 });
 
 
-zokou({nomCom:"sticker",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"sticker",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
 
 let {ms,mtype,arg,repondre,nomAuteurMessage}=commandeOptions
   var txt=JSON.stringify(ms.message)
@@ -198,7 +198,7 @@ try{
 });
 
 
-zokou({nomCom:"scrop",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"scrop",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
@@ -234,7 +234,7 @@ mediamsg = msgRepondu.videoMessage
 
 });
 
-zokou({nomCom:"take",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"take",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
@@ -274,7 +274,7 @@ mediamsg = msgRepondu.videoMessage
 zokou(
   {
     nomCom: "take",
-    categorie: "Dave-Conversion",
+    categorie: "Dave-Sticker",
     reaction: "👨🏿‍💻",
   },
   async (dest, zk, commandeOptions) => {
@@ -329,7 +329,7 @@ zokou(
 );
 
 
-zokou({ nomCom: "write", categorie: "Dave-Conversion", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
+zokou({ nomCom: "write", categorie: "Dave-Sticker", reaction: "👨🏿‍💻" }, async (origineMessage, zk, commandeOptions) => {
   const { ms, msgRepondu, arg, repondre, nomAuteurMessage } = commandeOptions;
 
   if (!msgRepondu) {
@@ -403,7 +403,7 @@ zokou({ nomCom: "write", categorie: "Dave-Conversion", reaction: "👨🏿‍�
 
 
 
-zokou({nomCom:"photo",categorie: "Dave-", reaction: "👨🏿‍💻"},async(dest,zk,commandeOptions)=>{
+zokou({nomCom:"photo",categorie: "Dave-Sticker", reaction: "👨🏿‍💻"},async(dest,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
