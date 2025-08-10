@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const { generateProfilePicture } = require("../framework/dl/Function");
 const fs = require("fs");
+const s = require("../set");
 const jimp = require('jimp');
 const {S_WHATSAPP_NET, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
