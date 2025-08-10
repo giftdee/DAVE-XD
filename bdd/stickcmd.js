@@ -4,7 +4,7 @@ const { addstickcmd, deleteCmd, getCmdById, inStickCmd, getAllStickCmds } = requ
 zokou(
     {
         nomCom: 'setcmd',
-        categorie: 'stickcmd'
+        categorie: 'Dave-System'
     }, 
     async (dest, zk, commandeOptions) => { 
         const { ms, arg, repondre, superUser, msgRepondu } = commandeOptions;
@@ -31,7 +31,7 @@ zokou(
 zokou(
     {
         nomCom: 'delcmd',
-        categorie: 'stickcmd'
+        categorie: 'Dave-System'
     },
     async (dest, zk, commandeOptions) => {
         const { ms, arg, repondre, superUser } = commandeOptions;
@@ -60,7 +60,7 @@ zokou(
 zokou(
     {
         nomCom: 'allcmd',
-        categorie: 'stickcmd'
+        categorie: 'Dave-System'
     },
     async (dest, zk, commandeOptions) => {
         const { repondre, superUser } = commandeOptions;
