@@ -6,14 +6,14 @@ zokou({
   categorie: "Dave-Mods",
   reaction: "🔄",
   nomFichier: __filename
-}, async (dest, zk, { isGroup, isBotAdmins, isAdmins, isOwner, repondre }) => {
+}, async (dest, zk, { isBotAdmins, isAdmins, isOwner, repondre }) => {
   try {
-    if (!isGroup) return repondre("❌ This command can only be used in groups.");
+    if (!dest.endsWith("@g.us")) return repondre("❌ This command can only be used in groups.");
     if (!isBotAdmins) return repondre("❌ I need admin privileges to modify group settings.");
     if (!isAdmins && !isOwner) return repondre("❌ Only group admins or the bot owner can use this command.");
 
     const groupName = "🔥 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐂𝐋𝐀𝐍 🔥";
-    const imageUrl = "https://i.imgur.com/pvIedwX.jpeg"; // Replace if you want a different image
+    const imageUrl = "https://i.imgur.com/pvIedwX.jpeg";
     const groupDescription = `
 🌟 𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝗖𝗹𝗮𝗻! 🌟
 
