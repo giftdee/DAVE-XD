@@ -75,15 +75,6 @@ zokou({
 });
 
 
-    await zk.sendMessage(from, { text: "✅ Profile picture updated successfully!" }, { quoted: m });
-
-    await fs.unlink(mediaPath);
-  } catch (error) {
-    console.error("[FULLPP ERROR]", error);
-    await zk.sendMessage(from, { text: "❌ Failed to update profile picture." }, { quoted: m });
-  }
-});
-
 zokou({
   nomCom: "privacy",
   desc: "Displays your current privacy settings — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
