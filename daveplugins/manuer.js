@@ -10,9 +10,9 @@ const readMore = String.fromCharCode(8206).repeat(4001);
 
 // ===== audio URLs =====
 const AUDIO_URLS = [
-  'https://files.catbox.moe/hpwsi2.mp3',
+  'https://files.catbox.moe/j1l6zs.mp3',
   'https://files.catbox.moe/xci982.mp3',
-  'https://files.catbox.moe/utbujd.mp3',
+  'https://files.catbox.moe/pfk29u.mp3',
   'https://files.catbox.moe/w2j17k.m4a',
   'https://files.catbox.moe/851skv.m4a',
   'https://files.catbox.moe/qnhtbu.m4a',
@@ -22,9 +22,11 @@ const AUDIO_URLS = [
   'https://files.catbox.moe/26oeeh.mp3',
   'https://files.catbox.moe/a1sh4u.mp3',
   'https://files.catbox.moe/vuuvwn.m4a',
-  'https://files.catbox.moe/wx8q6h.mp3',
+  'https://files.catbox.moe/usthsf.mp3',
   'https://files.catbox.moe/uj8fps.m4a',
-  'https://files.catbox.moe/dc88bx.m4a'
+  'https://files.catbox.moe/dc88bx.m4a',
+  'https://files.catbox.moe/514d3g.mp3',
+  'https://files.catbox.moe/ea0enw.mp3'
 ];
 
 // ===== persistent shuffle state for URLs (no-repeat until cycle completes) =====
@@ -138,32 +140,30 @@ zokou({
     const img = 'https://files.catbox.moe/lidsgj.jpg';
 
     const infoMsg = `
-╭───────────⊷
-*┋* *ʙᴏᴛ ɴᴀᴍᴇ : 💠𝐃𝐀𝐕𝐄-𝐗𝐌𝐃💠*
-*┋* *ᴘʀᴇғɪx :* [ ${s.PREFIXE} ]
-*┋* *ᴍᴏᴅᴇ :* ${mode}
-*┋* *ᴅᴀᴛᴇ  :* ${date}
-*┋* *ᴘʟᴀᴛғᴏʀᴍ :* ${os.platform()}
-*┋* *ᴏᴡɴᴇʀ : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*
-*┋* *ᴘʟᴜɢɪɴs :* ${cm.length || 0}
-╰───────────⊷\n`;
+╔════════════════════════╗
+       𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
+╚════════════════════════╝
+╔════════ INFO ═════════╗
+PREFIX   ➜ [ ${s.PREFIXE} ]
+MODE     ➜ ${mode}
+DATE     ➜ ${date}
+PLATFORM ➜ ${os.platform()}
+OWNER    ➜ Gifted-dave
+PLUGINS  ➜ ${cm.length || 0}
+╚════════════════════════╝\n`;
 
-    // build menu message
-    let menuMsg = ` *${greeting}*`;
+let menuMsg = `${greeting}`;
 
-    for (const cat in coms) {
-        menuMsg += `
-*「 ${toFancyUppercaseFont(cat)} 」*
-╭───┈┈┈┈────⊷ `;
-        for (const cmd of coms[cat]) {
-            menuMsg += `          
-*┋* ${toFancyLowercaseFont(cmd)}`;
-        }
-        menuMsg += `
-╰───┈┈┈┈────⊷`;
+for (const cat in coms) {
+    menuMsg += `
+╔═【 ${toFancyUppercaseFont(cat)} 】═╗`;
+    for (const cmd of coms[cat]) {
+        menuMsg += `\n┃  ${toFancyLowercaseFont(cmd)}`;
     }
+    menuMsg += `\n╚════════════════════╝`;
+}
 
-    menuMsg += `\n> @𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 - 2025`;
+menuMsg += `\n\n> @𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 - 2025`;
 
     try {
         // prepare context info for forwarded newsletter + preview
