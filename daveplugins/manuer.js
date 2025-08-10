@@ -140,27 +140,26 @@ zokou({
     const img = 'https://files.catbox.moe/lidsgj.jpg';
 
     const infoMsg = `
-╔════════════════════════╗
-       𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
-╚════════════════════════╝
-╔════════ INFO ═════════╗
-PREFIX   ➜ [ ${s.PREFIXE} ]
-MODE     ➜ ${mode}
-DATE     ➜ ${date}
-PLATFORM ➜ ${os.platform()}
-OWNER    ➜ Gifted-dave
-PLUGINS  ➜ ${cm.length || 0}
-╚════════════════════════╝\n`;
+┌────────────────────────────┐
+│         𝐃𝐀𝐕𝐄-𝐗𝐌𝐃          │
+├────────── INFO ────────────┤
+│ PREFIX   ➜ [ ${s.PREFIXE} ] │
+│ MODE     ➜ ${mode}          │
+│ DATE     ➜ ${date}          │
+│ PLATFORM ➜ ${os.platform()} │
+│ OWNER    ➜ Gifted-dave      │
+│ PLUGINS  ➜ ${cm.length || 0}│
+└────────────────────────────┘\n`;
 
 let menuMsg = `${greeting}`;
 
 for (const cat in coms) {
     menuMsg += `
-╔═【 ${toFancyUppercaseFont(cat)} 】═╗`;
+┌─[ ${toFancyUppercaseFont(cat)} ]─┐`;
     for (const cmd of coms[cat]) {
-        menuMsg += `\n┃  ${toFancyLowercaseFont(cmd)}`;
+        menuMsg += `\n│  ${toFancyLowercaseFont(cmd)}`;
     }
-    menuMsg += `\n╚════════════════════╝`;
+    menuMsg += `\n└────────────────────────────┘`;
 }
 
 menuMsg += `\n\n> @𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 - 2025`;
