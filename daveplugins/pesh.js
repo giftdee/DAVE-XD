@@ -9,7 +9,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY HAPPY WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE HAPPY WE GO...* 🤦" });
     const animations =  ['😃', '😄', '😁', '😊', '😎', '🥳', '😸', '😹', '🌞', '🌈', '😃', '😄', '😁', '😊', '😎', '🥳', '😸', '😹', '🌞', '🌈', '😃', '😄', '😁', '😊'];
     for (const animation of animations) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -38,7 +38,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY HEART WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE HEART WE GO...* 🤦" });
     const animations =  ['💖', '💗', '💕', '❤️', '💛', '💚', '🫀', '💙', '💜', '🖤', '♥️', '🤍', '🤎', '💗', '💞', '💓', '💘', '💝', '♥️', '💟', '🫀', '❤️'];
     for (const animation of animations) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -66,7 +66,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY ANGRY HERE WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE ANGRY HERE WE GO...* 🤦" });
     const animations =   ['😡', '😠', '🤬', '😤', '😾', '😡', '😠', '🤬', '😤', '😾'];
     for (const animation of animations) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -95,7 +95,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY SAD WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE SAD WE GO...* 🤦" });
     const animations =  ['🥺', '😟', '😕', '😖', '😫', '🙁', '😩', '😥', '😓', '😪', '😢', '😔', '😞', '😭', '💔', '😭', '😿'];
     for (const animation of animations) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -124,7 +124,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY SHY WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE SHY WE GO...* 🤦" });
     const animations =  ['😳', '😊', '😶', '🙈', '🙊', '😳', '😊', '😶', '🙈', '🙊'];
     for (const animation of animations) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -153,7 +153,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY MOON WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE MOON WE GO...* 🤦" });
     const animations =   ['🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '🌕', "🌚🌝"];
     for (const animation of animations) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -212,7 +212,7 @@ zokou({
   const { repondre, ms } = commandeOptions;
 
   try {
-    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *LUCKY HAND WE GO...* 🤦" });
+    const sentMessage = await zk.sendMessage(dest, { text: "🫣 *DAVE HAND WE GO...* 🤦" });
     const animations = [
       '8✊️===D', '8=✊️==D', '8==✊️=D', '8===✊️D', '8==✊️=D', '8=✊️==D', 
       '8✊️===D', '8=✊️==D', '8==✊️=D', '8===✊️D', '8==✊️=D', '8=✊️==D', 
