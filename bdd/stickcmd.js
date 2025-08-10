@@ -1,82 +1,116 @@
-const { zokou } = require('../framework/zokou');
-const { addstickcmd, deleteCmd, getCmdById, inStickCmd, getAllStickCmds } = require('../bdd/stickcmd');
+const fs = require('fs');
+const path = require('path');
 
-zokou(
-    {
-        nomCom: 'setcmd',
-        categorie: 'Dave-System'
-    }, 
-    async (dest, zk, commandeOptions) => { 
-        const { ms, arg, repondre, superUser, msgRepondu } = commandeOptions;
+// Path to the JSON file storing stickcmd data
+const filePath = path.join(__dirname, '../xmd/stickcmd.json');
 
-        if (!superUser) { 
-            repondre('You can\'t use this command'); 
-            return; 
-        }
+// Load data from the JSON file
+function loadStickcmdData() {
+  try {
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return {}; // Return an empty object if the file doesn't exist or there's an error
+  }
+}
 
-        if (msgRepondu && msgRepondu.stickerMessage) {  
-            if (!arg || !arg[0]) { 
-                repondre('Please provide the name of the command'); 
-                return; 
-            }
-          
-            await addstickcmd(arg[0].toLowerCase(), msgRepondu.stickerMessage.url);
-            repondre('Sticker command saved successfully');
-        } else {
-            repondre('Please mention a sticker');
-        }
+// Save data to the JSON file
+function saveStickcmdData(data) {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
+// Create the default file if it doesn't exist
+if (!fs.existsSync(filePath)) {
+  saveStickcmdData({});
+}
+
+// Function to add a stickcmd
+async function addstickcmd(cmd, id) {
+  try {
+    const data = loadStickcmdData();
+
+    // Add the command if it doesn't exist
+    if (!data[cmd]) {
+      data[cmd] = { id };
+      saveStickcmdData(data);
+      console.log(`Stickcmd ${cmd} has been added.`);
+    } else {
+      console.log(`Stickcmd ${cmd} already exists.`);
     }
-); 
+  } catch (error) {
+    console.error('Error while adding the stickcmd:', error);
+  }
+}
 
-zokou(
-    {
-        nomCom: 'delcmd',
-        categorie: 'Dave-System'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { ms, arg, repondre, superUser } = commandeOptions;
+// Function to check if a stickcmd exists by id
+async function inStickCmd(id) {
+  try {
+    const data = loadStickcmdData();
 
-        if (!superUser) {
-            repondre('Only mods can use this command');
-            return;
-        }
-
-        if (!arg || !arg[0]) {
-            repondre('Please provide the name of the command you want to delete');
-            return;
-        }
-
-        const cmdToDelete = arg[0];
-
-        try {
-            await deleteCmd(cmdToDelete.toLowerCase());
-            repondre(`The command ${cmdToDelete} has been deleted successfully.`);
-        } catch {
-            repondre(`The command ${cmdToDelete} doesn\'t exist`);
-        }
+    // Check if any command with the given id exists
+    for (const cmd in data) {
+      if (data[cmd].id === id) {
+        return true;
+      }
     }
-);
+    return false;
+  } catch (error) {
+    console.error('Error while checking if stickcmd exists:', error);
+    return false;
+  }
+}
 
-zokou(
-    {
-        nomCom: 'allcmd',
-        categorie: 'Dave-System'
-    },
-    async (dest, zk, commandeOptions) => {
-        const { repondre, superUser } = commandeOptions;
+// Function to delete a stickcmd
+async function deleteCmd(cmd) {
+  try {
+    const data = loadStickcmdData();
 
-        if (!superUser) {
-            repondre('Only mods can use this command');
-            return;
-        }
-
-        const allCmds = await getAllStickCmds();
-
-        if (allCmds.length > 0) {
-            const cmdList = allCmds.map(cmd => cmd.cmd).join(', ');
-            repondre(`*List of all stick commands:*\n${cmdList}`);
-        } else {
-            repondre('No stick commands saved');
-        }
+    // Check if the stickcmd exists
+    if (data[cmd]) {
+      delete data[cmd]; // Remove the stickcmd
+      saveStickcmdData(data);
+      console.log(`Stickcmd ${cmd} has been removed.`);
+    } else {
+      console.log(`Stickcmd ${cmd} does not exist.`);
     }
-);
+  } catch (error) {
+    console.error('Error while deleting the stickcmd:', error);
+  }
+}
+
+// Function to get the cmd by id
+async function getCmdById(id) {
+  try {
+    const data = loadStickcmdData();
+
+    // Search for the cmd by id
+    for (const cmd in data) {
+      if (data[cmd].id === id) {
+        return cmd;
+      }
+    }
+    return null; // Return null if not found
+  } catch (error) {
+    console.error('Error while getting the cmd by id:', error);
+    return null;
+  }
+}
+
+// Function to get all stickcmds
+async function getAllStickCmds() {
+  try {
+    const data = loadStickcmdData();
+    return Object.keys(data); // Return all command keys
+  } catch (error) {
+    console.error('Error while retrieving all stickcmds:', error);
+    return [];
+  }
+}
+
+module.exports = {
+  addstickcmd,
+  deleteCmd,
+  getCmdById,
+  inStickCmd,
+  getAllStickCmds,
+};
