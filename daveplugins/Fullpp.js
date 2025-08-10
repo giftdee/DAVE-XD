@@ -1,6 +1,8 @@
 const { zokou } = require('../framework/zokou');
 const fs = require('fs-extra');
 const path = require('path');
+const { generateProfilePicture } = require("../framework/dl/Function");
+const fs = require("fs");
 const jimp = require('jimp');
 const {S_WHATSAPP_NET, downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
@@ -23,41 +25,55 @@ async function getBuffer(message, type) {
 
 zokou({
   nomCom: "fullpp",
-  alias: ["mypp", "dp"],
-  desc: "Set your profile picture without compression (owner only) — 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
-  categorie: 'Dave-Whatsapp',
-  reaction: "📸",
-  ownerOnly: true,
-  nomFichier: __filename
-}, async (dest, zk, { m, from, repondre }) => {
-  try {
-    const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    const quotedImage = quoted?.imageMessage;
+  aliases: ["updatepp", "ppfull"],
+  reaction: '🍂',
+  categorie: "new"
+}, async (dest, zk, commandeOptions) => {
+  const { repondre, msgRepondu, auteurMessage } = commandeOptions;
 
-    if (!quotedImage) {
-      return repondre("📸 Please *reply to an image* to set it as your profile picture.");
+  if (msgRepondu) {
+    repondre('quote an image');
+
+    let media;
+    if (msgRepondu.imageMessage) {
+      media = msgRepondu.imageMessage;
+    } else {
+      repondre('This is not an image...');
+      return;
     }
 
-    const buffer = await getBuffer(quotedImage, "image");
-    const mediaPath = path.join(__dirname, "..", "temp", `${Date.now()}.jpg`);
-    await fs.ensureDir(path.dirname(mediaPath));
-    await fs.writeFile(mediaPath, buffer);
+    try {
+      var medis = await zk.downloadAndSaveMediaMessage(media);
 
-    const resized = await resizeImage(mediaPath);
+      var { img } = await generateProfilePicture(medis);
 
-    await zk.query({
-      tag: "iq",
-      attrs: {
-        to: 's.whatsapp.net',
-        type: "set",
-        xmlns: "w:profile:picture",
-      },
-      content: [{
-        tag: "picture",
-        attrs: { type: "image" },
-        content: resized.img,
-      }],
-    });
+      await zk.query({
+        tag: 'iq',
+        attrs: {
+          target: undefined,
+          to: S_WHATSAPP_NET,
+          type: 'set',
+          xmlns: 'w:profile:picture'
+        },
+        content: [
+          {
+            tag: 'picture',
+            attrs: { type: 'image' },
+            content: img
+          }
+        ]
+      });
+
+      fs.unlinkSync(medis);
+      repondre("Bot Profile Picture Updated");
+    } catch (error) {
+      repondre("An error occurred while updating bot profile photo: " + error);
+    }
+  } else {
+    repondre('No image was quoted.');
+  }
+});
+
 
     await zk.sendMessage(from, { text: "✅ Profile picture updated successfully!" }, { quoted: m });
 
