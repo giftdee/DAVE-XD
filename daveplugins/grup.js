@@ -351,7 +351,7 @@ zokou({ nomCom: "remove", categorie: 'Dave-Group', reaction: "👥" }, async (de
 })
 
 // COMMAND TO DELETE 
-zokou({ nomCom: "del", categorie: 'Dave-Group',reaction:"👥" }, async (dest, zk, commandeOptions) => {
+zokou({ nomCom: "del", categorie: 'Dave-Group',reaction:"🧹" }, async (dest, zk, commandeOptions) => {
 
   const { ms, repondre, verifGroupe,auteurMsgRepondu,idBot, msgRepondu, verifAdmin, superUser} = commandeOptions;
 
@@ -372,14 +372,11 @@ zokou({ nomCom: "del", categorie: 'Dave-Group',reaction:"👥" }, async (dest, z
          await zk.sendMessage(dest,{delete:key});return;
        } 
   }
-
           if(verifGroupe)
           {
                if(verifAdmin || superUser)
                {
-
                          try{
-
 
             const key=   {
                remoteJid : dest,
@@ -390,15 +387,11 @@ zokou({ nomCom: "del", categorie: 'Dave-Group',reaction:"👥" }, async (dest, z
             }        
 
          await zk.sendMessage(dest,{delete:key});return;
-
              }catch(e){repondre( "I need admin rights.")}
-
-
                }else{repondre("Sorry, you are not an administrator of the group.")}
           }
-
 });
-
+                                    
 // COMMAND TO GRUP INFO
 zokou({ nomCom: "info", categorie: 'Dave-Group' }, async (dest, zk, commandeOptions) => {
   const { ms, repondre, verifGroupe } = commandeOptions;
