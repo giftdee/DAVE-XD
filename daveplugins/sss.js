@@ -989,7 +989,7 @@ zokou({
   const { respond: sendMessage, args, messageInstance } = context;
   try {
     if (!args || args.length === 0) {
-      return sendMessage("Please describe your image and LUCKY-MD will generate it.");
+      return sendMessage("Please describe your image and 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 will generate it.");
     }
     const prompt = args.join(" ");
     const generatedImageUrl = "https://www.samirxpikachu.run.place/flux?prompt=" + prompt;
