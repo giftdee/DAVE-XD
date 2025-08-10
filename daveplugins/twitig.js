@@ -4,7 +4,7 @@ const { default: axios } = require('axios');
 const BOT_NAME = "DAVE-XMD";
 
 // === Twitter Download ===
-zokou({ nomCom: "twitter", categorie: "Download", reaction: "🐦" }, async (dest, zk, { repondre, arg, ms }) => {
+zokou({ nomCom: "twitter", categorie: "Dave-Download", reaction: "🐦" }, async (dest, zk, { repondre, arg, ms }) => {
   // Get link from args or quoted text
   let link = arg.join(" ").trim();
   if (!link && ms.quoted?.text) {
@@ -38,7 +38,7 @@ zokou({ nomCom: "twitter", categorie: "Download", reaction: "🐦" }, async (des
 });
 
 // === Instagram Download ===
-zokou({ nomCom: "ig", categorie: "Download", reaction: "📸" }, async (dest, zk, { repondre, arg, ms }) => {
+zokou({ nomCom: "ig", categorie: "Dave-Download", reaction: "📸" }, async (dest, zk, { repondre, arg, ms }) => {
   // Get link from args or quoted text
   let link = arg.join(" ").trim();
   if (!link && ms.quoted?.text) {
