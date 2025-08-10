@@ -98,6 +98,6 @@
     "youtubedl-core": "^4.11.7",
     "url-regex-safe": "^3.0.0",
     "url": "^0.11.4",
-    "unlimited-ai": "^6.0.0",
+    "unlimited-ai": "^6.0.0"
     }
 }
