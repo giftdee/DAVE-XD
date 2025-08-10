@@ -2,71 +2,46 @@ const { zokou } = require("../framework/zokou");
 const {getAllSudoNumbers,isSudoTableNotEmpty} = require("../bdd/sudo")
 const conf = require("../set");
 
-zokou({ nomCom: "owner", categorie: "Dave-General", reaction: "❣️" }, async (dest, zk, commandeOptions) => {
-    const { ms , mybotpic, repondre } = commandeOptions;
-    
-    const thsudo = await isSudoTableNotEmpty()
+zokou({ nomCom: "owner", categorie: "Dave-General", reaction: "💦" }, async (dest, zk, commandeOptions) => {
+    const { ms, mybotpic } = commandeOptions;
+
+    const thsudo = await isSudoTableNotEmpty();
 
     if (thsudo) {
-        let msg = `╔════◇ *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐖𝐍𝐄𝐑𝐒* ◇════╗\n\n`
-        
-        // Primary owner (must be 254111687009)
-        msg += `*👑 𝐌𝐚𝐢𝐧 𝐎𝐰𝐧𝐞𝐫:*\n• @254111687009\n\n`
-        
-        // Secondary owner (must be 254104260236)
-        msg += `*🌟 𝐒𝐞𝐜𝐨𝐧𝐝𝐚𝐫𝐲 𝐎𝐰𝐧𝐞𝐫:*\n• @254104260236\n\n`
-        
-        // Other sudo users
-        let sudos = await getAllSudoNumbers()
-        if (sudos.length > 0) {
-            msg += `───── *𝐎𝐭𝐡𝐞𝐫 𝐒𝐮𝐝𝐨𝐬* ─────\n`
-            for (const sudo of sudos) {
-                if (sudo) {
-                    const sudonumero = sudo.replace(/[^0-9]/g, '');
-                    // Skip if it's one of our required numbers
-                    if (!['254111687009', '254104260236'].includes(sudonumero)) {
-                        msg += `• @${sudonumero}\n`;
-                    }
-                }
+        let msg = `*My Super-User*\n\n*Owner Number*\n- 🌟 @${conf.NUMERO_OWNER}\n\n------ *Other Sudos* -----\n`;
+
+        let sudos = await getAllSudoNumbers();
+
+        for (const sudo of sudos) {
+            if (sudo) {
+                let sudonumero = sudo.replace(/[^0-9]/g, '');
+                msg += `- 💼 @${sudonumero}\n`;
             }
         }
-        msg += `╚════◇ *𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃* ◇════╝`
 
-        const mentionedJid = [
-            '254111687009@s.whatsapp.net',
-            '254104260236@s.whatsapp.net',
-            ...sudos.map(num => num.replace(/[^0-9]/g, '') + '@s.whatsapp.net')
-        ].filter(num => !['254111687009', '254104260236'].includes(num.replace(/@s\.whatsapp\.net/, '')))
+        const ownerjid = conf.NUMERO_OWNER.replace(/[^0-9]/g, '') + "@s.whatsapp.net";
+        const mentionedJid = sudos.map(sudo => sudo.replace(/[^0-9]/g, '') + "@s.whatsapp.net").concat([ownerjid]);
 
-        zk.sendMessage(
-            dest,
-            {
-                image: { url: mybotpic() },
-                caption: msg,
-                mentions: mentionedJid
-            },
-            { quoted: ms }
-        )
+        zk.sendMessage(dest, {
+            image: { url: mybotpic() },
+            caption: msg,
+            mentions: mentionedJid
+        });
     } else {
-        // VCARD for primary owner
-        const vcard = 
+        const vcard =
             'BEGIN:VCARD\n' +
             'VERSION:3.0\n' +
             'FN:' + conf.OWNER_NAME + '\n' +
-            'ORG:𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐦𝐞𝐧𝐭;\n' +
-            'TEL;type=CELL;type=VOICE;waid=254111687009:+254111687009\n' +
+            'ORG:undefined;\n' +
+            'TEL;type=CELL;type=VOICE;waid=' + conf.NUMERO_OWNER + ':+' + conf.NUMERO_OWNER + '\n' +
             'END:VCARD';
 
-        zk.sendMessage(
-            dest,
-            {
-                contacts: {
-                    displayName: "𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐎𝐰𝐧𝐞𝐫",
-                    contacts: [{ vcard }],
-                },
+        zk.sendMessage(dest, {
+            contacts: {
+                displayName: conf.OWNER_NAME,
+                contacts: [{ vcard }],
             },
-            { quoted: ms }
-        );
+        }, { quoted: ms });
     }
 });
 
