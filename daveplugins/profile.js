@@ -1,57 +1,43 @@
 const {zokou} = require("../framework/zokou");
 const conf = require("../set")
+const {jidDecode}=require("@whiskeysockets/baileys")
 
-zokou({
-  nomCom: "profile",
-  aliases: ["pp", "who"],
-  desc: "to generate profile picture",
-  categorie: "Dave-Fun"
-}, async (dest, zk, commandeOptions) => {
-  const { ms, arg, repondre, auteurMessage, nomAuteurMessage, msgRepondu, auteurMsgRepondu } = commandeOptions;
 
-  let jid = null;
-  let nom = null;
+zokou( {
+  nomCom : "profile",
+ categorie : "Dave-Fun",
+   },
+      async(dest,zk, commandeOptions)=> {
 
-  try {
-    if (!msgRepondu) {
-      jid = auteurMessage; 
-      nom = nomAuteurMessage; 
-    } else {
-      jid = auteurMsgRepondu; 
-      nom = "@" + auteurMsgRepondu.split("@")[0];
-    }
+        const {ms , arg, repondre,auteurMessage,nomAuteurMessage, msgRepondu , auteurMsgRepondu} = commandeOptions ;
+        let jid = null 
+          let nom = null ;
+        if (!msgRepondu) {
+            jid = auteurMessage;
+           nom = nomAuteurMessage;
 
-    // Fetch profile picture URL (High resolution)
-    let ppUrl;
-    try {
-      ppUrl = await zk.profilePictureUrl(jid, 'image'); // Fetch high-res picture
-    } catch (error) {
-      console.error('Error retrieving profile picture:', error);
-      ppUrl = conf.URL; // Fallback URL in case of an error
-    }
+           try { ppUrl = await zk.profilePictureUrl(jid , 'image') ; } catch { ppUrl = conf.IMAGE_MENU};
+          const status = await zk.fetchStatus(jid) ;
+           mess = {
+            image : { url : ppUrl },
+            caption : '*Nom :* '+ nom + '\n*Status :*\n' + status.status
+        }
 
-    // Fetch user status (Baileys may not have direct method for this, you may need to handle it based on available methods)
-    let status;
-    try {
-      // Assuming fetchStatus is not part of Baileys, you may need an alternate approach
-      status = await zk.fetchStatus(jid); // Use the actual method from your instance
-    } catch (error) {
-      console.error('Error retrieving user status:', error);
-      status = { status: "About not accessible due to user privacy" }; 
-    }
+        } else {
+            jid = auteurMsgRepondu;
+            nom ="@"+auteurMsgRepondu.split("@")[0] ;
 
-    const mess = {
-      image: { url: ppUrl },
-      caption: `Name: ${nom}\nAbout:\n${status.status}`, 
-      mentions: msgRepondu ? [auteurMsgRepondu] : []
-    };
-
-    await zk.sendMessage(dest, mess, { quoted: ms }); 
-
-  } catch (error) {
-    console.error('Unexpected error in profile command:', error); 
-  }
-});
+            try { ppUrl = await zk.profilePictureUrl(jid , 'image') ; } catch { ppUrl = conf.IMAGE_MENU};
+          const status = await zk.fetchStatus(jid) ;
+             mess = {
+              image : { url : ppUrl },
+              caption : '*Name :* '+ nom + '\n*Status :*\n' + status.status,
+               mentions:[auteurMsgRepondu]
+          }
+        } ;
+            zk.sendMessage(dest,mess,{quoted : ms})
+      });
+  
 zokou({
   nomCom: "profile2",
   aliases: ["pp2", "whois2"],
