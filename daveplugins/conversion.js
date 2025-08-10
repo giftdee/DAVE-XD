@@ -111,7 +111,7 @@ zokou({ nomCom: "url", categorie: "Dave-Tools", reaction: "👨🏿‍💻" }, a
 });
 
 
-zokou({nomCom:"sticker",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+zokou({nomCom:"sticker",categorie: "Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
 
 let {ms,mtype,arg,repondre,nomAuteurMessage}=commandeOptions
   var txt=JSON.stringify(ms.message)
@@ -145,7 +145,7 @@ const alea = (ext) => {
     }
 
     sticker = new Sticker(buffer, {
-      pack:"𝐃𝐀𝐕𝐄-𝐗𝐌𝐃",
+      pack:"gifted_dave" ,
       author: nomAuteurMessage,
       type:
         arg.includes("crop") || arg.includes("c")
@@ -169,7 +169,7 @@ const alea = (ext) => {
     }
 
     sticker = new Sticker(buffer, {
-      pack:"𝐃𝐀𝐕𝐄-𝐗𝐌𝐃", // pack stick
+      pack:"DAVE-XMD", // pack stick
       author:  nomAuteurMessage, // name of the author of the stick
       type:
         arg.includes("-r") || arg.includes("-c")
@@ -194,15 +194,11 @@ const alea = (ext) => {
 try{
   fs.unlinkSync(stickerFileName)
 }catch(e){console.log(e)}
-
-
-
-
-
-
+  
 });
 
-zokou({nomCom:"scrop",categorie: "Dave-Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+
+zokou({nomCom:"scrop",categorie: "Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
    const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
 
   if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
@@ -225,9 +221,45 @@ mediamsg = msgRepondu.videoMessage
   var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
 
      let stickerMess = new Sticker(stick, {
-            pack: Lucky-md-xforce,
-
+            pack: pack,
+            
             type: StickerTypes.CROPPED,
+            categories: ["🤩", "🎉"],
+            id: "12345",
+            quality: 70,
+            background: "transparent",
+          });
+          const stickerBuffer2 = await stickerMess.toBuffer();
+          zk.sendMessage(origineMessage, { sticker: stickerBuffer2 }, { quoted: ms });
+
+});
+
+zokou({nomCom:"take",categorie: "Conversion", reaction: "👨🏿‍💻"},async(origineMessage,zk,commandeOptions)=>{
+   const {ms , msgRepondu,arg,repondre,nomAuteurMessage} = commandeOptions ;
+
+  if(!msgRepondu) { repondre( 'make sure to mention the media' ) ; return } ;
+  if(!(arg[0])) {
+       pack = nomAuteurMessage
+  } else {
+    pack = arg.join(' ')
+  } ;
+  if (msgRepondu.imageMessage) {
+     mediamsg = msgRepondu.imageMessage
+  } else if(msgRepondu.videoMessage) {
+mediamsg = msgRepondu.videoMessage
+  } 
+  else if (msgRepondu.stickerMessage) {
+    mediamsg = msgRepondu.stickerMessage ;
+  } else {
+    repondre('Uh a media please'); return
+  } ;
+
+  var stick = await zk.downloadAndSaveMediaMessage(mediamsg)
+
+     let stickerMess = new Sticker(stick, {
+            pack: pack,
+            
+            type: StickerTypes.FULL,
             categories: ["🤩", "🎉"],
             id: "12345",
             quality: 70,
