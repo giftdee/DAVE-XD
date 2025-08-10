@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Path to the JSON file storing stickcmd data
-const filePath = path.join(__dirname, '../xmd/stickcmd.json');
+const filePath = path.join(__dirname, '../bdd/stickcmd.json');
 
 // Load data from the JSON file
 function loadStickcmdData() {
