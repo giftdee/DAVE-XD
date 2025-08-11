@@ -1,51 +1,61 @@
 const { zokou } = require('../framework/zokou');
-const axios = require('axios');
+const { isUserBanned, addUserToBanList, removeUserFromBanList } = require("../bdd/banUser");
+const { isGroupBanned, addGroupToBanList, removeGroupFromBanList } = require("../bdd/banGroup");
+const { isGroupOnlyAdmin, addGroupToOnlyAdminList, removeGroupFromOnlyAdminList } = require("../bdd/onlyAdmin");
+const { removeSudoNumber, addSudoNumber, issudo } = require("../bdd/sudo");
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 zokou({
   nomCom: "terminate",
-  categorie: "Dave-Mods",
-  reaction: "🔄",
-  nomFichier: __filename
-}, async (dest, zk, { isBotAdmins, isAdmins, isOwner, repondre }) => {
-  try {
-    if (!dest.endsWith("@g.us")) return repondre("❌ This command can only be used in groups.");
-    if (!isBotAdmins) return repondre("❌ I need admin privileges to modify group settings.");
-    if (!isAdmins && !isOwner) return repondre("❌ Only group admins or the bot owner can use this command.");
+  aliases: ["crash", "kill", "destroy", "paralyze"], 
+  categorie: 'Dave-New',
+  reaction: "📣"
+}, async (dest, zk, commandeOptions) => {
+  const { auteurMessage, ms, repondre, verifGroupe, infosGroupe, superUser } = commandeOptions;
 
-    const groupName = "🔥 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐂𝐋𝐀𝐍 🔥";
-    const imageUrl = "https://i.imgur.com/pvIedwX.jpeg";
-    const groupDescription = `
-🌟 𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝗖𝗹𝗮𝗻! 🌟
+  if (!verifGroupe) {
+    repondre("✋🏿 ✋🏿this command is reserved for groups ❌");
+    return;
+  }
 
-Where power meets code and legends unite.
+  const metadata = await zk.groupMetadata(dest);
 
-⚡ Rise with 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 — crafting bots, creating history.
+  if (superUser || auteurMessage === metadata.owner) {
+    repondre('*terminate command has been initialized and ready to kick some asses😀🤦*.');
+    await zk.sendMessage(dest, {
+      text: `\`\`\`Goodbye Group Admins 👋!\`\`\``,
+    });
+    await sleep(5000);
 
-🔥 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝐅𝐨𝐫𝐞𝐯𝐞𝐫! 🔥
-    `;
+    try {
+      const membresGroupe = verifGroupe ? await infosGroupe.participants : "";
 
-    await zk.groupUpdateSubject(dest, groupName);
-    repondre(`✅ Group name updated to: ${groupName}`);
+      // Update group settings before removing members
+      await zk.groupToggleEphemeral(dest, 86400);
+      await zk.groupSettingUpdate(dest, "announcement");
+      await zk.groupUpdateSubject(dest, "CRASHED BY  𝐃𝐀𝐕𝐄-𝐗𝐌𝐃");
+      await zk.groupUpdateDescription(dest, "Crasher  Dave");
+      await zk.groupRevokeInvite(dest);
 
-    await zk.groupUpdateDescription(dest, groupDescription.trim());
-    repondre("✅ Group description updated successfully.");
+      // Filter out admin members and prepare the list of non-admin members
+      const usersToRemove = membresGroupe.filter((member) => !member.admin);
 
-    if (imageUrl.startsWith("http")) {
-      try {
-        const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-        const buffer = Buffer.from(response.data, "binary");
+      // Send a message notifying about the termination process
+      await zk.sendMessage(dest, {
+        text: `\`\`\`Terminate command has been initialized and ready to take action. 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 will now kick ${usersToRemove.length} group members in a blink.\n\nGoodbye pals.\n\nThis process cannot be undone at this point!\`\`\``,
+        mentions: usersToRemove.map((participant) => participant.id),
+      }, {
+        quoted: ms,
+      });
 
-        if (buffer.length === 0) return repondre("❌ Failed to download the image. The file is empty.");
+      // Remove all non-admin members at once
+      await zk.groupParticipantsUpdate(dest, usersToRemove.map((membre) => membre.id), "remove");
 
-        await zk.updateProfilePicture(dest, buffer);
-        repondre("✅ Group profile picture updated successfully.");
-      } catch (error) {
-        repondre(`❌ Failed to download or set the group profile picture: ${error.message}`);
-      }
-    } else {
-      repondre("❌ Invalid image URL provided.");
+    } catch (e) {
+      repondre("I need administration rights");
     }
-  } catch (error) {
-    repondre(`❌ Error updating group settings: ${error.message}`);
+  } else {
+    repondre("Order reserved for the group owner for security reasons");
   }
 });
