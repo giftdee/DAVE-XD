@@ -2,12 +2,12 @@ const { zokou } = require("../framework/zokou");
 const fs = require('fs');
 
 
-let antiDeleteActive = false; // Variable pour stocker l'état de la commande anti-delete
+let antiDeleteActive = true; // Variable pour stocker l'état de la commande anti-delete
 
 zokou({
-  nomCom: "antidelete",
+  nomCom: "anti-delete",
   categorie: "Dave-Mods",
-  reaction: "🍑"
+  reaction: "😏"
 }, async (origineMessage, zk, commandeOptions) => {
   const { ms, arg } = commandeOptions;
 
@@ -61,7 +61,7 @@ zokou({
       }
 
       const senderId = msg.key.participant.split('@')[0];
-      const caption = `𝑫𝒆𝒍𝒆𝒕𝒆𝒅 𝑩𝒖𝒕 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 𝑪𝒂𝒏 𝒔𝒆𝒆\nMessage de @${senderId}`;
+      const caption = ` Anti-delete-message by hanstz Tech\nMessage de @${senderId}`;
       const imageCaption = { image: { url: './media/deleted-message.jpg' }, caption, mentions: [msg.key.participant] };
 
       await zk.sendMessage(idBot, imageCaption);
