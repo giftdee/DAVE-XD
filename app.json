@@ -60,7 +60,7 @@
 
       "description": "Your contact status will be react automatically (type 'yes' to activate or 'no' to deactivate; don't write in capital letters)",
 
-      "value": "no",
+      "value": "yes",
 
       "required": false
 
@@ -102,7 +102,7 @@
 
       "description": "Restrict other users from using your bot in private messages (type 'yes' to activate or 'no' to deactivate; don't write in capital letters)",
 
-      "value": "yes",
+      "value": "no",
 
       "required": false
 
@@ -152,7 +152,7 @@
 
       "description": "Set 'yes' to make your bot public or 'no' to keep it private",
 
-      "value": "no",
+      "value": "yes",
 
       "required": false
 
@@ -192,7 +192,7 @@
 
       "description": "don't you have a name bro.Insert your name here!!",
 
-      "value": "DAVE-XMD ⚡",
+      "value": "Gifted Dave",
 
       "required": false
 
@@ -242,7 +242,7 @@
 
       "description": "Set 'yes' to display a starting bot message or 'no' to disable it",
 
-      "value": "no",
+      "value": "yes",
 
       "required": true
 
@@ -272,7 +272,7 @@
 
       "description": "Automatically decline incoming calls (set 'on' to activate or 'off' to deactivate)",
 
-      "value": "no",
+      "value": "yes",
 
       "required": false
 
