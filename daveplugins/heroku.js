@@ -464,7 +464,7 @@ zokou({
 });
 
 zokou({
-  nomCom: 'mode public',
+  nomCom: 'publicmode',
   categorie: "Dave-Mods"
 }, async (chatId, zk, context) => {
   const { ms, repondre, superUser, auteurMessage, arg } = context;
@@ -476,7 +476,7 @@ zokou({
 
   // Validate user input and respond accordingly
   if (!arg[0]) {
-    return repondre('Instructions:\n\nType "mode public yes" to enable or "publicmode no" to disable.');
+    return repondre('Instructions:\n\nType "publicmode yes" to enable or "publicmode no" to disable.');
   }
 
   const option = arg.join(' ').toLowerCase();
