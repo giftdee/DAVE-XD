@@ -25,8 +25,9 @@
     "pm2": "^6.0.8",
     "@types/node": "^18.0.6",
     "@vitalets/google-translate-api": "^9.2.0",
-    "@whiskeysockets/baileys":
-    "github:Tennor-modz/MD-Baileys",
+    "baileys-pro": "latest",
+    "maher-zubair-baileys": "^6.6.5",
+    "@whiskeysockets/baileys":"^6.7.18",
     "ytdl-core": "github:franceking1/flash-dls",
     "@xct007/tiktok-scraper": "^1.0.2",  
     "@mrnima/tiktok-downloader": "1.0.0",
