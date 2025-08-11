@@ -894,11 +894,11 @@ zk.ev.on('group-participants.update', async (group) => {
 
                 let cmsg =`      BOT RUNNING
                 ⁠              
->⎯⎯⎯[ BOOT SEQUENCE INITIALIZED ]⎯⎯⎯
-⟢  STATUS : BOT ACTIVE
-⟢  DEV     : Gifted_dave
-⟢  BOT     : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
-⎯⎯⎯[ SYSTEM READY FOR COMMANDS ]⎯⎯⎯ 
+>╭──⭓ [ 𝐁𝐎𝐎𝐓 𝐒𝐄𝐐𝐔𝐄𝐍𝐂𝐄 𝐈𝐍𝐈𝐓𝐈𝐀𝐋𝐈𝐙𝐄𝐃 ]
+│   ➤ STATUS : BOT ACTIVE
+│   ➤ DEV    : Gifted_dave
+│   ➤ BOT    : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
+╰────────⭓ [ 𝐒𝐘𝐒𝐓𝐄𝐌 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐒 ]
 ⁠⁠`;
                 await zk.sendMessage(zk.user.id, { text: cmsg });
                 }
