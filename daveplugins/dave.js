@@ -14,7 +14,7 @@ zokou({
 
   try {
     if (!args || args.length === 0) {
-      return reply("Example Usage: .pair 254700000000");
+      return reply("Example Usage: .pair 254....");
     }
 
     await reply("*Wait, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is generating your pair code ✅...*");
