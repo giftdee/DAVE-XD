@@ -128,16 +128,6 @@
 
     },
 
-    "ANTI_CALL_TEXT": {
-
-      "description": "Type your anticall message to always send when calls are declined.You can as well leave it blank",
-
-      "value": "cant pick calls know owner busy",
-
-      "required": false
-
-    },
-
     "BOT_NAME": {
 
       "description": "you must name your bot here",
@@ -148,15 +138,6 @@
 
     },
 
-    "PUBLIC_MODE": {
-
-      "description": "Set 'yes' to make your bot public or 'no' to keep it private",
-
-      "value": "yes",
-
-      "required": false
-
-    },
 
     "HEROKU_API_KEY": {
 
@@ -248,15 +229,6 @@
 
     },
 
-    "PRESENCE": {
-
-      "description": "Mark your presence: 1 for online, 2 for typing, 3 for recording, or leave blank for real state",
-
-      "value": "1",
-
-      "required": false
-
-    },
 
     "ANTI_DELETE_MESSAGE": {
 
@@ -291,16 +263,6 @@
     "CHAT_BOT": {
 
       "description": " If you want bot to chat an answer messages in dem's put 'yes' to activate and 'no' to deactivate.",
-
-      "value": "no",
-
-      "required": false
-
-    },
-
-    "AUTO_REACTION": {
-
-      "description": "Set 'yes' to enable bot reactions to messages in private chats",
 
       "value": "no",
 
