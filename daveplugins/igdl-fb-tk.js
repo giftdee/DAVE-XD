@@ -1,45 +1,38 @@
-const { zokou } = require('../framework/zokou');
+
+const {zokou} = require('../framework/zokou');
 const fs = require('fs');
 const getFBInfo = require("@xaviabot/fb-downloader");
 const { default: axios } = require('axios');
 
-zokou({nomCom : "instagram" , categorie : "Dave-Download"}, async (dest , zk , commandeOptions) => {
-  const { ms, repondre, arg } = commandeOptions;
+zokou({nomCom : "igdl" , categorie : "Dave-Download"},async (dest , zk , commandeOptions)=>{
+  const {ms,repondre,arg} = commandeOptions ;
 
-  let link = arg.join(' ');
+  let link = arg.join(' ')
 
-  if (!arg[0]) { 
-    repondre('Veillez insérer un lien video instagramme');
-    return;
-  }
+  if (!arg[0]) { repondre('Veillez insérer un lien video instagramme');return}; 
 
   try {
-    let igvid = await axios('https://vihangayt.me/download/instagram?url='+link);
+
+    let igvid = await axios('https://vihangayt.me/download/instagram?url='+link)
 
     if (igvid.data.data.data[0].type == 'video') {
-      zk.sendMessage(dest, {
-        video : { url : igvid.data.data.data[0].url },
-        caption : "ig video downloader powered by *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*",
-        gifPlayback : false
-      }, { quoted : ms });
-    } else {
-      zk.sendMessage(dest, {
-        image : { url : igvid.data.data.data[0].url },
-        caption : "ig image downloader powered by *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*"
-      });
+    zk.sendMessage(dest,{video : {url : igvid.data.data.data[0].url},caption : "ig video downloader powered by *DAVE-TECH*",gifPlayback : false },{quoted : ms}) 
+    }
+    else {
+        zk.sendMessage(dest,{image : {url : igvid.data.data.data[0].url},caption : "ig image downloader powered by *DAVE-TECH*"})
     }
 
-  } catch (e) {
-    repondre("erreur survenue lors du téléchargement \n " + e);
-  }
+  } catch (e) {repondre("erreur survenue lors du téléchargement \n " + e)}
+
 });
 
 
 zokou({
-  nomCom: "facabook",
-  categorie: "Dave-Download",
+  nomCom: "fbdl",
+  categorie: "Download",
   reaction: "📽️"
-}, async (dest, zk, commandeOptions) => {
+},
+async (dest, zk, commandeOptions) => {
   const { repondre, ms, arg } = commandeOptions;
 
   if (!arg[0]) {
@@ -50,29 +43,31 @@ zokou({
   const queryURL = arg.join(" ");
 
   try {
-    getFBInfo(queryURL)
-      .then((result) => {
-        let caption = `
-titre: ${result.title}
-Lien: ${result.url}
-        `;
-        zk.sendMessage(dest, { image: { url: result.thumbnail }, caption: caption }, { quoted: ms });
-        zk.sendMessage(dest, { video: { url: result.hd }, caption: 'facebook video downloader powered by *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*' }, { quoted: ms });
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-        repondre('try fbdl2 on this link');
-      });
+     getFBInfo(queryURL)
+    .then((result) => {
+       let caption = `
+        titre: ${result.title}
+        Lien: ${result.url}
+      `;
+       zk.sendMessage(dest,{image : { url : result.thumbnail}, caption : caption},{quoted : ms}) ;
+       zk.sendMessage(dest, { video: { url: result.hd  }, caption: 'facebook video downloader powered by *𝐃𝐀𝐕𝐄-𝗧𝗘𝗖𝗛*' }, { quoted: ms });
+
+    })
+    .catch((error) => {console.log("Error:", error)
+                      repondre('try fbdl2 on this link')});
+
+
 
   } catch (error) {
     console.error('Erreur lors du téléchargement de la vidéo :', error);
-    repondre('Erreur lors du téléchargement de la vidéo.', error);
+    repondre('Erreur lors du téléchargement de la vidéo.' , error);
   }
 });
 
 
-zokou({ nomCom: "tiktok", categorie: "Dave-Download", reaction: "🎵" }, async (dest, zk, commandeOptions) => {
-  const { arg, ms, prefixe, repondre } = commandeOptions;
+
+zokou({ nomCom: "tiktok", categorie: "Download", reaction: "🎵" }, async (dest, zk, commandeOptions) => {
+  const { arg, ms, prefixe,repondre } = commandeOptions;
   if (!arg[0]) {
     repondre(`how to use this command:\n ${prefixe}tiktok tiktok_video_link`);
     return;
@@ -80,51 +75,55 @@ zokou({ nomCom: "tiktok", categorie: "Dave-Download", reaction: "🎵" }, async 
 
   const videoUrl = arg.join(" ");
 
-  let data = await axios.get('https://vihangayt.me/download/tiktok?url=' + videoUrl);
+ let data = await axios.get('https://vihangayt.me/download/tiktok?url='+ videoUrl) ;
 
-  let tik = data.data.data;
+  let tik = data.data.data
 
-  const caption = `
+      // Envoi du message avec le thumbnail de la vidéo
+      const caption = `
 Author: ${tik.author}
 Description: ${tik.desc}
-  `;
+      `;
 
-  zk.sendMessage(dest, { video: { url: tik.links[0].a }, caption: caption }, { quoted: ms });
+
+      zk.sendMessage(dest, { video: { url: tik.links[0].a} , caption : caption },{quoted : ms});    
+
 
 });
 
-
 zokou({
-  nomCom: "facebook2",
-  categorie: "Dave-Download",
+  nomCom: "fbdl2",
+  categorie: "Download",
   reaction: "📽️"
-}, async (dest, zk, commandeOptions) => {
+},
+async (dest, zk, commandeOptions) => {
   const { repondre, ms, arg } = commandeOptions;
 
   if (!arg[0]) {
-    repondre('Insert a public facebook video link!');
+    repondre('Insert a public facebook video link! !');
     return;
   }
 
   const queryURL = arg.join(" ");
 
   try {
-    getFBInfo(queryURL)
-      .then((result) => {
-        let caption = `
-titre: ${result.title}
-Lien: ${result.url}
-        `;
-        zk.sendMessage(dest, { image: { url: result.thumbnail }, caption: caption }, { quoted: ms });
-        zk.sendMessage(dest, { video: { url: result.sd }, caption: 'facebook video downloader powered by *𝐃𝐀𝐕𝐄-𝐗𝐌𝐃*' }, { quoted: ms });
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-        repondre(error);
-      });
+     getFBInfo(queryURL)
+    .then((result) => {
+       let caption = `
+        titre: ${result.title}
+        Lien: ${result.url}
+      `;
+       zk.sendMessage(dest,{image : { url : result.thumbnail}, caption : caption},{quoted : ms}) ;
+       zk.sendMessage(dest, { video: { url: result.sd  }, caption: 'facebook video downloader powered by *𝐃𝐀𝐕𝐄-𝗧𝗘𝗖𝗛*' }, { quoted: ms });
+
+    })
+    .catch((error) => {console.log("Error:", error)
+                      repondre(error)});
+
+
 
   } catch (error) {
     console.error('Erreur lors du téléchargement de la vidéo :', error);
-    repondre('Erreur lors du téléchargement de la vidéo.', error);
+    repondre('Erreur lors du téléchargement de la vidéo.' , error);
   }
 });
