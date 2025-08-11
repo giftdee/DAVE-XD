@@ -1,129 +1,128 @@
-const { zokou } = require('../framework/zokou');
-const axios = require("axios");
+const {zokou} = require('../framework/zokou');
+const fs = require('fs');
+const getFBInfo = require("@xaviabot/fb-downloader");
+const { default: axios } = require('axios');
 
-// tiktok
-zokou ({
-  nomCom: "tiktok",
-  aliases: ["tiksearch","TikTok", "t"],
-  categorie: "Dave-Search",
-  reaction: "🔍"
-}, async (dest, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
+zokou({nomCom : "instagram" , categorie : "Dave-Download"},async (dest , zk , commandeOptions)=>{
+  const {ms,repondre,arg} = commandeOptions ;
 
-  // Check if there is a query in the arguments
-  if (!arg || !arg[0]) {
-    return repondre('🤦Please provide a query!');
-  }
+  let link = arg.join(' ')
+
+  if (!arg[0]) { repondre('Veillez insérer un lien video instagramme');return}; 
 
   try {
-    // URL for the TikTok search API
-    const searchApiUrl = `https://apis-starlights-team.koyeb.app/starlight/tiktoksearch?text=${encodeURIComponent(arg.join(' '))}`;
-    const response = await axios.get(searchApiUrl);
 
-    // Check if response data is valid and contains search results
-    const searchData = response.data.data;
-    if (!searchData || searchData.length === 0) {
-      return repondre("❌No TikTok search results found.");
+    let igvid = await axios('https://vihangayt.me/download/instagram?url='+link)
+
+    if (igvid.data.data.data[0].type == 'video') {
+    zk.sendMessage(dest,{video : {url : igvid.data.data.data[0].url},caption : "ig video downloader powered by *DAVE-MD*",gifPlayback : false },{quoted : ms}) 
+    }
+    else {
+        zk.sendMessage(dest,{image : {url : igvid.data.data.data[0].url},caption : "ig image downloader powered by *DAVE-MD*"})
     }
 
-    // Construct TikTok search message
-    let searchMessage = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃  TIKTOK SEARCH\n\n`;
+  } catch (e) {repondre("erreur survenue lors du téléchargement \n " + e)}
 
-    // Loop through search results and construct track info with numbers
-    searchData.forEach((track, index) => {
-      const trackNumber = index + 1; // Number tracks starting from 1
-      searchMessage += `*${trackNumber}.* ${track.title}\n`;
-      searchMessage += `*Region*: ${track.region || "Unknown"}\n`;
-      searchMessage += `*ID*: ${track.id}\n`;  // `id` is the video ID
-      searchMessage += `*Video URL*: ${track.url}\n`;
-      searchMessage += `*Cover Image*: ${track.cover}\n`;
-      searchMessage += `*Views*: ${track.views || 0}\n`;
-      searchMessage += `*Likes*: ${track.likes || 0}\n`;
-      searchMessage += `*Comments*: ${track.comments || 0}\n`;
-      searchMessage += `*Shares*: ${track.share || 0}\n`;
-      searchMessage += `*Download Count*: ${track.download || 0}\n`;
-      searchMessage += `────────────────\n\n`;
-    });
+});
 
-    // Send the playlist message
-    await zk.sendMessage(
-      dest,
-      {
-        text: searchMessage,
-        contextInfo: {
-         isForwarded: true,
-         forwardedNewsletterMessageInfo: {
-         newsletterJid: '120363400480173280@newsletter',
-         newsletterName: "DAVE-XMD updates",
-         serverMessageId: 143,
-          },
-        },
-      },
-    );
+
+zokou({
+  nomCom: "facabook",
+  categorie: "Dave-Download",
+  reaction: "📽️"
+},
+async (dest, zk, commandeOptions) => {
+  const { repondre, ms, arg } = commandeOptions;
+
+  if (!arg[0]) {
+    repondre('Insert a public facebook video link!');
+    return;
+  }
+
+  const queryURL = arg.join(" ");
+
+  try {
+     getFBInfo(queryURL)
+    .then((result) => {
+       let caption = `
+        titre: ${result.title}
+        Lien: ${result.url}
+      `;
+       zk.sendMessage(dest,{image : { url : result.thumbnail}, caption : caption},{quoted : ms}) ;
+       zk.sendMessage(dest, { video: { url: result.hd  }, caption: 'facebook video downloader powered by *DAVE-MD*' }, { quoted: ms });
+
+    })
+    .catch((error) => {console.log("Error:", error)
+                      repondre('try fbdl2 on this link')});
+
+
+
   } catch (error) {
-    // Log and respond with error message
-    console.error(error);  // Log the error to the console
-    repondre(`❌Error: ${error.message || 'Something went wrong.'}`);
+    console.error('Erreur lors du téléchargement de la vidéo :', error);
+    repondre('Erreur lors du téléchargement de la vidéo.' , error);
   }
 });
 
-// Twitter 
-zokou({
-  nomCom: "twitter",
-  aliases: ["xsearch", "twitterlist", "tweetsearch", "xsearch"],
-  categorie: "Dave-Download",
-  reaction: "🔍"
-}, async (dest, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
 
-  // Ensure a query is provided in the arguments
+
+zokou({ nomCom: "tiktok", categorie: "Dave-Download", reaction: "🎵" }, async (dest, zk, commandeOptions) => {
+  const { arg, ms, prefixe,repondre } = commandeOptions;
   if (!arg[0]) {
-    return repondre(' Please provide a link!');
+    repondre(`how to use this command:\n ${prefixe}tiktok tiktok_video_link`);
+    return;
   }
 
+  const videoUrl = arg.join(" ");
+
+ let data = await axios.get('https://vihangayt.me/download/tiktok?url='+ videoUrl) ;
+
+  let tik = data.data.data
+
+      // Envoi du message avec le thumbnail de la vidéo
+      const caption = `
+Author: ${tik.author}
+Description: ${tik.desc}
+      `;
+
+
+      zk.sendMessage(dest, { video: { url: tik.links[0].a} , caption : caption },{quoted : ms});    
+
+
+});
+
+zokou({
+  nomCom: "facebook2",
+  categorie: "Dave-Download",
+  reaction: "📽️"
+},
+async (dest, zk, commandeOptions) => {
+  const { repondre, ms, arg } = commandeOptions;
+
+  if (!arg[0]) {
+    repondre('Insert a public facebook video link! !');
+    return;
+  }
+
+  const queryURL = arg.join(" ");
+
   try {
-    // Define the search API URL
-    const searchApiUrl = `https://apis-starlights-team.koyeb.app/starlight/Twitter-Posts?text=${encodeURIComponent(arg[0])}`;
-    const response = await axios.get(searchApiUrl);
-    const searchData = response.data.result;  // Assuming 'result' contains an array of tweets
+     getFBInfo(queryURL)
+    .then((result) => {
+       let caption = `
+        titre: ${result.title}
+        Lien: ${result.url}
+      `;
+       zk.sendMessage(dest,{image : { url : result.thumbnail}, caption : caption},{quoted : ms}) ;
+       zk.sendMessage(dest, { video: { url: result.sd  }, caption: 'facebook video downloader powered by *DAVE-MD*' }, { quoted: ms });
 
-    // Check if no results are found
-    if (!searchData || searchData.length === 0) {
-      return repondre("No Twitter search results found.");
-    }
+    })
+    .catch((error) => {console.log("Error:", error)
+                      repondre(error)});
 
-    // Construct the search message
-    let searchMessage = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 TWITTER SEARCH\n\n`;
-    searchMessage += `Creator: ${response.data.creator}\n\n`;  // Include the creator info
 
-    // Loop through search results and append details to the message
-    searchData.forEach((track, index) => {
-      const trackNumber = index + 1; // Number tracks starting from 1
-      searchMessage += `*${trackNumber}.* ${track.user}\n`;
-      searchMessage += `*Profile*: ${track.profile || "Unknown"}\n`;
-      searchMessage += `*Post*: ${track.post}\n`;  // The text of the tweet
-      searchMessage += `*User Link*: ${track.user_link}\n`;  // Link to the user's profile
-      searchMessage += `──────────────\n\n`;
-    });
 
-    // Send the search result message
-    await zk.sendMessage(
-      dest,
-      {
-        text: searchMessage,
-        contextInfo: {
-         isForwarded: true,
-         forwardedNewsletterMessageInfo: {
-         newsletterJid: '120363400480173280@newsletter',
-         newsletterName: "DAVE-XMD updates",
-         serverMessageId: 143,
-          },
-        },
-      }
-    );
   } catch (error) {
-    // Log and respond with the error message
-    console.error(error);  // Log the error to the console
-    repondre(`❌Error: ${error.message || 'Something went wrong.'}`);
+    console.error('Erreur lors du téléchargement de la vidéo :', error);
+    repondre('Erreur lors du téléchargement de la vidéo.' , error);
   }
 });
