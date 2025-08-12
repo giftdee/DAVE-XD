@@ -39,20 +39,20 @@ let path = require("path");
 const FileType = require('file-type');
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
 //import chalk from 'chalk'
-const { verifierEtatJid , recupererActionJid } = require("./luckydatabase/antilien");
-const { atbverifierEtatJid , atbrecupererActionJid } = require("./luckydatabase/antibot");
-let evt = require(__dirname + "/fredi/ezra");
-const {isUserBanned , addUserToBanList , removeUserFromBanList} = require("./luckydatabase/banUser");
-const  {addGroupToBanList,isGroupBanned,removeGroupFromBanList} = require("./luckydatabase/banGroup");
-const {isGroupOnlyAdmin,addGroupToOnlyAdminList,removeGroupFromOnlyAdminList} = require("./luckydatabase/onlyAdmin");
+const { verifierEtatJid , recupererActionJid } = require("./bdd/antilien");
+const { atbverifierEtatJid , atbrecupererActionJid } = require("./bdd/antibot");
+let evt = require(__dirname + "/framework/zokou");
+const {isUserBanned , addUserToBanList , removeUserFromBanList} = require("./bdd/banUser");
+const  {addGroupToBanList,isGroupBanned,removeGroupFromBanList} = require("./bdd/banGroup");
+const {isGroupOnlyAdmin,addGroupToOnlyAdminList,removeGroupFromOnlyAdminList} = require("./bdd/onlyAdmin");
 //const //{loadCmd}=require("/fredi/mesfonctions")
-let { reagir } = require(__dirname + "/fredi/app");
-var session = conf.session.replace(/DAVE-XMD-WHATSAPP-BOT;;;=>/g,"");
+let { reagir } = require(__dirname + "/framework/app");
+var session = conf.session.replace(/DAVE-XMD-WHATSAPP-BOT;;;=>/g, "");
 const prefixe = conf.PREFIXE;
 const more = String.fromCharCode(8206)
 const readmore = more.repeat(4001)
 const BaseUrl = process.env.GITHUB_GIT;
-const Ezraapikey = process.env.BOT_OWNER;
+const Daveapikey = process.env.BOT_OWNER;
 
 async function authentification() {
     try {
