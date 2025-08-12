@@ -63,7 +63,6 @@ async function authentification() {
         return;
     }
 }
-
 authentification();
 
 const store = (0, baileys_1.makeInMemoryStore)({ logger: pino().child({ level: "silent", stream: "store" }) });
@@ -80,263 +79,1165 @@ setTimeout(() => {
             markOnlineOnConnect: false,
             auth: {
                 creds: state.creds,
+                /** caching makes the store faster to send/recv messages */
                 keys: (0, baileys_1.makeCacheableSignalKeyStore)(state.keys, logger),
             },
+            //////////
             getMessage: async (key) => {
                 if (store) {
-                    const msg = await store.loadMessage(key.remoteJid, key.id);
-                    return msg?.message || undefined;
+                    const msg = await store.loadMessage(key.remoteJid, key.id, undefined);
+                    return msg.message || undefined;
                 }
-                return undefined;
-            },
-        };
-        const zk = (0, baileys_1.default)(sockOptions);
-        store.bind(zk.ev);
-        setInterval(() => { store.writeToFile("store.json"); }, 3000);
+                return {
+                    conversation: 'An Error Occurred, Repeat Command!'
+                };
+            }
+                };
+
+
+   const zk = (0, baileys_1.default)(sockOptions);
+   store.bind(zk.ev);
+
+
+// Function to get the current date and time in Kenya 
+function getCurrentDateTime() {
+    const options = {
+        timeZone: 'Africa/Nairobi', // Kenyan time zone
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false, // 24-hour format
+    };
+    const dateTime = new Intl.DateTimeFormat('en-KE', options).format(new Date());
+    return dateTime;
+}
+
+// Auto Bio Update Interval
+setInterval(async () => {
+    if (conf.AUTO_BIO === "yes") {
+        const currentDateTime = getCurrentDateTime(); // Get the current date and time
+        const bioText = `💬𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 is active...\n${currentDateTime}`; // Format the bio text
+        await zk.updateProfileStatus(bioText); // Update the bio
+        console.log(`Updated Bio: ${bioText}`); // Log the updated bio
+    }
+}, 60000); // Update bio every 60 seconds
+
+// Function to handle deleted messages
+// Other functions (auto-react, anti-delete, etc.) as needed
+        zk.ev.on('call', async (callData) => {
+  if (conf.ANTI_CALL === 'yes') {
+    const callId = callData[0].id;
+    const callerId = callData[0].from;
+
+    // Reject the call
+    await zk.rejectCall(callId, callerId);
+
+    // Check if enough time has passed since the last message
+    const currentTime = Date.now();
+    if (currentTime - lastTextTime >= messageDelay) {
+      // Send the rejection message if the delay has passed
+      await client.sendMessage(callerId, {
+        text: conf.ANTI_CALL_TEXT
+      });
+
+      // Update the last text time
+      lastTextTime = currentTime;
+    } else {
+      console.log('Message skipped to prevent overflow');
+    }
+  }
+});
+
+     // Utility function for delay
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Track the last reaction time to prevent overflow
+let lastReactionTime = 0;
+
+
+// Array of reaction emojis for regular messages and status updates
+// Array of reaction emojis for regular messages and status updates
+const emojiMap = {
+    // General Greetings
+    "hello": ["👋", "🙂", "😊", "🙋‍♂️", "🙋‍♀️"],
+    "hi": ["👋", "🙂", "😁", "🙋‍♂️", "🙋‍♀️"],
+    "good morning": ["🌅", "🌞", "☀️", "🌻", "🌼"],
+    "good night": ["🌙", "🌜", "⭐", "🌛", "💫"],
+
+    // Farewells
+    "bye": ["👋", "😢", "👋🏻", "🥲", "🚶‍♂️", "🚶‍♀️"],
+    "see you": ["👋", "😊", "👋🏻", "✌️", "🚶‍♂️"],
+
+    // Casual Conversations
+    "bro": ["🤜🤛", "👊", "💥", "🥊", "👑"],
+    "sister": ["👭", "💁‍♀️", "🌸", "💖", "🙋‍♀️"],
+    "buddy": ["🤗", "👯‍♂️", "👯‍♀️", "🤜🤛", "🤝"],
+    "niaje": ["👋", "😄", "💥", "🔥", "🕺", "💃"],
+
+    // Names (can be expanded with more names as needed)
+    "fredi": ["😎", "💯", "🔥", "🚀", "👑"],
+    "ezra": ["🔥", "💥", "👑", "💯", "😎"],
+
+    // Expressions of gratitude
+    "thanks": ["🙏", "😊", "💖", "❤️", "💐"],
+    "thank you": ["🙏", "😊", "🙌", "💖", "💝"],
+
+    // Love and Affection
+    "love": ["❤️", "💖", "💘", "😍", "😘", "💍", "💑"],
+    "miss you": ["😢", "💔", "😔", "😭", "💖"],
+
+    // Apologies
+    "sorry": ["😔", "🙏", "😓", "💔", "🥺"],
+    "apologies": ["😔", "💔", "🙏", "😞", "🙇‍♂️", "🙇‍♀️"],
+
+    // Celebrations
+    "congratulations": ["🎉", "🎊", "🏆", "🎁", "👏"],
+    "well done": ["👏", "💪", "🎉", "🎖️", "👍"],
+    "good job": ["👏", "💯", "👍", "🌟", "🎉"],
+
+    // Emotions
+    "happy": ["😁", "😊", "🎉", "🎊", "💃", "🕺"],
+    "sad": ["😢", "😭", "😞", "💔", "😓"],
+    "angry": ["😡", "🤬", "😤", "💢", "😾"],
+    "excited": ["🤩", "🎉", "😆", "🤗", "🥳"],
+    "surprised": ["😲", "😳", "😯", "😮", "😲"],
+    
+        // Questions & Inquiries
+    "help": ["🆘", "❓", "🙏", "💡", "👨‍💻", "👩‍💻"],
+    "how": ["❓", "🤔", "😕", "😳", "🧐"],
+    "what": ["❓", "🤷‍♂️", "🤷‍♀️", "😕", "😲"],
+    "where": ["❓", "🌍", "🗺️", "🏙️", "🌎"],
+
+    // Social Interactions
+    "party": ["🎉", "🥳", "🍾", "🍻", "🎤", "💃", "🕺"],
+    "fun": ["🤣", "😂", "🥳", "🎉", "🎮", "🎲"],
+    "hangout": ["🍕", "🍔", "🍻", "🎮", "🍿", "😆"],
+
+    // Positive Words
+    "good": ["👍", "👌", "😊", "💯", "🌟"],
+    "awesome": ["🔥", "🚀", "🤩", "👏", "💥"],
+    "cool": ["😎", "👌", "🎮", "🎸", "💥"],
+
+    // Negative Words
+    "boring": ["😴", "🥱", "🙄", "😑", "🤐"],
+    "tired": ["😴", "🥱", "😌", "💤", "🛌"],
+
+    // Random / Fun Words
+    "bot": ["🤖", "💻", "⚙️", "🧠", "🔧"],
+    "robot": ["🤖", "⚙️", "💻", "🔋", "🤓"],
+    "cool bot": ["🤖", "😎", "🤘", "💥", "🎮"],
+
+    // Miscellaneous
+    "love you": ["❤️", "💖", "😘", "💋", "💑"],
+    "thank you bot": ["🙏", "🤖", "😊", "💖", "💐"],
+    "good night bot": ["🌙", "🌛", "⭐", "💤", "😴"],
+
+    // Words Based on Emotions
+    "laughter": ["😂", "🤣", "😆", "😄", "🤪"],
+    "crying": ["😢", "😭", "😿", "😓", "💔"],
+
+    // Names & Nicknames
+    "john": ["👑", "🔥", "💥", "😎", "💯"],
+    "mike": ["💪", "🏆", "🔥", "💥", "🚀"],
+    "lisa": ["💖", "👑", "🌸", "😍", "🌺"],
+    "emily": ["💖", "💃", "👑", "🎉", "🎀"],
+
+    "happy": ["😁", "😄", "😊", "🙌", "🎉", "🥳", "💃", "🕺", "🔥"],
+    "excited": ["🤩", "🎉", "🥳", "🎊", "😆", "🤗", "💥", "🚀"],
+    "love": ["❤️", "💖", "💘", "💝", "😍", "😘", "💍", "💑", "🌹"],
+    "grateful": ["🙏", "💐", "🥰", "❤️", "😊"],
+    "thankful": ["🙏", "💖", "💐", "🤗", "😇"],
+
+    // Negative emotions
+    "sad": ["😢", "😭", "😞", "💔", "😔", "😓", "😖"],
+    "angry": ["😡", "😠", "🤬", "💢", "👊", "💥", "⚡"],
+    "frustrated": ["😤", "😩", "🤯", "😑", "🌀"],
+    "bored": ["😴", "🥱", "🙄", "😑", "😒"],
+
+    // Expressions of surprise
+    "surprised": ["😲", "😳", "😮", "😯", "😲", "🙀"],
+    "shocked": ["😱", "😳", "😯", "💥", "🤯"],
+    "wow": ["😲", "😱", "🤩", "🤯", "💥", "🚀"],
+
+    // Emotions of sadness or loss
+    "crying": ["😭", "😢", "💔", "😞", "😓"],
+    "miss you": ["😭", "💔", "😔", "😢", "❤️"],
+    "lonely": ["😔", "😭", "😢", "💔", "🙁"],
+
+    // Asking for help
+    "help": ["🆘", "❓", "🤔", "🙋‍♂️", "🙋‍♀️", "💡"],
+    "need assistance": ["🆘", "💁‍♂️", "💁‍♀️", "❓", "🙏"],
+
+    // Apologies
+    "sorry": ["😔", "🙏", "💔", "😓", "🥺", "🙇‍♂️", "🙇‍♀️"],
+    "apology": ["😔", "😞", "🙏", "💔", "🙇‍♂️", "🙇‍♀️"],
+
+    // Motivation and encouragement
+    "good job": ["👏", "💯", "🎉", "🌟", "👍", "👏"],
+    "well done": ["👏", "🎉", "🎖️", "💪", "🔥", "🏆"],
+    "you can do it": ["💪", "🔥", "💯", "🚀", "🌟"],
+
+    // Celebrations
+    "congratulations": ["🎉", "🏆", "🎊", "🎁", "👏", "🍾"],
+    "cheers": ["🥂", "🍻", "🍾", "🍷", "🥳", "🎉"],
+
+    // Casual goodbyes
+    "goodbye": ["👋", "😢", "💔", "👋🏻", "🚶‍♂️", "🚶‍♀️"],
+    "bye": ["👋", "👋🏻", "🥲", "🚶‍♂️", "🚶‍♀️"],
+    "see you": ["👋", "👋🏻", "🤗", "✌️", "🙋‍♂️", "🙋‍♀️"],
+
+    // Greetings and hellos
+    "hello": ["👋", "🙂", "😊", "🙋‍♂️", "🙋‍♀️"],
+    "hi": ["👋", "🙂", "😁", "🙋‍♂️", "🙋‍♀️"],
+
+    // Fun and games
+    "party": ["🎉", "🥳", "🎤", "💃", "🕺", "🍻", "🎶"],
+    "fun": ["🎮", "🎲", "🤣", "🎉", "🃏"],
+    "play": ["🎮", "🏀", "⚽", "🎾", "🎱", "🎲", "🏆"],
+
+    // Daily life
+    "work": ["💻", "🖥️", "💼", "📅", "📝"],
+    "school": ["📚", "🏫", "🎒", "👨‍🏫", "👩‍🏫"],
+    "study": ["📖", "📝", "💡", "📚", "🎓"],
+
+    // Seasons & Nature
+    "summer": ["🌞", "🏖️", "🌴", "🍉", "🌻"],
+    "winter": ["❄️", "☃️", "🎿", "🔥", "⛄"],
+    "autumn": ["🍁", "🍂", "🎃", "🍂", "🍁"],
+    "spring": ["🌸", "🌼", "🌷", "🌱", "🌺"],
+
+    // Special Days
+    "birthday": ["🎂", "🎉", "🎁", "🎈", "🎊"],
+    "anniversary": ["💍", "🎉", "🎁", "🎈", "💑"],
+
+    // Miscellaneous
+    "robot": ["🤖", "⚙️", "🔧", "🤖", "🧠"],
+    "bot": ["🤖", "🧠", "⚙️", "💻", "🖥️"],
+    "thanks": ["🙏", "💖", "😊", "❤️", "💐"],
+    "good luck": ["🍀", "🍀", "💯", "🍀", "🎯"],
+    
+        // Greetings by names
+    "john": ["👑", "🔥", "💥", "😎", "💯"],
+    "mike": ["💪", "🏆", "🔥", "💥", "🚀"],
+    "lisa": ["💖", "👑", "🌸", "😍", "🌺"],
+    "emily": ["💖", "💃", "👑", "🎉", "🎀"],
+
+    // Others
+    "food": ["🍕", "🍔", "🍟", "🍲", "🍣", "🍩"],
+    "drink": ["🍺", "🍷", "🥂", "🍾", "🥤"],
+    "coffee": ["☕", "🥤", "🍵", "🥶"],
+    "tea": ["🍵", "🫖", "🍂", "🍃"],
+
+
+    // Emotions and Moods
+    "excited": ["🤩", "🎉", "🥳", "💥", "🚀", "😆", "😜"],
+    "nervous": ["😬", "😰", "🤞", "🧠", "👐"],
+    "confused": ["🤔", "😕", "🧐", "😵", "🤷‍♂️", "🤷‍♀️"],
+    "embarrassed": ["😳", "😳", "🙈", "😳", "😬", "😅"],
+    "hopeful": ["🤞", "🌠", "🙏", "🌈", "💫"],
+    "shy": ["😊", "😳", "🙈", "🫣", "🫶"],
+
+    // People and Relationships
+    "family": ["👨‍👩‍👧‍👦", "👩‍👧", "👩‍👧‍👦", "👨‍👩‍👧", "💏", "👨‍👨‍👧‍👦", "👩‍👩‍👧‍👦"],
+    "friends": ["👯‍♂️", "👯‍♀️", "🤗", "🫶", "💫", "🤝"],
+    "relationship": ["💑", "❤️", "💍", "🥰", "💏", "💌"],
+    "couple": ["👩‍❤️‍👨", "👨‍❤️‍👨", "👩‍❤️‍👩", "💍", "💑", "💏"],
+    "best friend": ["🤗", "💖", "👯‍♀️", "👯‍♂️", "🙌"],
+    "love you": ["❤️", "😘", "💖", "💘", "💓", "💗"],
+
+    // Travel and Adventure
+    "vacation": ["🏖️", "🌴", "✈️", "🌊", "🛳️", "🏞️", "🏕️"],
+    "beach": ["🏖️", "🌊", "🏄‍♀️", "🩴", "🏖️", "🌴", "🦀"],
+    "road trip": ["🚗", "🚙", "🛣️", "🌄", "🌟"],
+    "mountain": ["🏞️", "⛰️", "🏔️", "🌄", "🏕️", "🌲"],
+    "city": ["🏙️", "🌆", "🗽", "🌇", "🚖", "🏙️"],
+    "exploration": ["🌍", "🧭", "🌎", "🌍", "🧳", "📍", "⛵"],
+
+    // Time and Date
+    "morning": ["🌅", "☀️", "🌞", "🌄", "🌻", "🕶️"],
+    "afternoon": ["🌞", "🌤️", "⛅", "🌻", "🌇"],
+    "night": ["🌙", "🌛", "🌜", "⭐", "🌚", "💫"],
+    "evening": ["🌙", "🌛", "🌇", "🌓", "💫"],
+    "goodnight": ["🌙", "😴", "💤", "🌜", "🛌", "🌛", "✨"],
+
+    // Work and Productivity
+    "productivity": ["💻", "📊", "📝", "💼", "📅", "📈"],
+    "office": ["🖥️", "💼", "🗂️", "📅", "🖋️"],
+    "workout": ["🏋️‍♀️", "💪", "🏃‍♂️", "🏃‍♀️", "🤸‍♀️", "🚴‍♀️", "🏋️‍♂️"],
+    "study hard": ["📚", "📝", "📖", "💡", "💼"],
+    "focus": ["🔍", "🎯", "💻", "🧠", "🤓"],
+
+    // Food and Drinks
+    "food": ["🍕", "🍔", "🍟", "🍖", "🍖", "🥗", "🍣", "🍲"],
+    "drink": ["🍹", "🥤", "🍷", "🍾", "🍸", "🍺", "🥂", "☕"],
+    "coffee": ["☕", "🧃", "🍵", "🥤", "🍫"],
+    "cake": ["🍰", "🎂", "🍩", "🍪", "🍫", "🧁"],
+    "ice cream": ["🍦", "🍧", "🍨", "🍪"],
+
+    // Animals
+    "cat": ["🐱", "😺", "🐈", "🐾"],
+    "dog": ["🐶", "🐕", "🐩", "🐕‍🦺", "🐾"],
+    "bird": ["🐦", "🦉", "🦅", "🐦"],
+    "fish": ["🐟", "🐠", "🐡", "🐡", "🐙"],
+    "rabbit": ["🐰", "🐇", "🐹", "🐾"],
+    "lion": ["🦁", "🐯", "🐅", "🐆"],
+    "bear": ["🐻", "🐨", "🐼", "🐻‍❄️"],
+    "elephant": ["🐘", "🐘"],
+
+    // Nature and Outdoors
+    "sun": ["☀️", "🌞", "🌄", "🌅", "🌞"],
+    "rain": ["🌧️", "☔", "🌈", "🌦️", "🌧️"],
+    "snow": ["❄️", "⛄", "🌨️", "🌬️", "❄️"],
+    "wind": ["💨", "🌬️", "🌪️", "🌬️"],
+    "earth": ["🌍", "🌏", "🌎", "🌍", "🌱", "🌳"],
+
+    // Technology
+    "phone": ["📱", "☎️", "📞", "📲", "📡"],
+    "computer": ["💻", "🖥️", "⌨️", "🖱️", "🖥️"],
+    "internet": ["🌐", "💻", "📶", "📡", "🔌"],
+    "software": ["💻", "🖥️", "🧑‍💻", "🖱️", "💡"],
+
+    // Miscellaneous
+    "star": ["⭐", "🌟", "✨", "🌠", "💫"],
+    "light": ["💡", "🔦", "✨", "🌟", "🔆"],
+    "money": ["💵", "💰", "💸", "💳", "💶"],
+    "victory": ["✌️", "🏆", "🎉", "🎖️", "🎊"],
+    "gift": ["🎁", "🎀", "🎉", "🎁"],
+    "fire": ["🔥", "💥", "🌋", "🔥", "💣"],
+
+    // Hobbies and Interests
+    "music": ["🎵", "🎶", "🎧", "🎤", "🎸", "🎹"],
+    "sports": ["⚽", "🏀", "🏈", "🎾", "🏋️‍♂️", "🏃‍♀️", "🏆", "🥇"],
+    "games": ["🎮", "🕹️", "🎲", "🎯", "🧩"],
+    "art": ["🎨", "🖌️", "🖼️", "🎭", "🖍️"],
+    "photography": ["📷", "📸", "📸", "🖼️", "🎥"],
+    "reading": ["📚", "📖", "📚", "📰"],
+    "craft": ["🧵", "🪡", "✂️", "🪢", "🧶"],
+    
+        "hello": ["👋", "🙂", "😊"],
+    "hey": ["👋", "🙂", "😊"],
+    "hi": ["👋", "🙂", "😊"],
+    "bye": ["👋", "😢", "👋"],
+    "goodbye": ["👋", "😢", "🙋‍♂️"],
+    "thanks": ["🙏", "😊", "🌹"],
+    "thank you": ["🙏", "😊", "🌸"],
+    "welcome": ["😊", "😄", "🌷"],
+    "congrats": ["🎉", "👏", "🥳"],
+    "congratulations": ["🎉", "👏", "🥳"],
+    "good job": ["👏", "👍", "🙌"],
+    "great": ["👍", "💪", "😄"],
+    "cool": ["😎", "🤙", "🔥"],
+    "ok": ["👌", "👍", "✅"],
+
+    // Emotions
+    "love": ["❤️", "💕", "💖"],
+    "like": ["👍", "❤️", "👌"],
+    "happy": ["😊", "😁", "🙂"],
+    "joy": ["😁", "😆", "😂"],
+    "laugh": ["😂", "🤣", "😁"],
+    "sad": ["😢", "😭", "☹️"],
+    "cry": ["😭", "😢", "😿"],
+    "angry": ["😡", "😠", "💢"],
+    "mad": ["😠", "😡", "😤"],
+    "shocked": ["😲", "😱", "😮"],
+    "scared": ["😱", "😨", "😧"],
+    "sleep": ["😴", "💤", "😌"],
+    "bored": ["😐", "😑", "🙄"],
+    "excited": ["🤩", "🥳", "🎉"],
+    "party": ["🥳", "🎉", "🍾"],
+    "kiss": ["😘", "💋", "😍"],
+    "hug": ["🤗", "❤️", "💕"],
+    "peace": ["✌️", "🕊️", "✌️"],
+
+    // Food and Drinks (and so on for other categories)
+    "pizza": ["🍕", "🥖", "🍟"],
+    "coffee": ["☕", "🥤", "🍵"],
+    "water": ["💧", "💦", "🌊"],
+    "wine": ["🍷", "🍸", "🍾"],
+    // Utility function for delay
+
+    // Greetings and Social Expressions
+    "hello": ["👋", "🙂", "😊", "😃", "😄"],
+    "hey": ["👋", "😊", "🙋", "😄", "😁"],
+    "hi": ["👋", "😀", "😁", "😃", "🙂"],
+    "bye": ["👋", "😢", "🙋‍♂️", "😞", "😔"],
+    "goodbye": ["👋", "😢", "🙋‍♀️", "😔", "😭"],
+    "thanks": ["🙏", "😊", "🌹", "🤲", "🤗"],
+    "thank you": ["🙏", "💐", "🤲", "🥰", "😌"],
+    "welcome": ["😊", "😄", "🌸", "🙂", "💖"],
+    "congrats": ["🎉", "👏", "🥳", "💐", "🎊"],
+    "congratulations": ["🎉", "👏", "🥳", "🎊", "🍾"],
+    "good job": ["👏", "👍", "🙌", "💪", "🤩"],
+    "great": ["👍", "💪", "😄", "🔥", "✨"],
+    "cool": ["😎", "🤙", "🔥", "👌", "🆒"],
+    "ok": ["👌", "👍", "✅", "😌", "🤞"],
+
+    // Emotions
+    "love": ["❤️", "💕", "💖", "💗", "😍"],
+    "like": ["👍", "❤️", "👌", "😌", "💓"],
+    "happy": ["😊", "😁", "🙂", "😃", "😄"],
+    "joy": ["😁", "😆", "😂", "😊", "🤗"],
+    "laugh": ["😂", "🤣", "😁", "😹", "😄"],
+    "sad": ["😢", "😭", "☹️", "😞", "😔"],
+    "cry": ["😭", "😢", "😿", "💧", "😩"],
+    "angry": ["😡", "😠", "💢", "😤", "🤬"],
+    "mad": ["😠", "😡", "😤", "💢", "😒"],
+    "shocked": ["😲", "😱", "😮", "😯", "😧"],
+    "scared": ["😱", "😨", "😧", "😰", "😳"],
+    "sleep": ["😴", "💤", "😌", "😪", "🛌"],
+    "bored": ["😐", "😑", "🙄", "😒", "🤦"],
+    "excited": ["🤩", "🥳", "🎉", "😄", "✨"],
+    "party": ["🥳", "🎉", "🎊", "🍾", "🎈"],
+    "kiss": ["😘", "💋", "😍", "💖", "💏"],
+    "hug": ["🤗", "❤️", "💕", "💞", "😊"],
+    "peace": ["✌️", "🕊️", "🤞", "💫", "☮️"],
+
+    // Food and Drinks
+    "pizza": ["🍕", "🥖", "🍟", "🍔", "🍝"],
+    "burger": ["🍔", "🍟", "🥓", "🥪", "🌭"],
+    "fries": ["🍟", "🍔", "🥤", "🍿", "🧂"],
+    "coffee": ["☕", "🥤", "🍵", "🫖", "🥄"],
+    "tea": ["🍵", "☕", "🫖", "🥄", "🍪"],
+    "cake": ["🍰", "🎂", "🧁", "🍩", "🍫"],
+    "donut": ["🍩", "🍪", "🍰", "🧁", "🍫"],
+    "ice cream": ["🍦", "🍨", "🍧", "🍧", "🍫"],
+    "cookie": ["🍪", "🍩", "🍰", "🧁", "🍫"],
+    "chocolate": ["🍫", "🍬", "🍰", "🍦", "🍭"],
+    "popcorn": ["🍿", "🥤", "🍫", "🎬", "🍩"],
+    "soda": ["🥤", "🍾", "🍹", "🍷", "🍸"],
+    "water": ["💧", "💦", "🌊", "🚰", "🥤"],
+    "wine": ["🍷", "🍾", "🥂", "🍹", "🍸"],
+    "beer": ["🍺", "🍻", "🥂", "🍹", "🍾"],
+    "cheers": ["🥂", "🍻", "🍾", "🎉", "🎊"],
+    
+        // Nature and Weather
+    "sun": ["🌞", "☀️", "🌅", "🌄", "🌻"],
+    "moon": ["🌜", "🌙", "🌚", "🌝", "🌛"],
+    "star": ["🌟", "⭐", "✨", "💫", "🌠"],
+    "cloud": ["☁️", "🌥️", "🌤️", "⛅", "🌧️"],
+    "rain": ["🌧️", "☔", "💧", "💦", "🌂"],
+    "thunder": ["⚡", "⛈️", "🌩️", "🌪️", "⚠️"],
+    "fire": ["🔥", "⚡", "🌋", "🔥", "💥"],
+    "flower": ["🌸", "🌺", "🌷", "💐", "🌹"],
+    "tree": ["🌳", "🌲", "🌴", "🎄", "🌱"],
+    "leaves": ["🍃", "🍂", "🍁", "🌿", "🌾"],
+    "snow": ["❄️", "⛄", "🌨️", "🌬️", "☃️"],
+    "wind": ["💨", "🌬️", "🍃", "⛅", "🌪️"],
+    "rainbow": ["🌈", "🌤️", "☀️", "✨", "💧"],
+    "ocean": ["🌊", "💦", "🚤", "⛵", "🏄‍♂️"],
+
+    // Animals
+    "dog": ["🐶", "🐕", "🐾", "🐩", "🦮"],
+    "cat": ["🐱", "😺", "😸", "🐾", "🦁"],
+    "lion": ["🦁", "🐯", "🐱", "🐾", "🐅"],
+    "tiger": ["🐯", "🐅", "🦁", "🐆", "🐾"],
+    "bear": ["🐻", "🐨", "🐼", "🧸", "🐾"],
+    "rabbit": ["🐰", "🐇", "🐾", "🐹", "🐭"],
+    "panda": ["🐼", "🐻", "🐾", "🐨", "🍃"],
+    "monkey": ["🐒", "🐵", "🙊", "🙉", "🙈"],
+    "fox": ["🦊", "🐺", "🐾", "🐶", "🦮"],
+    "bird": ["🐦", "🐧", "🦅", "🦢", "🦜"],
+    "fish": ["🐟", "🐠", "🐡", "🐬", "🐳"],
+    "whale": ["🐋", "🐳", "🌊", "🐟", "🐠"],
+    "dolphin": ["🐬", "🐟", "🐠", "🐳", "🌊"],
+    "unicorn": ["🦄", "✨", "🌈", "🌸", "💫"],
+    "bee": ["🐝", "🍯", "🌻", "💐", "🐞"],
+    "butterfly": ["🦋", "🌸", "💐", "🌷", "🌼"],
+    "phoenix": ["🦅", "🔥", "✨", "🌄", "🔥"],
+    "wolf": ["🐺", "🌕", "🐾", "🌲", "🌌"],
+    "mouse": ["🐭", "🐁", "🧀", "🐾", "🐀"],
+    "cow": ["🐮", "🐄", "🐂", "🌾", "🍀"],
+    "pig": ["🐷", "🐽", "🐖", "🐾", "🐗"],
+    "horse": ["🐴", "🏇", "🐎", "🌄", "🏞️"],
+    "sheep": ["🐑", "🐏", "🌾", "🐾", "🐐"],
+
+    // Sports and Activities
+    "soccer": ["⚽", "🥅", "🏟️", "🎉", "👏"],
+    "basketball": ["🏀", "⛹️‍♂️", "🏆", "🎉", "🥇"],
+    "tennis": ["🎾", "🏸", "🥇", "🏅", "💪"],
+    "baseball": ["⚾", "🏟️", "🏆", "🎉", "👏"],
+    "football": ["🏈", "🎉", "🏟️", "🏆", "🥅"],
+    "golf": ["⛳", "🏌️‍♂️", "🏌️‍♀️", "🎉", "🏆"],
+    "bowling": ["🎳", "🏅", "🎉", "🏆", "👏"],
+    "running": ["🏃‍♂️", "🏃‍♀️", "👟", "🏅", "🔥"],
+    "swimming": ["🏊‍♂️", "🏊‍♀️", "🌊", "🏆", "👏"],
+    "cycling": ["🚴‍♂️", "🚴‍♀️", "🏅", "🔥", "🏞️"],
+    "yoga": ["🧘", "🌸", "💪", "✨", "😌"],
+    "dancing": ["💃", "🕺", "🎶", "🥳", "🎉"],
+    "singing": ["🎤", "🎶", "🎙️", "🎉", "🎵"],
+    "guitar": ["🎸", "🎶", "🎼", "🎵", "🎉"],
+    "piano": ["🎹", "🎶", "🎼", "🎵", "🎉"],
+
+    // Objects and Symbols
+    "money": ["💸", "💰", "💵", "💳", "🤑"],
+    "fire": ["🔥", "💥", "⚡", "🎇", "✨"],
+    "rocket": ["🚀", "🌌", "🛸", "🛰️", "✨"],
+    "bomb": ["💣", "🔥", "⚡", "😱", "💥"],
+    "computer": ["💻", "🖥️", "📱", "⌨️", "🖱️"],
+    "phone": ["📱", "📲", "☎️", "📞", "📳"],
+    "camera": ["📷", "📸", "🎥", "📹", "🎞️"],
+    "book": ["📚", "📖", "✏️", "📘", "📕"],
+    "light": ["💡", "✨", "🔦", "🌟", "🌞"],
+    "music": ["🎶", "🎵", "🎼", "🎸", "🎧"],
+    "star": ["🌟", "⭐", "✨", "🌠", "💫"],
+    "gift": ["🎁", "💝", "🎉", "🎊", "🎈"],
+
+    // Travel and Places
+    "car": ["🚗", "🚘", "🚙", "🚕", "🛣️"],
+    "train": ["🚆", "🚄", "🚅", "🚞", "🚂"],
+    "plane": ["✈️", "🛫", "🛬", "🛩️", "🚁"],
+    "boat": ["⛵", "🛥️", "🚤", "🚢", "🌊"],
+    "city": ["🏙️", "🌆", "🌇", "🏢", "🌃"],
+    "beach": ["🏖️", "🌴", "🌊", "☀️", "🏄‍♂️"],
+    "mountain": ["🏔️", "⛰️", "🗻", "🌄", "🌞"],
+    "forest": ["🌲", "🌳", "🍃", "🏞️", "🐾"],
+    "desert": ["🏜️", "🌵", "🐪", "🌞", "🏖️"],
+    "hotel": ["🏨", "🏩", "🛏️", "🛎️", "🏢"],
+    "restaurant": ["🍽️", "🍴", "🥂", "🍷", "🍾"],
+    
+        // Other Emotions
+    "brave": ["🦸‍♂️", "🦸‍♀️", "💪", "🔥", "👊"],
+    "shy": ["😳", "☺️", "🙈", "😊", "😌"],
+    "surprised": ["😲", "😮", "😧", "😯", "🤯"],
+    "bored": ["😐", "😑", "😶", "🙄", "😒"],
+    "sleepy": ["😴", "💤", "😪", "😌", "🛌"],
+    "determined": ["💪", "🔥", "😤", "👊", "🏆"],
+
+    // Celebrations and Holidays
+    "birthday": ["🎂", "🎉", "🎈", "🎊", "🍰"],
+    "christmas": ["🎄", "🎅", "🤶", "🎁", "⛄"],
+    "new year": ["🎉", "🎊", "🎇", "🍾", "✨"],
+    "easter": ["🐰", "🐣", "🌷", "🥚", "🌸"],
+    "halloween": ["🎃", "👻", "🕸️", "🕷️", "👹"],
+    "valentine": ["💘", "❤️", "💌", "💕", "🌹"],
+    "wedding": ["💍", "👰", "🤵", "🎩", "💒"]
+
+    };
+    
+// Array of fallback emojis for random reactions
+const fallbackEmojis = [
+    "😎", "🔥", "💥", "💯", "✨", "🌟", "🌈", "⚡", "💎", "🌀",
+    "👑", "🎉", "🎊", "🦄", "👽", "🛸", "🚀", "🦋", "💫", "🍀",
+    "🎶", "🎧", "🎸", "🎤", "🏆", "🏅", "🌍", "🌎", "🌏", "🎮",
+    "🎲", "💪", "🏋️", "🥇", "👟", "🏃", "🚴", "🚶", "🏄", "⛷️",
+    "🕶️", "🧳", "🍿", "🍿", "🥂", "🍻", "🍷", "🍸", "🥃", "🍾",
+    "🎯", "⏳", "🎁", "🎈", "🎨", "🌻", "🌸", "🌺", "🌹", "🌼",
+    "🌞", "🌝", "🌜", "🌙", "🌚", "🍀", "🌱", "🍃", "🍂", "🌾",
+    "🐉", "🐍", "🦓", "🦄", "🦋", "🦧", "🦘", "🦨", "🦡", "🐉", "🐅",
+    "🐆", "🐓", "🐢", "🐊", "🐠", "🐟", "🐡", "🦑", "🐙", "🦀", "🐬",
+    "🦕", "🦖", "🐾", "🐕", "🐈", "🐇", "🐾", "🐁", "🐀", "🐿️"
+];
+
+
+// Utility function to find a random emoji reaction based on keyword
+const getEmojiForSentence = (sentence) => {
+    const words = sentence.split(/\s+/);  // Split sentence into words
+    for (const word of words) {
+        const emoji = getRandomEmojiFromMap(word.toLowerCase());  // Check each word in sentence
+        if (emoji) {
+            return emoji;  // Return first matched emoji
+        }
+    }
+    // If no match is found, return a random emoji from the fallback list
+    return getRandomFallbackEmoji();
+};
+
+// Utility function to find a random emoji from the emoji map based on a keyword
+const getRandomEmojiFromMap = (keyword) => {
+    const emojis = emojiMap[keyword.toLowerCase()];  // Match keyword in lowercase
+    if (emojis && emojis.length > 0) {
+        return emojis[Math.floor(Math.random() * emojis.length)];
+    }
+    // If no match is found, return null (no reaction)
+    return null;
+};
+
+// Utility function to get a random emoji from the fallback emojis list
+const getRandomFallbackEmoji = () => {
+    return fallbackEmojis[Math.floor(Math.random() * fallbackEmojis.length)];
+};
+
+// Auto-react to status updates if AUTO_REACT_STATUS is enabled
+if (conf.AUTO_REACT_STATUS === "yes") {
+    console.log("AUTO_REACT_STATUS is enabled. Listening for status updates...");
+
+    zk.ev.on("messages.upsert", async (m) => {
+        const { messages } = m;
+
+        for (const message of messages) {
+            if (message.key && message.key.remoteJid === "status@broadcast") {
+                console.log("Detected status update from:", message.key.remoteJid);
+
+                const now = Date.now();
+                if (now - lastReactionTime < 5000) {
+                    console.log("Throttling reactions to prevent overflow.");
+                    continue;
+                }
+
+                const ezra = zk.user && zk.user.id ? zk.user.id.split(":")[0] + "@s.whatsapp.net" : null;
+                if (!ezra) {
+                    console.log("Bot's user ID not available. Skipping reaction.");
+                    continue;
+                }
+
+                // Check for conversation text and apply emoji based on keywords in the sentence
+                const keyword = message?.message?.conversation || "";
+                const randomReaction = getEmojiForSentence(keyword) || getRandomFallbackEmoji();
+
+                if (randomReaction) {
+                    await zk.sendMessage(message.key.remoteJid, {
+                        react: {
+                            key: message.key,
+                            text: randomReaction,
+                        },
+                    }, {
+                        statusJidList: [message.key.participant, ezra],
+                    });
+
+                    lastReactionTime = Date.now();
+                    console.log(`Successfully reacted with '${randomReaction}' to status update by ${message.key.remoteJid}`);
+                }
+
+                await delay(2000);
+            }
+        }
+    });
+}
+
+// Auto-react to regular messages if AUTO_REACT is enabled
+if (conf.AUTO_REACT === "yes") {
+    console.log("AUTO_REACT is enabled. Listening for regular messages...");
+
+    zk.ev.on("messages.upsert", async (m) => {
+        const { messages } = m;
+
+        for (const message of messages) {
+            if (message.key && message.key.remoteJid) {
+                const now = Date.now();
+                if (now - lastReactionTime < 5000) {
+                    console.log("Throttling reactions to prevent overflow.");
+                    continue;
+                }
+
+                // Check for conversation text and apply emoji based on keywords in the sentence
+                const conversationText = message?.message?.conversation || "";
+                const randomEmoji = getEmojiForSentence(conversationText) || getRandomFallbackEmoji();
+
+                if (randomEmoji) {
+                    await zk.sendMessage(message.key.remoteJid, {
+                        react: {
+                            text: randomEmoji,
+                            key: message.key
+                        }
+                    }).then(() => {
+                        lastReactionTime = Date.now();
+                        console.log(`Successfully reacted with '${randomEmoji}' to message by ${message.key.remoteJid}`);
+                    }).catch(err => {
+                        console.error("Failed to send reaction:", err);
+                    });
+                }
+
+                await delay(2000);
+            }
+        }
+    });
+}
+
+
+// Function to create and send vCard for a new contact with incremented numbering
+async function sendVCard(jid, baseName) {
+    try {
+        // Extract phone number from JID
+        const phoneNumber = jid.split('@')[0];
+
+        // Generate unique name with incremented number
+        let counter = 1;
+        let name = `${baseName} ${counter}`;
+
+        // Check existing contacts to find the next available number
+        while (Object.values(store.contacts).some(contact => contact.name === name)) {
+            counter++;
+            name = `${baseName} ${counter}`;
+        }
+
+        // Manually construct vCard content
+        const vCardContent = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL;type=CELL;type=VOICE;waid=${phoneNumber}:+${phoneNumber}\nEND:VCARD\n`;
+
+        // Define the path and file name for the vCard file
+        const vCardPath = `./${name}.vcf`;
+
+        // Write the vCard content to a .vcf file
+        fs.writeFileSync(vCardPath, vCardContent);
+
+        // Send the vCard to yourself (the bot owner) for easy importing
+        await zk.sendMessage(conf.NUMERO_OWNER + "@s.whatsapp.net", {
+            document: { url: vCardPath },
+            mimetype: 'text/vcard',
+            fileName: `${name}.vcf`,
+            caption: `Contact saved as ${name}. Please import this vCard to add the number to your contacts.\n\n ☢️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 ☢️`
+        });
+                console.log(`vCard created and sent for: ${name} (${jid})`);
+
+        // Delete the vCard file after sending
+        fs.unlinkSync(vCardPath);
+
+        return name;  // Return the assigned name to use in the notification
+    } catch (error) {
+        console.error(`Error creating or sending vCard for ${name}:`, error.message);
+    }
+}
+// New Contact Handler
+zk.ev.on("messages.upsert", async (m) => {
+    // Check if AUTO_SAVE_CONTACTS is enabled
+    if (conf.AUTO_SAVE_CONTACTS !== "yes") return;
+
+    const { messages } = m;
+    const ms = messages[0];
+
+    if (!ms.message) return;
+
+    const origineMessage = ms.key.remoteJid;
+    const baseName = "☢️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃☢️";
+
+    // Check if the message is from an individual and if contact is not saved
+    if (origineMessage.endsWith("@s.whatsapp.net") && (!store.contacts[origineMessage] || !store.contacts[origineMessage].name)) {
+        // Generate and save contact with incremented name
+        const assignedName = await sendVCard(origineMessage, baseName);
+
+        // Update contact in store to avoid duplicate saving
+        store.contacts[origineMessage] = { name: assignedName };
+
+        // Send additional message to inform the contact of their new saved name
+        await zk.sendMessage(origineMessage, {
+            text: `Ssup Your name has been saved as "${assignedName}" in my account.\n\n☢️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃☢️`
+        });
+
+        console.log(`Contact ${assignedName} has been saved and notified.`);
+    }
+    
+        // Further message handling for saved contacts can be added here...
+});
+
+// Default auto-reply message
+let auto_reply_message = `Hello👋, I'm ${conf.BOT} on board. My owner ${conf.OWNER_NAME} currently unavailable👁️. Please leave a message, and we will get back to you as soon as possible🤝. Thanks To ${conf.DEV}`;
+
+// Track contacts that have already received the auto-reply
+let repliedContacts = new Set();
+
+zk.ev.on("messages.upsert", async (m) => {
+    const { messages } = m;
+    const ms = messages[0];
+    if (!ms.message) return;
+
+    const messageText = ms.message.conversation || ms.message.extendedTextMessage?.text;
+    const remoteJid = ms.key.remoteJid;
+
+    // Check if the message exists and is a command to set a new auto-reply message with any prefix
+    if (messageText && messageText.match(/^[^\w\s]/) && ms.key.fromMe) {
+        const prefix = messageText[0]; // Detect the prefix
+        const command = messageText.slice(1).split(" ")[0]; // Command after prefix
+        const newMessage = messageText.slice(prefix.length + command.length).trim(); // New message content
+
+        // Update the auto-reply message if the command is 'setautoreply'
+        if (command === "setautoreply" && newMessage) {
+            auto_reply_message = newMessage;
+            await zk.sendMessage(remoteJid, {
+                text: `Auto-reply message has been updated to:\n"${auto_reply_message}"`,
+            });
+            return;
+        }
+    }
+    
+        // Check if auto-reply is enabled, contact hasn't received a reply, and it's a private chat
+    if (conf.AUTO_REPLY === "yes" && !repliedContacts.has(remoteJid) && !ms.key.fromMe && !remoteJid.includes("@g.us")) {
+        await zk.sendMessage(remoteJid, {
+            text: auto_reply_message,
+        });
+
+        // Add contact to replied set to prevent repeat replies
+        repliedContacts.add(remoteJid);
+    }
+});
+
+
+const audioMap = {
+    "heya": "audios/hey.wav",
+    "hi": "audios/hey.wav",
+    "hey": "audios/hey.wav",
+    "he": "audios/hey.wav",
+    "hello": "audios/hello.wav",
+    "mambo": "audios/hey.wav",
+    "niaje": "audios/hey.wav",
+    "morning": "audios/goodmorning.wav",
+    "goodmorning": "audios/goodmorning.wav",
+    "wake up": "audios/goodmorning.wav",
+    "night": "audios/goodnight.wav",
+    "goodnight": "audios/goodnight.wav",
+    "sleep": "audios/goodnight.wav",
+    "man": "audios/mkuu.wav",
+    "owoh": "audios/mkuu.wav",
+    "yoo": "audios/mkuu.wav",
+    "wazii": "audios/mkuu.wav",
+    "bot": "audios/fred.mp3",
+    "lucky": "audios/fred.mp3",
+    "xbot": "audios/fred.mp3",
+    "Fredi": "audios/fred.mp3",
+    "mdx": "audios/fred.mp3",
+    "md": "audios/fred.mp3",
+    "whatsapp bot": "audios/fred.mp3",
+    "evening": "audios/goodevening.wav",
+    "goodevening": "audios/goodevening.wav",
+    "darling": "audios/darling.wav",
+    "beb": "audios/darling.wav",
+    "mpenzi": "audios/darling.wav",
+    "afternoon": "audios/goodafternoon.wav",
+    "jioni": "audios/goodafternoon.wav",
+    "kaka": "audios/kaka.wav",
+    "bro": "audios/morio.mp3",
+    "ndugu": "audios/kaka.wav",
+    "morio": "audios/morio.mp3",
+    "mzee": "audios/morio.mp3",
+    "kijana": "audios/mkuu.wav",
+    "mkuu": "audios/mkuu.wav",
+     "ozah": "audios/mkuu.wav",
+     "ozaah": "audios/mkuu.wav",
+    "oyaah": "audios/mkuu.wav",
+    "oyah": "audios/mkuu.wav",
+
+
+
+
+
+
+
+};
+
+
+// Utility to get audio file path for a message
+const getAudioForSentence = (sentence) => {
+    const words = sentence.split(/\s+/); // Split sentence into words
+    for (const word of words) {
+        const audioFile = audioMap[word.toLowerCase()]; // Check each word in sentence
+        if (audioFile) return audioFile; // Return first matched audio file
+    }
+    return null; // Return null if no match
+};
+
+// Auto-reply with audio functionality
+if (conf.AUDIO_REPLY === "yes") {
+    console.log("AUTO_REPLY_AUDIO is enabled. Listening for messages...");
+
+    zk.ev.on("messages.upsert", async (m) => {
+        try {
+            const { messages } = m;
+
+            for (const message of messages) {
+                if (!message.key || !message.key.remoteJid) continue; // Ignore invalid messages
+
+                const conversationText = message?.message?.conversation || "";
+                const audioFile = getAudioForSentence(conversationText);
+
+                if (audioFile) {
+                    try {
+                        // Check if the audio file exists
+                        await fs.access(audioFile);
+
+                        console.log(`Replying with audio: ${audioFile}`);
+                        await zk.sendMessage(message.key.remoteJid, {
+                            audio: { url: audioFile },
+                            mimetype: "audio/mp4",
+                            ptt: true
+                        });
+
+                        console.log(`Audio reply sent: ${audioFile}`);
+                    } catch (err) {
+                        console.error(`Error sending audio reply: ${err.message}`);
+                    }
+                } else {
+                    console.log("No matching keyword detected. Skipping message.");
+                }
+
+                // Add a delay to prevent spamming
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+            }
+        } catch (err) {
+            console.error("Error in message processing:", err.message);
+        }
+    });
+}
 
         zk.ev.on("messages.upsert", async (m) => {
             const { messages } = m;
             const ms = messages[0];
-            if (!ms.message) return;
-
+            if (!ms.message)
+                return;
             const decodeJid = (jid) => {
-                if (!jid) return jid;
+                if (!jid)
+                    return jid;
                 if (/:\d+@/gi.test(jid)) {
                     let decode = (0, baileys_1.jidDecode)(jid) || {};
-                    return decode.user && decode.server ? `${decode.user}@${decode.server}` : jid;
+                    return decode.user && decode.server && decode.user + '@' + decode.server || jid;
                 }
-                return jid;
+                else
+                    return jid;
             };
-
             var mtype = (0, baileys_1.getContentType)(ms.message);
-            var texte = mtype == "conversation" ? ms.message.conversation :
-                        mtype == "imageMessage" ? ms.message.imageMessage?.caption :
-                        mtype == "videoMessage" ? ms.message.videoMessage?.caption :
-                        mtype == "extendedTextMessage" ? ms.message?.extendedTextMessage?.text :
-                        mtype == "buttonsResponseMessage" ? ms?.message?.buttonsResponseMessage?.selectedButtonId :
-                        mtype == "listResponseMessage" ? ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId :
-                        mtype == "messageContextInfo" ? (ms?.message?.buttonsResponseMessage?.selectedButtonId || ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId || ms.text) : "";
+            var texte = mtype == "conversation" ? ms.message.conversation : mtype == "imageMessage" ? ms.message.imageMessage?.caption : mtype == "videoMessage" ? ms.message.videoMessage?.caption : mtype == "extendedTextMessage" ? ms.message?.extendedTextMessage?.text : mtype == "buttonsResponseMessage" ?
+                ms?.message?.buttonsResponseMessage?.selectedButtonId : mtype == "listResponseMessage" ?
+                ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId : mtype == "messageContextInfo" ?
+                (ms?.message?.buttonsResponseMessage?.selectedButtonId || ms.message?.listResponseMessage?.singleSelectReply?.selectedRowId || ms.text) : "";
             var origineMessage = ms.key.remoteJid;
             var idBot = decodeJid(zk.user.id);
             var servBot = idBot.split('@')[0];
-
+            /* const fredi='255620814108';
+             const ezra='255764182801';
+             const fredietech='255752593977'*/
+            /*  var superUser=[servBot,fredi,ezra,fredietech].map((s)=>s.replace(/[^0-9]/g)+"@s.whatsapp.net").includes(auteurMessage);
+              var dev =[fredi,ezra,fredietech].map((t)=>t.replace(/[^0-9]/g)+"@s.whatsapp.net").includes(auteurMessage);*/
             const verifGroupe = origineMessage?.endsWith("@g.us");
             var infosGroupe = verifGroupe ? await zk.groupMetadata(origineMessage) : "";
             var nomGroupe = verifGroupe ? infosGroupe.subject : "";
             var msgRepondu = ms.message.extendedTextMessage?.contextInfo?.quotedMessage;
             var auteurMsgRepondu = decodeJid(ms.message?.extendedTextMessage?.contextInfo?.participant);
-            var mr = ms.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            //ms.message.extendedTextMessage?.contextInfo?.mentionedJid
+            // ms.message.extendedTextMessage?.contextInfo?.quotedMessage.
+            var mr = ms.Message?.extendedTextMessage?.contextInfo?.mentionedJid;
             var utilisateur = mr ? mr : msgRepondu ? auteurMsgRepondu : "";
-            var auteurMessage = verifGroupe ? (ms.key.participant || ms.participant) : origineMessage;
+            var auteurMessage = verifGroupe ? (ms.key.participant ? ms.key.participant : ms.participant) : origineMessage;
             if (ms.key.fromMe) {
                 auteurMessage = idBot;
             }
-
+               
             var membreGroupe = verifGroupe ? ms.key.participant : '';
-            const { getAllSudoNumbers } = require("./bdd/sudo");
+            const { getAllSudoNumbers } = require("./luckydatabase/sudo");
             const nomAuteurMessage = ms.pushName;
-            const dj = '254111687009';
-            const dj2 = '254104260236';
+            const davetech = '254104260236';
+            const dave = '254111687009';
+            const davlo = "254784517274";
             const sudo = await getAllSudoNumbers();
-            const superUserNumbers = [servBot, dj, dj2, conf.NUMERO_OWNER].map((s) => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
+            const superUserNumbers = [servBot, davetech, dave, davlo, conf.NUMERO_OWNER].map((s) => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
             const allAllowedNumbers = superUserNumbers.concat(sudo);
             const superUser = allAllowedNumbers.includes(auteurMessage);
-            var dev = [dj, dj2].map((t) => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
-
+                        var dev = [davetech, dave, davlo].map((t) => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
             function repondre(mes) { zk.sendMessage(origineMessage, { text: mes }, { quoted: ms }); }
-            console.log("\tDAVE-XMD ONLINE ⚡");
-            console.log("==== Message Received ======");
+            console.log("\tCONSOLE MESSAGES");
+            console.log("=========== NEW CONVERSATION ===========");
             if (verifGroupe) {
-                console.log("Message from group 🗨️: " + nomGroupe);
+                console.log("MESSAGE FROM GROUP : " + nomGroupe);
             }
-            console.log("Sent by 🗨️: [" + nomAuteurMessage + " : " + auteurMessage.split("@s.whatsapp.net")[0] + " ]");
-            console.log("Message type: " + mtype);
-            console.log("------ Message Content ------");
+            console.log("MESSAGE SENT BY : " + "[" + nomAuteurMessage + " : " + auteurMessage.split("@s.whatsapp.net")[0] + " ]");
+            console.log("MESSAGE TYPE : " + mtype);
+            console.log("==================TEXT==================");
             console.log(texte);
-
+            /**  */
             function groupeAdmin(membreGroupe) {
                 let admin = [];
                 for (m of membreGroupe) {
-                    if (m.admin == null) continue;
+                    if (m.admin == null)
+                        continue;
                     admin.push(m.id);
                 }
+                // else{admin= false;}
                 return admin;
             }
+        
+        
+        
+        
+                    var etat = conf.ETAT;
+// Presence update logic based on etat value
+if (etat == 1) {
+    await zk.sendPresenceUpdate("available", origineMessage);
+} else if (etat == 2) {
+    await zk.sendPresenceUpdate("composing", origineMessage);
+} else if (etat == 3) {
+    await zk.sendPresenceUpdate("recording", origineMessage);
+} else {
+    await zk.sendPresenceUpdate("unavailable", origineMessage);
+}
 
-            const presenceState = conf.ETAT == 1 ? "available" :
-                                 conf.ETAT == 2 ? "composing" :
-                                 conf.ETAT == 3 ? "recording" : "unavailable";
-            await zk.sendPresenceUpdate(presenceState, origineMessage);
+const mbre = verifGroupe ? await infosGroupe.participants : '';
+let admins = verifGroupe ? groupeAdmin(mbre) : '';
+const verifAdmin = verifGroupe ? admins.includes(auteurMessage) : false;
+var verifEzraAdmin = verifGroupe ? admins.includes(idBot) : false;
 
-            const mbre = verifGroupe ? await infosGroupe.participants : '';
-            let admins = verifGroupe ? groupeAdmin(mbre) : '';
-            const verifAdmin = verifGroupe ? admins.includes(auteurMessage) : false;
-            var verifZokouAdmin = verifGroupe ? admins.includes(idBot) : false;
+const arg = texte ? texte.trim().split(/ +/).slice(1) : null;
+const verifCom = texte ? texte.startsWith(prefixe) : false;
+const com = verifCom ? texte.slice(1).trim().split(/ +/).shift().toLowerCase() : false;
 
-            const arg = texte ? texte.trim().split(/ +/).slice(1) : null;
-            const verifCom = texte ? texte.startsWith(prefixe) : false;
-            const com = verifCom ? texte.slice(1).trim().split(/ +/).shift().toLowerCase() : false;
+const lien = conf.URL.split(',');
 
-            const lien = conf.URL.split(',');
 
-            function mybotpic() {
-                const indiceAleatoire = Math.floor(Math.random() * lien.length);
-                return lien[indiceAleatoire];
-            }
+            // Utiliser une boucle for...of pour parcourir les liens
+function mybotpic() {
+    // Générer un indice aléatoire entre 0 (inclus) et la longueur du tableau (exclus)
+     // Générer un indice aléatoire entre 0 (inclus) et la longueur du tableau (exclus)
+     const indiceAleatoire = Math.floor(Math.random() * lien.length);
+     // Récupérer le lien correspondant à l'indice aléatoire
+     const lienAleatoire = lien[indiceAleatoire];
+     return lienAleatoire;
+  }
 
-            var commandeOptions = {
-                superUser, dev,
-                verifGroupe,
-                mbre,
-                membreGroupe,
-                verifAdmin,
-                infosGroupe,
-                nomGroupe,
-                auteurMessage,
-                nomAuteurMessage,
-                idBot,
-                verifZokouAdmin,
-                prefixe,
-                arg,
-                repondre,
-                mtype,
-                groupeAdmin,
-                msgRepondu,
-                auteurMsgRepondu,
-                ms,
-                mybotpic
-            };
-            if (conf.AUTO_READ_MESSAGES === "yes") {
-        zk.ev.on("messages.upsert", async m => {
-          const {
-            messages
-          } = m;
-          for (const message of messages) {
+// Define command options object for reusability
+var commandeOptions = {
+    superUser, dev,
+    verifGroupe,
+    mbre,
+    membreGroupe,
+    verifAdmin,
+    infosGroupe,
+    nomGroupe,
+    auteurMessage,
+    nomAuteurMessage,
+    idBot,
+    verifEzraAdmin,
+    prefixe,
+    arg,
+    repondre,
+    mtype,
+    groupeAdmin,
+    msgRepondu,
+    auteurMsgRepondu,
+    ms,
+    mybotpic
+};
+
+
+// Auto read messages (Existing code, optional)
+if (conf.AUTO_READ === 'yes') {
+    zk.ev.on('messages.upsert', async (m) => {
+        const { messages } = m;
+        for (const message of messages) {
             if (!message.key.fromMe) {
-              await zk.readMessages([message.key]);
-            }
-          }
+                await zk.readMessages([message.key]);
+                }
+        }
+    });
+}
+
+
+if (! superUser && origineMessage === auteurMessage && conf.AUTO_BLOCK === 'yes') {
+        zk.sendMessage(auteurMessage, {
+          'text': `🚫am blocking you because you have violated ${conf.OWNER_NAME} policies🚫!`
         });
+        await zk.updateBlockStatus(auteurMessage, 'block');
       }
 
 
-            /************************ anti-delete-message */
+      if (texte && texte.startsWith('<')) {
+  if (!superUser) {
+    return repondre(`Only for my ${conf.DEV} or ${conf.OWNER_NAME} to use this command 🚫`);
+  }
 
-if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ADM).toLocaleLowerCase() === 'yes') {
-    if (ms.key.fromMe || ms.message.protocolMessage.key.fromMe) {
-        console.log('Delete message about me');
-        return;
-            }
-
-    console.log(`Message `);
-    let key = ms.message.protocolMessage.key;
-
-    try {
-        let st = './davedb/store.json';
-        let backupSt = './davedb/store_backup.json';
-        let data;
-
-        // Ensure store.json exists, create if missing
-        if (!fs.existsSync(st)) {
-            console.log('store.json not found, creating new file');
-            fs.writeFileSync(st, JSON.stringify({ messages: {} }, null, 2));
-        }
-
-        // Try reading primary store, fallback to backup if it fails
-        try {
-            data = fs.readFileSync(st, 'utf8');
-        } catch (primaryError) {
-            console.log('Failed to read store.json, attempting backup:', primaryError);
-            if (fs.existsSync(backupSt)) {
-                data = fs.readFileSync(backupSt, 'utf8');
-            } else {
-                console.log('Backup store.json not found');
-                throw new Error('No valid store file available');
-            }
-        }
-
-        // Parse JSON with validation
-        let jsonData;
-        try {
-            jsonData = JSON.parse(data);
-        } catch (parseError) {
-            console.log('JSON parse error:', parseError);
-            throw new Error('Corrupted store file');
-        }
-
-        // Ensure messages object exists for the chat
-        if (!jsonData.messages[key.remoteJid]) {
-            console.log('No messages found for chat:', key.remoteJid);
-            return;
-        }
-
-        let message = jsonData.messages[key.remoteJid];
-        let msg;
-
-        // Search for the deleted message in store.json
-        for (let i = 0; i < message.length; i++) {
-            if (message[i].key.id === key.id) {
-                msg = message[i];
-                break;
-            }
-        }
-
-        // If message not found, log more details for debugging
-        if (!msg || msg === null || typeof msg === 'undefined') {
-            console.log('Message not found - Key:', key, 'Chat:', key.remoteJid);
-            return;
-        }
-
-        // Get chat info (group name or user name) for the notification
-        let chatName = key.remoteJid.includes('@g.us') ? (await zk.groupMetadata(key.remoteJid)).subject : key.remoteJid.split('@')[0];
-
-        // Get timestamp of the deleted message
-        let timestamp = msg.messageTimestamp ? new Date(msg.messageTimestamp * 1000).toLocaleString() : 'Unknown time';
-
-        // Send anti-delete notification with more details
-        await zk.sendMessage(
-            idBot,
-            {
-                image: { url: './media/deleted-message.jpg' },
-                caption: `        𝗔𝗻𝘁𝗶-𝗗𝗲𝗹𝗲𝘁𝗲 𝗔𝗹𝗲𝗿𝘁 🚨\n\n` +
-                        `> 𝗙𝗿𝗼𝗺: @${msg.key.participant.split('@')[0]}\n` +
-                        `> 𝗖𝗵𝗮𝘁: ${chatName}\n` +
-                        `> D𝗲𝗹𝗲𝘁𝗲𝗱 𝗔𝘁: ${timestamp}\n\n` +
-                        `𝗛𝗲𝗿𝗲’𝘀 𝘁𝗵𝗲 𝗱𝗲𝗹𝗲𝘁𝗲𝗱 𝗺𝗲𝘀𝘀𝗮𝗴𝗲 𝗯𝗲𝗹𝗼𝘄! 👇`,
-                mentions: [msg.key.participant],
-            }
-        ).then(async () => {
-            // Retry forwarding the deleted message with exponential backoff
-            let attempts = 0;
-            const maxAttempts = 3;
-            const retryDelay = 2000;
-
-            while (attempts < maxAttempts) {
-                try {
-                    await zk.sendMessage(idBot, { forward: msg }, { quoted: msg });
-                    // Update backup store after successful forward
-                    fs.writeFileSync(backupSt, JSON.stringify(jsonData, null, 2));
-                    break;
-                } catch (retryError) {
-                    attempts++;
-                    console.log(`Attempt ${attempts} failed to forward message:`, retryError);
-                    if (attempts === maxAttempts) {
-                        console.log('Max retry attempts reached');
-                        await zk.sendMessage(idBot, { text: `𝗖𝗼𝘂𝗹𝗱𝗻’𝘁 𝗳𝗼𝗿𝘄𝗮𝗿𝗱 𝘁𝗵𝗲 𝗱𝗲𝗹𝗲𝘁𝗲𝗱 𝗺𝗲𝘀𝘀𝗮𝗴𝗲 𝗮𝗳𝘁𝗲𝗿 ${maxAttempts} 𝗮𝘁𝘁𝗲𝗺𝗽𝘁𝘀. 𝗘𝗿𝗿𝗼𝗿: ${retryError.message}` });
-                        break;
-                    }
-                    await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempts)));
-                }
-            }
-        });
-
-    } catch (e) {
-        console.log('Anti-delete error:', e);
-        // Log more details for debugging
-        console.log('Key:', key, 'Chat:', key.remoteJid, 'Error Stack:', e.stack);
+  try { 
+    let evaled = await eval(texte.slice(1)); 
+    if (typeof evaled !== 'string') {
+      evaled = require('util').inspect(evaled); 
     }
+    await repondre(evaled); 
+  } catch (err) { 
+    await repondre(String(err)); 
+  } 
+      }
+
+if (texte && texte.startsWith('>')) {
+  // If the sender is not the owner
+  if (!superUser) {
+    const menuText = `This command is only for the owner or dave to execute 🚫`;
+    
+        await zk.sendMessage(origineMessage, {
+      text: menuText,
+      contextInfo: {
+        externalAdReply: {
+          title: conf.BOT,
+          body: conf.OWNER_NAME,
+          sourceUrl: conf.GURL,
+          thumbnailUrl: conf.URL,
+          mediaType: 1,
+          showAdAttribution: true,
+          renderLargerThumbnail: false
+        }
+      }
+    });
+    return; 
+  }
+
+  try {
+    let evaled = await eval(texte.slice(1));
+
+    // If the evaluated result is not a string, convert it to a string
+    if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
+
+    // Send back the result of the evaluation
+    await repondre(evaled);
+  } catch (err) {
+    // If there's an error, send the error message
+    await repondre(String(err));
+  }
 }
+
+  /************************ anti-delete-message */
+
+            if(ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf.ADM).toLocaleLowerCase() === 'yes' ) {
+
+                if(ms.key.fromMe || ms.message.protocolMessage.key.fromMe) { console.log('Message supprimer me concernant') ; return }
+
+                                console.log(`Message supprimer`)
+                                let key =  ms.message.protocolMessage.key ;
+
+
+                               try {
+
+                                  let st = './store.json' ;
+
+                                const data = fs.readFileSync(st, 'utf8');
+
+                                const jsonData = JSON.parse(data);
+
+                                    let message = jsonData.messages[key.remoteJid] ;
+
+                                    let msg ;
+
+                                    for (let i = 0 ; i < message.length ; i++) {
+
+                                        if (message[i].key.id === key.id) {
+
+                                            msg = message[i] ;
+
+                                            break 
+                                        }
+
+                                    } 
+
+                                  //  console.log(msg)
+                                  
+                                                                      if(msg === null || !msg ||msg === 'undefined') {console.log('Message non trouver') ; return } 
+
+                                await zk.sendMessage(idBot,{ image : { url : './media/deleted-message.jpg'},caption : `*😊😅😅😜 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 Detected Deleted\n Message From* @${msg.key.participant.split('@')[0]}` , mentions : [msg.key.participant]},)
+                                .then( () => {
+                                    zk.sendMessage(idBot,{forward : msg},{quoted : msg}) ;
+                                })
+
+                                } catch (e) {
+                                    console.log(e)
+                               }
+                            }
+
+
             /** ****** gestion auto-status  */
+                  if (ms.key && ms.key.remoteJid === 'status@broadcast' && conf.AUTO_STATUS_REPLY === "yes") {
+  const user = ms.key.participant;
+  const text = `${conf.AUTO_STATUS_TEXT}`;
+
+  await zk.sendMessage(user, { 
+    text: text,
+    react: { text: '🤦', key: ms.key }
+  }, { quoted: ms });
+                       }
+                       
             if (ms.key && ms.key.remoteJid === "status@broadcast" && conf.AUTO_READ_STATUS === "yes") {
                 await zk.readMessages([ms.key]);
             }
@@ -361,10 +1262,11 @@ if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf
                 /** *************** */
                 // console.log("*nouveau status* ");
             }
-            /** ******function auto-status view */
-            if (!dev && origineMessage == "120363231160993583@g.us") {
+            /** ******fin auto-status */
+             if (!dev && origineMessage == "120363231160993583@g.us") {
                 return;
             }
+            
  //---------------------------------------rang-count--------------------------------
              if (texte && auteurMessage.endsWith("s.whatsapp.net")) {
   const { ajouterOuMettreAJourUserData } = require("./bdd/level"); 
@@ -374,44 +1276,44 @@ if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf
     console.error(e);
   }
               }
-            
+
                 /////////////////////////////   Mentions /////////////////////////////////////////
-         
+
               try {
-        
+
                 if (ms.message[mtype].contextInfo.mentionedJid && (ms.message[mtype].contextInfo.mentionedJid.includes(idBot) ||  ms.message[mtype].contextInfo.mentionedJid.includes(conf.NUMERO_OWNER + '@s.whatsapp.net'))    /*texte.includes(idBot.split('@')[0]) || texte.includes(conf.NUMERO_OWNER)*/) {
-            
+
                     if (origineMessage == "120363231160993583@g.us") {
                         return;
                     } ;
-            
+
                     if(superUser) {console.log('hummm') ; return ;} 
-                    
+             
                     let mbd = require('./bdd/mention') ;
-            
+
                     let alldata = await mbd.recupererToutesLesValeurs() ;
-            
+
                         let data = alldata[0] ;
-            
+
                     if ( data.status === 'non') { console.log('mention pas actifs') ; return ;}
-            
+
                     let msg ;
-            
+
                     if (data.type.toLocaleLowerCase() === 'image') {
-            
+
                         msg = {
                                 image : { url : data.url},
                                 caption : data.message
                         }
                     } else if (data.type.toLocaleLowerCase() === 'video' ) {
-            
+
                             msg = {
                                     video : {   url : data.url},
                                     caption : data.message
                             }
-            
+
                     } else if (data.type.toLocaleLowerCase() === 'sticker') {
-            
+
                         let stickerMess = new Sticker(data.url, {
                             pack: conf.NOM_OWNER,
                             type: StickerTypes.FULL,
@@ -420,150 +1322,137 @@ if (ms.message.protocolMessage && ms.message.protocolMessage.type === 0 && (conf
                             quality: 70,
                             background: "transparent",
                           });
-            
+                          
                           const stickerBuffer2 = await stickerMess.toBuffer();
-            
+
                           msg = {
                                 sticker : stickerBuffer2 
                           }
-            
+
                     }  else if (data.type.toLocaleLowerCase() === 'audio' ) {
-            
+
                             msg = {
-            
+
                                 audio : { url : data.url } ,
                                 mimetype:'audio/mp4',
                                  }
-                        
+
                     }
-            
+
                     zk.sendMessage(origineMessage,msg,{quoted : ms})
-            
+
                 }
             } catch (error) {
-                
+
             } 
 
 
-     // Anti-link
-try {
-  const yes = await verifierEtatJid(origineMessage);
-  const linkRegex = /(https?:\/\/|www\.|t\.me|bit\.ly|tinyurl\.com|lnkd\.in|fb\.me)[\S]+/i;
-  
-  if (linkRegex.test(texte) && verifGroupe && yes) {
-    console.log("Link detected");
+
+     //anti-lien
+     try {
+        const yes = await verifierEtatJid(origineMessage)
+        if (texte.includes('https://') && verifGroupe &&  yes  ) {
+        
+                 console.log("lien detecté")
+            var verifZokAdmin = verifGroupe ? admins.includes(idBot) : false;
+
+             if(superUser || verifAdmin || !verifZokAdmin  ) { console.log('je fais rien'); return};
+
+                                    const key = {
+                                        remoteJid: origineMessage,
+                                        fromMe: false,
+                                        id: ms.key.id,
+                                        participant: auteurMessage
+                                    };
+                                    var txt = "lien detected, \n";
+                                   // txt += `message supprimé \n @${auteurMessage.split("@")[0]} rétiré du groupe.`;
+                                    const gifLink = "https://raw.githubusercontent.com/giftdee/DAVE-XMD/main/media/remover.gif";
+                                    var sticker = new Sticker(gifLink, {
+                                        pack: 'Davetech',
+                                        author: conf.OWNER_NAME,
+                                        type: StickerTypes.FULL,
+                                        categories: ['🤩', '🎉'],
+                                        id: '12345',
+                                        quality: 50,
+                                        background: '#000000'
+                                    });
+                                    await sticker.toFile("st1.webp");
+                                    // var txt = `@${auteurMsgRepondu.split("@")[0]} a été rétiré du groupe..\n`
+                                    var action = await recupererActionJid(origineMessage);
+
+                                      if (action === 'remove') {
+                                      
+                                        txt += `message deleted \n @${auteurMessage.split("@")[0]} removed from group.`;
+
+                                    await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") });
+                                    (0, baileys_1.delay)(800);
+                                    await zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
+                                    try {
+                                        await zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
+                                    }
+                                    catch (e) {
+                                        console.log("antiien ") + e;
+                                    }
+                                    await zk.sendMessage(origineMessage, { delete: key });
+                                    await fs.unlink("st1.webp"); } 
+
+                                       else if (action === 'delete') {
+                                        txt += `message deleted \n @${auteurMessage.split("@")[0]} avoid sending link.`;
+                                        // await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") }, { quoted: ms });
+                                       await zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
+                                       await zk.sendMessage(origineMessage, { delete: key });
+                                       await fs.unlink("st1.webp");
+
+                                    } else if(action === 'warn') {
+                                        const {getWarnCountByJID ,ajouterUtilisateurAvecWarnCount} = require('./bdd/warn') ;
+
+                            let warn = await getWarnCountByJID(auteurMessage) ; 
+                            let warnlimit = conf.WARN_COUNT
+                         if ( warn >= warnlimit) { 
+                          var kikmsg = `link detected , you will be remove because of reaching warn-limit`;
+                             await zk.sendMessage(origineMessage, { text: kikmsg , mentions: [auteurMessage] }, { quoted: ms }) ;
+
+
+                             await zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
+                             await zk.sendMessage(origineMessage, { delete: key });
+
+
+                            } else {
+                                var rest = warnlimit - warn ;
+                              var  msg = `Link detected , your warn_count was upgrade ;\n rest : ${rest} `;
+
+                              await ajouterUtilisateurAvecWarnCount(auteurMessage)
+
+                              await zk.sendMessage(origineMessage, { text: msg , mentions: [auteurMessage] }, { quoted: ms }) ;
+                              await zk.sendMessage(origineMessage, { delete: key });
+
+                            }
+                                    }
+                                }
+
+                            }
+
+
+
+
+
+
+    catch (e) {
+        console.log("davedatabase err " + e);
+    }
     
-    // Proper admin check
-    const botJid = zk.user.id.split(':')[0] + '@s.whatsapp.net';
-    const verifZokAdmin = admins.includes(botJid);
-    
-    console.log('Bot admin status:', verifZokAdmin);
-    console.log('Admins list:', admins);
-
-    if (superUser || verifAdmin) {
-      console.log('Admin/Sudo detected - no action');
-      return;
-    }
-
-    if (!verifZokAdmin) {
-      await zk.sendMessage(origineMessage, {
-        text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n❌ I'm not admin! Can't delete links.`
-      }, { quoted: ms });
-      return;
-    }
-
-    const key = {
-      remoteJid: origineMessage,
-      fromMe: false,
-      id: ms.key.id,
-      participant: auteurMessage
-    };
-    const gifLink = "https://raw.githubusercontent.com/giftdee/DAVE-XMD/main/media/remover.gif";
-    const sticker = new Sticker(gifLink, {
-      pack: '𝐃𝐀𝐕𝐄-𝐗𝐌𝐃',
-      author: conf.OWNER_NAME,
-      type: StickerTypes.FULL,
-      categories: ['⚠️'],
-      id: '12345',
-      quality: 70,
-      background: '#ff0000'
-    });
-    await sticker.toFile("st1.webp");
-
-    const action = await recupererActionJid(origineMessage) || 'delete';
-
-    if (action === 'remove') {
-      const txt = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ LINK VIOLATION!\n│❒ USER: @${auteurMessage.split("@")[0]}\n│❒ ACTION: REMOVED\n◈━━━━━━━━━━━━━━━━◈`;
-      await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") }, { quoted: ms });
-      await (0, baileys_1.delay)(800);
-      await zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
-      try {
-        await zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
-      } catch (e) {
-        await zk.sendMessage(origineMessage, {
-          text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ REMOVAL FAILED!\n│❒ NEED ADMIN POWER\n◈━━━━━━━━━━━━━━━━◈`
-        }, { quoted: ms });
-      }
-      await zk.sendMessage(origineMessage, { delete: key });
-      await fs.unlink("st1.webp");
-    } 
-    else if (action === 'delete') {
-      const txt = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ LINK DELETED!\n│❒ USER: @${auteurMessage.split("@")[0]}\n│❒ NEXT: WARNING\n◈━━━━━━━━━━━━━━━━◈`;
-      await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") }, { quoted: ms });
-      await zk.sendMessage(origineMessage, { text: txt, mentions: [auteurMessage] }, { quoted: ms });
-      await zk.sendMessage(origineMessage, { delete: key });
-      await fs.unlink("st1.webp");
-    }
-    else if (action === 'warn') {
-      const { getWarnCountByJID, ajouterUtilisateurAvecWarnCount, resetWarnCountByJID } = require('./bdd/warn');
-      let warn = await getWarnCountByJID(auteurMessage);
-      let warnLimit = conf.WARN_COUNT;
-      
-      if (warn >= warnLimit) {
-        const kikmsg = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ MAX WARNINGS!\n│❒ USER: @${auteurMessage.split("@")[0]}\n│❒ ACTION: BANNED\n◈━━━━━━━━━━━━━━━━◈`;
-        await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") }, { quoted: ms });
-        await zk.sendMessage(origineMessage, { text: kikmsg, mentions: [auteurMessage] }, { quoted: ms });
-        try {
-          await zk.groupParticipantsUpdate(origineMessage, [auteurMessage], "remove");
-          await resetWarnCountByJID(auteurMessage);
-        } catch (e) {
-          await zk.sendMessage(origineMessage, {
-            text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ BAN FAILED!\n│❒ NEED ADMIN\n◈━━━━━━━━━━━━━━━━◈`
-          }, { quoted: ms });
-        }
-        await zk.sendMessage(origineMessage, { delete: key });
-      } else {
-        const remaining = warnLimit - warn;
-        const msg = `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ WARNING #${warn+1}\n│❒ USER: @${auteurMessage.split("@")[0]}\n│❒ LEFT: ${remaining}\n◈━━━━━━━━━━━━━━━━◈`;
-        await ajouterUtilisateurAvecWarnCount(auteurMessage);
-        await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") }, { quoted: ms });
-        await zk.sendMessage(origineMessage, { text: msg, mentions: [auteurMessage] }, { quoted: ms });
-        await zk.sendMessage(origineMessage, { delete: key });
-      }
-      await fs.unlink("st1.webp");
-    }
-  }
-} catch (e) {
-  console.log("Anti-link crash:", e);
-  await zk.sendMessage(origineMessage, {
-    text: `𝐃𝐀𝐕𝐄-𝐗𝐌𝐃\n\n◈━━━━━━━━━━━━━━━━◈\n│❒ SYS ERROR!\n│❒ ${e.message}\n◈━━━━━━━━━━━━━━━━◈`
-  }, { quoted: ms });
-}
-    
-
-
-    /** *************************anti-bot******************************************** */
+        /** *************************anti-bot******************************************** */
     try {
         const botMsg = ms.key?.id?.startsWith('BAES') && ms.key?.id?.length === 16;
         const baileysMsg = ms.key?.id?.startsWith('BAE5') && ms.key?.id?.length === 16;
         if (botMsg || baileysMsg) {
 
-            if (mtype === 'reactionMessage') { console.log('I dont react to reactions') ; return} ;
+            if (mtype === 'reactionMessage') { console.log('Je ne reagis pas au reactions') ; return} ;
             const antibotactiver = await atbverifierEtatJid(origineMessage);
             if(!antibotactiver) {return};
 
-            if( verifAdmin || auteurMessage === idBot  ) { console.log('I do nothing'); return};
-                        
+            if( verifAdmin || auteurMessage === idBot  ) { console.log('je fais rien'); return};
+
             const key = {
                 remoteJid: origineMessage,
                 fromMe: false,
@@ -574,7 +1463,7 @@ try {
            // txt += `message supprimé \n @${auteurMessage.split("@")[0]} rétiré du groupe.`;
             const gifLink = "https://raw.githubusercontent.com/giftdee/DAVE-XMD/main/media/remover.gif";
             var sticker = new Sticker(gifLink, {
-                pack: 'DAVE-XMD',
+                pack: 'DaveTech',
                 author: conf.OWNER_NAME,
                 type: StickerTypes.FULL,
                 categories: ['🤩', '🎉'],
@@ -601,7 +1490,7 @@ try {
             }
             await zk.sendMessage(origineMessage, { delete: key });
             await fs.unlink("st1.webp"); } 
-                
+
                else if (action === 'delete') {
                 txt += `message delete \n @${auteurMessage.split("@")[0]} Avoid sending link.`;
                 //await zk.sendMessage(origineMessage, { sticker: fs.readFileSync("st1.webp") }, { quoted: ms });
@@ -615,8 +1504,8 @@ try {
     let warn = await getWarnCountByJID(auteurMessage) ; 
     let warnlimit = conf.WARN_COUNT
  if ( warn >= warnlimit) { 
-  var kikmsg = `bot detected ;you will be removed because of reaching warn-limit`;
-    
+  var kikmsg = `bot detected ;you will be remove because of reaching warn-limit`;
+
      await zk.sendMessage(origineMessage, { text: kikmsg , mentions: [auteurMessage] }, { quoted: ms }) ;
 
 
@@ -640,20 +1529,20 @@ try {
     catch (er) {
         console.log('.... ' + er);
     }        
-             
-         
+
+
             /////////////////////////
-            
-            //execution des daveplugins   
+
+            //execution des davecmd   
             if (verifCom) {
                 //await await zk.readMessages(ms.key);
-                const cd = evt.cm.find((zokou) => zokou.nomCom === (com));
+                const cd = evt.cm.find((ezra) => ezra.nomCom === (com));
                 if (cd) {
                     try {
 
             if ((conf.MODE).toLocaleLowerCase() != 'yes' && !superUser) {
                 return;
-            }
+}
 
                          /******************* PM_PERMT***************/
 
@@ -661,12 +1550,12 @@ try {
                 repondre("You don't have acces to commands here") ; return }
             ///////////////////////////////
 
-             
+
             /*****************************banGroup  */
             if (!superUser && verifGroupe) {
 
                  let req = await isGroupBanned(origineMessage);
-                    
+
                         if (req) { return }
             }
 
@@ -674,17 +1563,17 @@ try {
 
             if(!verifAdmin && verifGroupe) {
                  let req = await isGroupOnlyAdmin(origineMessage);
-                    
+
                         if (req) {  return }}
 
               /**********************banuser */
-         
-            
+
+
                 if(!superUser) {
                     let req = await isUserBanned(auteurMessage);
-                    
+
                         if (req) {repondre("You are banned from bot commands"); return}
-                    
+
 
                 } 
 
@@ -692,16 +1581,16 @@ try {
                         cd.fonction(origineMessage, zk, commandeOptions);
                     }
                     catch (e) {
-                        console.log("😡r😡 " + e);
+                        console.log("😡😡 " + e);
                         zk.sendMessage(origineMessage, { text: "😡😡 " + e }, { quoted: ms });
                     }
                 }
             }
-            //end of order execution
+            //fin exécution luckycmd
         });
-        //end event message
+        //fin événement message
 
-/******** group event update ****************/
+/******** evenement groupe update ****************/
 const { recupevents } = require('./bdd/welcome'); 
 
 zk.ev.on('group-participants.update', async (group) => {
@@ -711,24 +1600,26 @@ zk.ev.on('group-participants.update', async (group) => {
     try {
         ppgroup = await zk.profilePictureUrl(group.id, 'image');
     } catch {
-        ppgroup = '';
+        ppgroup = 'https://files.catbox.moe/3o37c5.jpeg';
     }
 
     try {
         const metadata = await zk.groupMetadata(group.id);
 
         if (group.action == 'add' && (await recupevents(group.id, "welcome") == 'on')) {
-            let msg = `DAVE-XMD`;
+            let msg = `👋 Hello
+`;
+
             let membres = group.participants;
             for (let membre of membres) {
-                msg += ` \n𝐇𝐞𝐥𝐥𝐨 @${membre.split("@")[0]} 𝐀𝐍𝐃 𝐖𝐄𝐋𝐂𝐎𝐌𝐄 𝐓𝐎 𝐎𝐔𝐑 𝐆𝐑𝐎𝐔𝐏 𝐇𝐄𝐑𝐄'𝐒 𝐀 𝐂𝐔𝐏 𝐎𝐅 𝐓𝐄𝐀.⭐ \n\n`;
+                msg += ` *@${membre.split("@")[0]}* Welcome to Our Official Group,`;
             }
 
-            msg += `> 𝐏𝐋𝐄𝐀𝐒𝐄 𝐑𝐄𝐀𝐃 𝐓𝐇𝐄 𝐆𝐑𝐎𝐔𝐏 𝐃𝐄𝐒𝐂𝐑𝐈𝐏𝐓𝐈𝐎𝐍 𝐓𝐎 𝐀𝐕𝐎𝐈𝐃 𝐆𝐄𝐓𝐓𝐈𝐍𝐆 𝐑𝐄𝐌𝐎𝐕𝐄𝐃* `;
+            msg += `You might want to read the group Description to avoid getting removed...`;
 
             zk.sendMessage(group.id, { image: { url: ppgroup }, caption: msg, mentions: membres });
         } else if (group.action == 'remove' && (await recupevents(group.id, "goodbye") == 'on')) {
-            let msg = `𝐒𝐨𝐦𝐞𝐨𝐧𝐞 𝐉𝐮𝐬𝐭 𝐥𝐞𝐟𝐭 𝐮𝐬🥲 𝐁𝐲𝐞𝐞.  𝐖𝐞 𝐩𝐫𝐨𝐛𝐚𝐛𝐥𝐲 𝐧𝐨𝐭 𝐠𝐨𝐧𝐧𝐚 𝐦𝐢𝐬𝐬 𝐲𝐨𝐮😒🚮;\n`;
+            let msg = `one or somes member(s) left group;\n`;
 
             let membres = group.participants;
             for (let membre of membres) {
@@ -739,7 +1630,7 @@ zk.ev.on('group-participants.update', async (group) => {
 
         } else if (group.action == 'promote' && (await recupevents(group.id, "antipromote") == 'on') ) {
             //  console.log(zk.user.id)
-          if (group.author == metadata.owner || group.author  == conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id)  || group.author == group.participants[0]) { console.log('SuperUser case I do nothing') ;return ;} ;
+          if (group.author == metadata.owner || group.author  == conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id)  || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
 
 
          await   zk.groupParticipantsUpdate(group.id ,[group.author,group.participants[0]],"demote") ;
@@ -754,7 +1645,7 @@ zk.ev.on('group-participants.update', async (group) => {
 
         } else if (group.action == 'demote' && (await recupevents(group.id, "antidemote") == 'on') ) {
 
-            if (group.author == metadata.owner || group.author ==  conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id) || group.author == group.participants[0]) { console.log('SuperUser case I do nothing') ;return ;} ;
+            if (group.author == metadata.owner || group.author ==  conf.NUMERO_OWNER + '@s.whatsapp.net' || group.author == decodeJid(zk.user.id) || group.author == group.participants[0]) { console.log('Cas de superUser je fais rien') ;return ;} ;
 
 
            await  zk.groupParticipantsUpdate(group.id ,[group.author],"demote") ;
@@ -775,102 +1666,94 @@ zk.ev.on('group-participants.update', async (group) => {
     }
 });
 
-/******** end of group event update *************************/
+/******** fin d'evenement groupe update *************************/
 
-/******************************Cron setup */
 
-        
-    async  function activateCrons() {
+
+
+    /*****************************Cron setup */
+
+
+
+
+
+
+
+   async  function activateCrons() {
         const cron = require('node-cron');
         const { getCron } = require('./bdd/cron');
 
           let crons = await getCron();
           console.log(crons);
           if (crons.length > 0) {
-        
+
             for (let i = 0; i < crons.length; i++) {
-        
+
               if (crons[i].mute_at != null) {
                 let set = crons[i].mute_at.split(':');
 
-                console.log(`establishment of an automute for ${crons[i].group_id} a ${set[0]} H ${set[1]}`)
+                console.log(`etablissement d'un automute pour ${crons[i].group_id} a ${set[0]} H ${set[1]}`)
 
                 cron.schedule(`${set[1]} ${set[0]} * * *`, async () => {
                   await zk.groupSettingUpdate(crons[i].group_id, 'announcement');
-                  zk.sendMessage(crons[i].group_id, { image : { url : './media/chrono.webp'} , caption: "Hello, it's time to close the group; Goodnight." });
+                  zk.sendMessage(crons[i].group_id, { image : { url : './media/chrono.webp'} , caption: "Hello, it's time to close the group; sayonara." });
 
                 }, {
                     timezone: "Africa/Nairobi"
                   });
               }
-        
+
               if (crons[i].unmute_at != null) {
                 let set = crons[i].unmute_at.split(':');
 
                 console.log(`etablissement d'un autounmute pour ${set[0]} H ${set[1]} `)
-        
+
                 cron.schedule(`${set[1]} ${set[0]} * * *`, async () => {
 
                   await zk.groupSettingUpdate(crons[i].group_id, 'not_announcement');
 
                   zk.sendMessage(crons[i].group_id, { image : { url : './media/chrono.webp'} , caption: "Good morning; It's time to open the group." });
 
-                 
+
                 },{
                     timezone: "Africa/Nairobi"
                   });
               }
-        
+
             }
           } else {
-            console.log('Crons have not been enabled');
+            console.log('Les crons n\'ont pas été activés');
           }
 
           return
         }
 
-        
+
         //événement contact
-        zk.ev.on("contacts.upsert", async (contacts) => {
-            const insertContact = (newContact) => {
-                for (const contact of newContact) {
-                    if (store.contacts[contact.id]) {
-                        Object.assign(store.contacts[contact.id], contact);
-                    }
-                    else {
-                        store.contacts[contact.id] = contact;
-                    }
-                }
-                return;
-            };
-            insertContact(contacts);
-        });
-        //fin événement contact 
-        //événement connexion
         zk.ev.on("connection.update", async (con) => {
             const { lastDisconnect, connection } = con;
             if (connection === "connecting") {
-                console.log("ℹ️ DAVE-XMD is connecting...");
+                console.log("☢️DAVE-XMD☢️ is connecting...");
             }
             else if (connection === 'open') {
-                console.log("✅ DAVE-XMD Connected to WhatsApp!");
+                console.log("☢️ DAVE-XMD☢️ Connected to WhatsApp! ☺️");
                 console.log("--");
                 await (0, baileys_1.delay)(200);
                 console.log("------");
                 await (0, baileys_1.delay)(300);
                 console.log("------------------/-----");
-                console.log("DAVE-XMD is Online ✅\n\n");
-                //chargement des daveplugins 
-                console.log("Loading Dave Commands ...\n");
+                console.log("☢️ DAVE-XMD☢️ is Online 🕸\n\n");
+                //chargement des luckycmd 
+                console.log("Loading ☢️ DAVE-XMD☢️ Plugins...\n");
                 fs.readdirSync(__dirname + "/daveplugins").forEach((fichier) => {
                     if (path.extname(fichier).toLowerCase() == (".js")) {
                         try {
                             require(__dirname + "/daveplugins/" + fichier);
-                            console.log(fichier + " Installed Successfully✔️");
+                            console.log(fichier + "☢️ DAVE-XMD☢️ Plugins Installed Successfully✔️");
                         }
                         catch (e) {
                             console.log(`${fichier} could not be installed due to : ${e}`);
-                        } /* require(__dirname + "/kn_dave/" + fichier);
+                        } /* require(__dirname + "/beltah/" + fichier);
                          console.log(fichier + " Installed ✔️")*/
                         (0, baileys_1.delay)(300);
                     }
@@ -886,20 +1769,32 @@ zk.ev.on('group-participants.update', async (group) => {
                 else {
                     md = "undefined";
                 }
-                console.log("Commands Installation Completed ✅");
+                console.log("☢️𝐃𝐀𝐕𝐄-𝐗𝐌𝐃☢️ plugins Installation Completed ✅");
 
                 await activateCrons();
-                
+
                 if((conf.DP).toLowerCase() === 'yes') {     
 
-                let cmsg =`      BOT RUNNING
-                ⁠              
->╭──⭓ [ 𝐁𝐎𝐎𝐓 𝐒𝐄𝐐𝐔𝐄𝐍𝐂𝐄 𝐈𝐍𝐈𝐓𝐈𝐀𝐋𝐈𝐙𝐄𝐃 ]
-│   ➤ STATUS : BOT ACTIVE
-│   ➤ DEV    : Gifted_dave
-│   ➤ BOT    : 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃
-╰────────⭓ [ 𝐒𝐘𝐒𝐓𝐄𝐌 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐒 ]
-⁠⁠`;
+                let cmsg =`HELLO👋, 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 CONNECTED✅😇⁠⁠⁠⁠
+
+╭════⊷
+║ *『 ${conf.BOT} 𝐢𝐬 𝐎𝐧𝐥𝐢𝐧𝐞』*
+║    Creator: *${conf.OWNER_NAME}*
+║    Prefix : [  ${prefixe} ]
+║    Mode : ${md} mode
+║    Total Commands : ${evt.cm.length}
+╰──────────────────⊷
+
+╭═══◇
+┃
+┃ *Thank you for choosing*                      
+┃  *${conf.BOT}*
+> Regards ${conf.OWNER_NAME} 
+╰──────────────────⊷ 
+Follow 𝐃𝐀𝐕𝐄-𝐗𝐌𝐃 channel for updates
+https://whatsapp.com/channel/0029VbApvFQ2Jl84lhONkc3k
+`;
+
                 await zk.sendMessage(zk.user.id, { text: cmsg });
                 }
             }
@@ -909,25 +1804,25 @@ zk.ev.on('group-participants.update', async (group) => {
                     console.log('Session id error, rescan again...');
                 }
                 else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
-                    console.log('!!! connection closed, reconnection in progress ...');
+                    console.log('!!! connexion fermée, reconnexion en cours ...');
                     main();
                 }
                 else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
-                    console.log('connection error trying to reconnect... ');
+                    console.log('connection error 🥺 ,,, trying to reconnect... ');
                     main();
                 }
                 else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
-                    console.log('connection replaced ,,, a session is already open please close it !!!');
+                    console.log('connexion réplacée ,,, une sesssion est déjà ouverte veuillez la fermer svp !!!');
                 }
                 else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
-                    console.log('you are disconnected,,, please rescan the qr code please');
+                    console.log('vous êtes déconnecté,,, veuillez rescanner le code qr svp');
                 }
                 else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
-                    console.log('reboot in progress ▶️');
+                    console.log('redémarrage en cours ▶️');
                     main();
                 }   else {
 
-                    console.log('restart error  ',raisonDeconnexion) ;         
+                    console.log('redemarrage sur le coup de l\'erreur  ',raisonDeconnexion) ;         
                     //repondre("* Redémarrage du bot en cour ...*");
 
                                 const {exec}=require("child_process") ;
@@ -939,6 +1834,7 @@ zk.ev.on('group-participants.update', async (group) => {
                 main(); //console.log(session)
             }
         });
+
         //fin événement connexion
         //événement authentification 
         zk.ev.on("creds.update", saveCreds);
@@ -970,11 +1866,11 @@ zk.ev.on('group-participants.update', async (group) => {
                 if (typeof options.chatJid !== 'string') reject(new Error('ChatJid must be a string'));
                 if (options.timeout && typeof options.timeout !== 'number') reject(new Error('Timeout must be a number'));
                 if (options.filter && typeof options.filter !== 'function') reject(new Error('Filter must be a function'));
-        
+
                 const timeout = options?.timeout || undefined;
                 const filter = options?.filter || (() => true);
                 let interval = undefined
-        
+
                 /**
                  * 
                  * @param {{messages: Baileys.proto.IWebMessageInfo[], type: Baileys.MessageUpsertType}} data 
@@ -987,7 +1883,7 @@ zk.ev.on('group-participants.update', async (group) => {
                             const chatId = message.key.remoteJid;
                             const isGroup = chatId.endsWith('@g.us');
                             const isStatus = chatId == 'status@broadcast';
-        
+
                             const sender = fromMe ? zk.user.id.replace(/:.*@/g, '@') : (isGroup || isStatus) ? message.key.participant.replace(/:.*@/g, '@') : chatId;
                             if (sender == options.sender && chatId == options.chatJid && filter(message)) {
                                 zk.ev.off('messages.upsert', listener);
@@ -1016,9 +1912,12 @@ zk.ev.on('group-participants.update', async (group) => {
     let fichier = require.resolve(__filename);
     fs.watchFile(fichier, () => {
         fs.unwatchFile(fichier);
-        console.log(`update ${__filename}`);
+        console.log(`mise à jour ${__filename}`);
         delete require.cache[fichier];
         require(fichier);
     });
     main();
 }, 5000);
+    
+    
+    
