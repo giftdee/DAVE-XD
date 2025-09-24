@@ -2,18 +2,19 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const AdmZip = require("adm-zip");
-const ownerMiddleware = require('../../utility/botUtil/Ownermiddleware');
+const ownerMiddleware = require("../../utility/botUtil/Ownermiddleware");
 
 module.exports = async (context) => {
     const { client, m } = context;
+
     await ownerMiddleware(context, async () => {
         if (global.updateInProgress) {
-            return await m.reply("🛑 *Yo, chill punk!* Update’s already running. Don’t spam me! 😡");
+            return await m.reply("🛑 Update already running! Chill.");
         }
         global.updateInProgress = true;
 
         try {
-            await m.reply("💣 *DAVE-XD Update Unleashed!* Scanning GitHub for fresh chaos... 😈");
+            await m.reply("💣 *DAVE-XD Update Started!* Fetching latest commits...");
 
             // Paths
             const lastCommitPath = path.join(__dirname, "../../last_commit.txt");
@@ -21,23 +22,19 @@ module.exports = async (context) => {
             const extractPath = path.join(__dirname, "../../latest");
             const botRoot = path.join(__dirname, "../..");
 
-            // Ensure directories exist
-            if (!fs.existsSync(path.dirname(zipPath))) {
-                fs.mkdirSync(path.dirname(zipPath), { recursive: true });
-            }
-
-            // 1. Check latest commit SHA
-            console.log("Fetching latest commit...");
+            // 1️⃣ Get latest commit SHA from GitHub main branch
+            console.log("Fetching latest commit SHA from GitHub...");
             const repoUrl = "https://api.github.com/repos/giftdee/DAVE-XD/commits/main";
             const { data: commitData } = await axios.get(repoUrl, {
-                headers: { "User-Agent": "DAVE-XD-Bot" }
+                headers: { "User-Agent": "DAVE-XD-Updater" } // required for GitHub
             }).catch(err => {
                 throw new Error(`GitHub API error: ${err.response?.status || err.message}`);
             });
+
             const latestSha = commitData.sha;
             console.log(`Latest SHA: ${latestSha}`);
 
-            // 2. Compare with stored SHA
+            // Compare with stored SHA
             let currentSha = "";
             if (fs.existsSync(lastCommitPath)) {
                 currentSha = fs.readFileSync(lastCommitPath, "utf-8").trim();
@@ -45,96 +42,65 @@ module.exports = async (context) => {
             console.log(`Current SHA: ${currentSha}`);
 
             if (latestSha === currentSha) {
-                return await m.reply("🛡️ *No updates, loser!* DAVE-XD is already peak chaos. 🔥");
+                return await m.reply("✅ *Already up to date!* No new commits on main branch.");
             }
 
-            await m.reply("⚡ *New commits detected!* Downloading the mayhem...");
+            await m.reply("⚡ *New update found!* Downloading ZIP...");
 
-            // 3. Download ZIP
-            console.log("Downloading ZIP...");
-            const { data: zipData } = await axios.get("https://github.com/giftdee/DAVE-XD/archive/main.zip", {
-                responseType: "arraybuffer"
-            }).catch(err => {
-                throw new Error(`Download failed: ${err.message}`);
-            });
+            // 2️⃣ Download repo ZIP
+            const zipUrl = "https://github.com/giftdee/DAVE-XD/archive/refs/heads/main.zip";
+            const { data: zipData } = await axios.get(zipUrl, { responseType: "arraybuffer" });
             fs.writeFileSync(zipPath, zipData);
-            const stats = fs.statSync(zipPath);
-            console.log(`ZIP downloaded: ${stats.size} bytes`);
-            if (stats.size < 1000) throw new Error("ZIP file too small, likely corrupted");
+            console.log(`ZIP downloaded: ${zipPath}`);
 
-            // 4. Extract ZIP
-            await m.reply("🧨 *Unzipping the chaos...*");
+            // 3️⃣ Extract ZIP
             const zip = new AdmZip(zipPath);
             zip.extractAllTo(extractPath, true);
             console.log(`Extracted to ${extractPath}`);
 
-            // 5. Copy files, preserving specific files
-            await m.reply("🔄 *Replacing files, keeping your precious configs safe...*");
-            const sourcePath = path.join(extractPath, "DAVE-XD");
+            // 4️⃣ Copy files to bot root
+            const sourcePath = path.join(extractPath, "DAVE-XD-main");
             copyFolderSync(sourcePath, botRoot);
 
-            // 6. Save new SHA
-            console.log("Saving new SHA:", latestSha);
+            // 5️⃣ Save new SHA
             fs.writeFileSync(lastCommitPath, latestSha);
 
-            // 7. Cleanup
-            console.log("Cleaning up...");
+            // 6️⃣ Cleanup
             fs.unlinkSync(zipPath);
             fs.rmSync(extractPath, { recursive: true, force: true });
 
-            await m.reply(
-                "😈 *DAVE-XD updated! Dyno restarting in 3 seconds...* ⚠️ *Warning*: Heroku updates are temporary unless you push to git. Check logs for manual steps! 🔥"
-            );
+            await m.reply("✅ *DAVE-XD successfully updated!* Restarting in 3 seconds...");
 
-            // 8. Heroku dyno restart
-            setTimeout(() => {
-                console.log("Restarting Heroku dyno...");
-                process.exit(0);
-            }, 3000);
+            setTimeout(() => process.exit(0), 3000);
 
         } catch (error) {
-            console.error("Update error:", error.stack);
-            await m.reply(`💀 *Update crashed, weakling!* Error: ${error.message}. Check logs and fix it! 😡`);
+            console.error("Update error:", error);
+            await m.reply(`💀 Update failed: ${error.message}`);
         } finally {
             global.updateInProgress = false;
         }
     });
 };
 
-// Helper function to copy directories while preserving specific files
+// Helper: Copy folder content except ignored files
 function copyFolderSync(source, target) {
-    if (!fs.existsSync(target)) {
-        fs.mkdirSync(target, { recursive: true });
-    }
+    if (!fs.existsSync(target)) fs.mkdirSync(target, { recursive: true });
 
-    const items = fs.readdirSync(source);
-    for (const item of items) {
+    for (const item of fs.readdirSync(source)) {
         const srcPath = path.join(source, item);
         const destPath = path.join(target, item);
 
-        // Skip specific files and folders
-        if (
-            item === ".env" ||
-            item === "Procfile" ||
-            item === "package.json" ||
-            item === "package-lock.json" ||
-            item === "last_commit.txt" ||
-            item === "Session" ||
-            item === "node_modules"
-        ) {
-            console.log(`Skipping ${item} to preserve custom settings`);
+        // Skip these files
+        if ([".env", "Procfile", "package.json", "package-lock.json", "last_commit.txt", "Session", "node_modules"].includes(item)) {
+            console.log(`Skipping ${item}`);
             continue;
         }
 
         if (fs.lstatSync(srcPath).isDirectory()) {
             copyFolderSync(srcPath, destPath);
         } else {
-            try {
-                fs.copyFileSync(srcPath, destPath);
-                console.log(`Copied ${srcPath} to ${destPath}`);
-            } catch (e) {
-                console.error(`Failed to copy ${srcPath}: ${e.message}`);
-            }
+            fs.copyFileSync(srcPath, destPath);
+            console.log(`Copied: ${srcPath} -> ${destPath}`);
         }
     }
 }
