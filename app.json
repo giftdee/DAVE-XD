@@ -1,42 +1,37 @@
 {
   "name": "DAVE-XD",
-  "description": "a sim0le buttoned version bot build by dave.",
+  "description": "a simple buttoned version bot built by dave.",
   "website": "https://github.com/giftdee/DAVE-XD#readme",
   "repository": "https://github.com/giftdee/DAVE-XD.git",
   "logo": "https://i.imgur.com/ZleeQtZ.jpeg",
   "success_url": "/",
-  
+
   "env": {
     "SESSION": {
-      "description": "🕳️ *Required* – Paste your session id here.",
-      "required": true
-    },
-    "CODE": {
-      "description": "🕳️ *Required* – Your country code (e.g., 254 for Kenya).",
-      "value": "254",
+      "description": "Required – Paste your session id here.",
       "required": true
     }
   },
-  
+
   "addons": [
     {
       "plan": "heroku-postgresql",
-      "description": "🗃️ Free PostgreSQL database for storing bot data."
+      "description": "Free PostgreSQL database for storing bot data."
     }
   ],
-  
+
   "buildpacks": [
     {
       "url": "heroku/nodejs",
-      "description": "📦 Node.js runtime for running the bot."
+      "description": "Node.js runtime for running the bot."
     },
     {
       "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git",
-      "description": "🖼️ WebP support for image processing."
+      "description": "WebP support for image processing."
     },
     {
       "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest",
-      "description": "🎥 FFmpeg for audio/video processing."
+      "description": "FFmpeg for audio/video processing."
     }
   ]
 }
