@@ -1,43 +1,67 @@
+const axios = require('axios');
+const yts = require('yt-search');
+const fs = require('fs');
+const path = require('path');
+
 module.exports = async (context) => {
-  const { client, m, text } = context;
-  const yts = require("yt-search");
+    const { client, m, text } = context;
 
-  const formatStylishReply = (message) => {
-    return `◈━━━━━━━━━━━━━━━━◈\n│❒ ${message}\n◈━━━━━━━━━━━━━━━━◈`;
-  };
+    try {
+        if (!text) {
+            await client.sendMessage(m.chat, { 
+                text: 'Usage: .song <song name or YouTube link>' 
+            }, { quoted: m });
+            return;
+        }
 
-  if (!text) {
-    return m.reply(formatStylishReply("Yo, dumbass, give me a song name! 🎵 Don’t waste my time."));
-  }
+        let video;
+        if (text.includes('youtube.com') || text.includes('youtu.be')) {
+            video = { url: text };
+        } else {
+            const search = await yts(text);
+            if (!search || !search.videos.length) {
+                await client.sendMessage(m.chat, { 
+                    text: 'No results found.' 
+                }, { quoted: m });
+                return;
+            }
+            video = search.videos[0];
+        }
 
-  if (text.length > 100) {
-    return m.reply(formatStylishReply("What’s this essay, loser? Keep the song name short, max 100 chars."));
-  }
+        // Inform user
+        await client.sendMessage(m.chat, {
+            image: { url: video.thumbnail },
+            caption: `🎵 Downloading: *${video.title}*\n⏱ Duration: ${video.timestamp}`
+        }, { quoted: m });
 
-  const { videos } = await yts(text);
-  if (!videos || videos.length === 0) {
-    return m.reply(formatStylishReply("No songs found, you got shit taste. 😕 Try something else."));
-  }
+        // Get Izumi API link
+        const apiUrl = `https://izumiiiiiiii.dpdns.org/downloader/youtube?url=${encodeURIComponent(video.url)}&format=mp3`;
 
-  const song = videos[0];
-  const title = song.title;
-  const artist = song.author?.name || "Unknown Artist";
-  const views = song.views?.toLocaleString() || "Unknown";
-  const duration = song.duration?.toString() || "Unknown";
-  const uploaded = song.ago || "Unknown";
-  const thumbnail = song.thumbnail || "";
-  const videoUrl = song.url;
+        const res = await axios.get(apiUrl, {
+            timeout: 30000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
 
-  const response = `◈━━━━━━━━━━━━━━━━◈\n` +
-                  `│❒ *${title}* found for ${m.pushName}! 🎶\n` +
-                  `│🎤 *Artist*: ${artist}\n` +
-                  `│👀 *Views*: ${views}\n` +
-                  `│⏱ *Duration*: ${duration}\n` +
-                  `│📅 *Uploaded*: ${uploaded}\n` +
-                  (thumbnail ? `│🖼 *Thumbnail*: ${thumbnail}\n` : '') +
-                  `│🔗 *Video*: ${videoUrl}\n` +
-                  `◈━━━━━━━━━━━━━━━━◈\n` +
-                  `Powered by DAVE-XD`;
+        if (!res.data || !res.data.result || !res.data.result.download) {
+            throw new Error('Izumi API failed to return a valid link.');
+        }
 
-  await m.reply(formatStylishReply(response));
+        const audioData = res.data.result;
+
+        // Send audio directly using the download URL
+        await client.sendMessage(m.chat, {
+            audio: { url: audioData.download },
+            mimetype: 'audio/mpeg',
+            fileName: `${audioData.title || video.title || 'song'}.mp3`,
+            ptt: false
+        }, { quoted: m });
+
+    } catch (err) {
+        console.error('Song command error:', err);
+        await client.sendMessage(m.chat, { 
+            text: '_failed to download the song_.' 
+        }, { quoted: m });
+    }
 };
