@@ -1,11 +1,13 @@
 {
-  "name": "DAVE-XD",
+  "name": "Toxic-MD",
   "version": "1.0.0",
-  "description": "WhatsApp Multi Device Bot",
+  "description": "DAVE-xD multi device whatsapp bot",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node index.js"
+    "start": "pm2 start index.js --deep-monitoring --attach --name DAVE-xD",
+    "stop": "pm2 stop DAVE-xD",
+    "restart": "pm2 restart DAVE-xD"
   },
   "keywords": [
     "termux",
@@ -75,6 +77,7 @@
     "node-fetch": "^2.6.1",
     "node-id3": "^0.2.6",
     "openai": "^4.0.0",
+    "pm2": "^6.0.5",
     "pg": "^8.13.3",
     "pg-hstore": "^2.3.4",
     "path": "^0.12.7",
