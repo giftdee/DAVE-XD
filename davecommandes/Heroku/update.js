@@ -26,7 +26,7 @@ module.exports = async (context) => {
             console.log("Fetching latest commit SHA from GitHub...");
             const repoUrl = "https://api.github.com/repos/giftdee/DAVE-XD/commits/main";
             const { data: commitData } = await axios.get(repoUrl, {
-                headers: { "User-Agent": "DAVE-XD-Updater" } // required for GitHub
+                headers: { "User-Agent": "DAVE-XD-Updater" } // GitHub requires User-Agent
             }).catch(err => {
                 throw new Error(`GitHub API error: ${err.response?.status || err.message}`);
             });
@@ -35,10 +35,7 @@ module.exports = async (context) => {
             console.log(`Latest SHA: ${latestSha}`);
 
             // Compare with stored SHA
-            let currentSha = "";
-            if (fs.existsSync(lastCommitPath)) {
-                currentSha = fs.readFileSync(lastCommitPath, "utf-8").trim();
-            }
+            let currentSha = fs.existsSync(lastCommitPath) ? fs.readFileSync(lastCommitPath, "utf-8").trim() : "";
             console.log(`Current SHA: ${currentSha}`);
 
             if (latestSha === currentSha) {
@@ -70,7 +67,6 @@ module.exports = async (context) => {
             fs.rmSync(extractPath, { recursive: true, force: true });
 
             await m.reply("✅ *DAVE-XD successfully updated!* Restarting in 3 seconds...");
-
             setTimeout(() => process.exit(0), 3000);
 
         } catch (error) {
@@ -90,8 +86,9 @@ function copyFolderSync(source, target) {
         const srcPath = path.join(source, item);
         const destPath = path.join(target, item);
 
-        // Skip these files
-        if ([".env", "Procfile", "package.json", "package-lock.json", "last_commit.txt", "Session", "node_modules"].includes(item)) {
+        // Skip critical files/folders
+        const ignored = [".env", "Procfile", "package.json", "package-lock.json", "last_commit.txt", "Session", "node_modules"];
+        if (ignored.includes(item)) {
             console.log(`Skipping ${item}`);
             continue;
         }
