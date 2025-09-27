@@ -19,7 +19,7 @@ module.exports = async (context) => {
   }
 
   try {
-    const repoUrl = 'https://api.github.com/repos/huh234/DAVE-XD';
+    const repoUrl = 'https://api.github.com/repos/giftdee/DAVE-XD';
     const response = await fetch(repoUrl);
     const repoData = await response.json();
 
