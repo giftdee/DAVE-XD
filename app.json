@@ -1,42 +1,37 @@
 {
   "name": "DAVE-XD",
-  "description": "DAVE-XD, your friendly assistant!",
-  "logo": "https://i.ibb.co/nqsRcKDB/Xploader4.jpg",
-  "keywords": [
-    "whatsapp",
-    "bot",
-    "baileys",
-    "cypherx"
-  ],
-  "repository": "https://github.com/giftdee/DAVE-XD",
-  "stack": "container",
-  "addons": [
-    {
-      "plan": "heroku-postgresql"
-    }
-  ],
-  "scripts": {
-    "start": "node index.js"
-  },
+  "description": "A lightning-fast WhatsApp bot with multi-device support, built on Node.js & Baileys.",
+  "website": "https://github.com/giftdee/DAVE-XD#readme",
+  "repository": "https://github.com/giftdee/DAVE-XD.git",
+  "logo": "https://i.ibb.co/mChCjFPL/ad76194e124ff34e.jpg",
+  "success_url": "/",
+
   "env": {
-    "SESSION_ID": {
-      "description": "Paste your session ID here (must start with '~dave' or '~').",
-      "value": "",
+    "SESSION": {
+      "description": "Required – Your WhatsApp session ID (generated after linking the bot).",
       "required": true
     }
   },
+
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "description": "Free PostgreSQL database for storing bot data."
+    }
+  ],
+
   "buildpacks": [
     {
-      "url": "heroku/nodejs"
+      "url": "heroku/nodejs",
+      "description": "Node.js runtime for running the bot."
     },
     {
-      "url": "https://github.com/DuckyTeam/heroku-buildpack-imagemagick.git"
+      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git",
+      "description": "WebP support for image processing."
     },
     {
-      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
-    },
-    {
-      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest",
+      "description": "FFmpeg for audio/video processing."
     }
   ]
 }
