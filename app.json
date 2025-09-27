@@ -1,7 +1,13 @@
 {
   "name": "DAVE-XD",
-  "description": "Dave-xd, your friendly assistant!",
-  "keywords": ["whatsapp", "bot", "baileys", "multi-device"],
+  "description": "DAVE-XD, your friendly assistant!",
+  "logo": "https://i.ibb.co/nqsRcKDB/Xploader4.jpg",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "baileys",
+    "cypherx"
+  ],
   "repository": "https://github.com/giftdee/DAVE-XD",
   "stack": "container",
   "addons": [
@@ -14,15 +20,23 @@
   },
   "env": {
     "SESSION_ID": {
-      "description": "Must begin with '~' or 'dave'",
+      "description": "Paste your session ID here (must start with '~dave' or '~').",
       "value": "",
-      "required": false
+      "required": true
     }
   },
   "buildpacks": [
-    { "url": "heroku/nodejs" },
-    { "url": "https://github.com/DuckyTeam/heroku-buildpack-imagemagick.git" },
-    { "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest" },
-    { "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git" }
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "https://github.com/DuckyTeam/heroku-buildpack-imagemagick.git"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+    },
+    {
+      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
+    }
   ]
 }
