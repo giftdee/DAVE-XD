@@ -62,7 +62,6 @@
     "gemini-ai": "^1.1.0",
     "fs": "^0.0.1-security",
     "discord-mongoose-economy": "^1.2.0",
-    "function-main": "git+https://github.com/huh234/Function-Main.git",
     "g4f": "^1.1.0",
     "google-tts-api": "^2.0.2",
     "human-readable": "^0.2.1",
