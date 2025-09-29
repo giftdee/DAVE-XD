@@ -106,7 +106,7 @@ function smsg(conn, m, store) {
             title: `DAVE-XD`,
             body: m.pushName,
             previewType: "PHOTO",
-            thumbnailUrl: 'https://i.ibb.co/7JcYBD5Y/cbb9f804644ae8c4.jpg', 
+            thumbnailUrl: 'https://i.imgur.com/YqERpM0.jpeg', 
             thumbnail: kali, 
             sourceUrl: 'https://github.com/giftdee/DAVE-XD'
           }
