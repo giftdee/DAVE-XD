@@ -17,12 +17,21 @@ const antilink = require('../Functions/antilink');
 const chatbotpm = require('../Functions/chatbotpm');
 
 const { getSettings, getSudoUsers, getBannedUsers, getGroupSettings } = require('../Database/config');
-
 const { botname, mycode } = require('../Env/settings');
+
+// 🆕 Import cleanup function
+const { cleanupOldMessages } = require('../lib/Store');
 
 process.setMaxListeners(0);
 
-module.exports = dave = async (client, m, chatUpdate, store) => {
+// Run cleanup immediately at startup
+cleanupOldMessages();
+// Schedule cleanup every 24 hours
+setInterval(() => {
+    cleanupOldMessages();
+}, 24 * 60 * 60 * 1000);
+
+module.exports = toxic = async (client, m, chatUpdate, store) => {
     try {
         const sudoUsers = await getSudoUsers();
         const bannedUsers = await getBannedUsers();
@@ -51,14 +60,14 @@ module.exports = dave = async (client, m, chatUpdate, store) => {
         const Tag =
             m.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
 
-        var msgDave = m.message?.extendedTextMessage?.contextInfo?.quotedMessage || null;
+        var msgToxic = m.message?.extendedTextMessage?.contextInfo?.quotedMessage || null;
 
         var budy = typeof m.text == "string" ? m.text : "";
 
         const timestamp = speed();
-        const davespeed = speed() - timestamp;
+        const toxicspeed = speed() - timestamp;
 
-        const filePath = require('path').resolve(__dirname, '../dave.jpg');
+        const filePath = require('path').resolve(__dirname, '../toxic.jpg');
         const pict = fs.readFileSync(filePath);
 
         const commandName = body && (body.startsWith(prefix) || body.startsWith('/')) ? 
@@ -76,18 +85,16 @@ module.exports = dave = async (client, m, chatUpdate, store) => {
         const arg = budy.trim().substring(budy.indexOf(" ") + 1);
         const arg1 = arg.trim().substring(arg.indexOf(" ") + 1);
 
-        // Updated group metadata handling with debug logging
+        // Group metadata handling
         try {
             m.isGroup = m.chat.endsWith("g.us");
-            console.log(`DAVE-XD: Processing message in ${m.isGroup ? 'group' : 'private'} chat: ${m.chat}`);
             m.metadata = m.isGroup ? await client.groupMetadata(m.chat).catch(e => {
-                console.error("DAVE-XD: Group metadata fetch error:", e);
+                console.error("DAVE-xD: Group metadata fetch error:", e);
                 return {};
             }) : {};
             const participants = m.metadata?.participants || [];
             m.isAdmin = Boolean(participants.find(p => p.admin !== null && p.jid === m.sender));
             m.isBotAdmin = Boolean(participants.find(p => p.admin !== null && p.jid === botNumber));
-            console.log(`DAVE-XD: isAdmin: ${m.isAdmin}, isBotAdmin: ${m.isBotAdmin} for sender: ${m.sender}`);
         } catch (error) {
             console.error("DAVE-XD: Error fetching group metadata:", error);
             m.metadata = {};
@@ -104,8 +111,8 @@ module.exports = dave = async (client, m, chatUpdate, store) => {
         const mime = (quoted.msg || quoted).mimetype || "";
         const qmsg = (quoted.msg || quoted);
 
-        const DevDave = Array.isArray(sudoUsers) ? sudoUsers : [];
-        const Owner = DevDave.map((v) => v.replace(/[^0-9]/g, "") + "@s.whatsapp.net").includes(m.sender);
+        const DevToxic = Array.isArray(sudoUsers) ? sudoUsers : [];
+        const Owner = DevToxic.map((v) => v.replace(/[^0-9]/g, "") + "@s.whatsapp.net").includes(m.sender);
 
         const groupMetadata = m.isGroup ? m.metadata : "";
         const groupName = m.isGroup && groupMetadata ? groupMetadata.subject : "";
@@ -117,15 +124,14 @@ module.exports = dave = async (client, m, chatUpdate, store) => {
 
         const context = {
             client, m, text, Owner, chatUpdate, store, isBotAdmin, isAdmin, IsGroup, participants,
-            pushname, body, budy, totalCommands, args, mime, qmsg, msgDave, botNumber, itsMe,
-            packname, generateProfilePicture, groupMetadata, davespeed, mycode,
+            pushname, body, budy, totalCommands, args, mime, qmsg, msgToxic, botNumber, itsMe,
+            packname, generateProfilePicture, groupMetadata, toxicspeed, mycode,
             fetchJson, exec, getRandom, UploadFileUgu, TelegraPh, prefix, cmd, botname, mode, gcpresence, antitag, antidelete: antideleteSetting, fetchBuffer, store, uploadtoimgur, chatUpdate,
             getGroupAdmins: () => participants.filter(p => p.admin !== null).map(p => p.jid), pict, Tag
         };
 
-        // Debug command receipt
+        // Command handling
         if (cmd) {
-            console.log(`DAVE-XD: Command received: ${resolvedCommandName} in ${m.isGroup ? 'group' : 'private'} chat from ${m.sender}`);
             const senderNumber = m.sender.replace(/@s\.whatsapp\.net$/, '');
             if (bannedUsers.includes(senderNumber)) {
                 await client.sendMessage(m.chat, { text: `◈━━━━━━━━━━━━━━━━◈\n│❒ Banned, huh? You're too pathetic to use my commands. Get lost! 💀` }, { quoted: m });
@@ -133,12 +139,12 @@ module.exports = dave = async (client, m, chatUpdate, store) => {
             }
         }
 
-        // Relax mode check to allow group messages
+        // Relax mode check
         if (cmd && mode === 'private' && !itsMe && !Owner && !sudoUsers.includes(m.sender)) {
-            console.log(`DAVE-XD: Private mode active, skipping non-owner/non-sudo command from ${m.sender}`);
             return;
         }
 
+        // Execute various functions
         if (antideleteSetting === true) {
             await antidelete(client, m, store, pict);
         }
@@ -150,10 +156,7 @@ module.exports = dave = async (client, m, chatUpdate, store) => {
 
         if (cmd) {
             await commands[resolvedCommandName](context);
-            console.log(`DAVE-XD: Executed command: ${resolvedCommandName}`);
         }
-
-        console.log(`◈━━━━━━━━━━━━━━━━◈\n│❒ Bot successfully connected to WhatsApp ✅💫\n│❒ Loaded ${totalCommands} plugins. DAVE-XD is ready to dominate! 😈\n┗━━━━━━━━━━━━━━━┛`);
 
     } catch (err) {
         console.error('DAVE-XD Error:', util.format(err));
