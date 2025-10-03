@@ -44,15 +44,15 @@ async function initializeDatabase() {
         const defaultSettings = {
             prefix: '.',
             packname: 'DAVE-XD',
-            mode: 'public',
+            mode: 'publiv',
             presence: 'online',
             autoview: 'true',
             autolike: 'false',
             autoread: 'false',
-            autobio: 'true',
+            autobio: 'false',
             anticall: 'false',
             chatbotpm: 'false',
-            autolikeemoji: '❤️',
+            autolikeemoji: '💚',
             antilink: 'false',
             antidelete: 'false'
         };
